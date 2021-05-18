@@ -4,7 +4,6 @@ const MessageBox = ({ messages, setMessages }) => {
   const [message, setMessage] = useState('')
 
   const addMessage = (event) => {
-    console.log('Send message')
     event.preventDefault()
     if (message !== '') {
       const messageObject = {
@@ -19,16 +18,21 @@ const MessageBox = ({ messages, setMessages }) => {
   }
 
   const handleMessageChange = (event) => {
-    console.log('Change message input value')
     setMessage(event.target.value)
+  }
+
+  const clearMessages = (event) => {
+    setMessages([])
   }
 
   return (
     <div>
       <form onSubmit={addMessage}>
-        Message:
-        <input value={message} onChange={handleMessageChange} />
-        <button type='submit'>Send</button>
+        <div>
+          Message: <input value={message} onChange={handleMessageChange} />
+          <button type='submit'>Send</button>
+          <button onClick={clearMessages}>Clear</button>
+        </div>
       </form>
     </div>
   )
