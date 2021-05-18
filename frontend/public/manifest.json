@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Trollbot",
+  "name": "Chatbot that can be used for testing automated trolling",
   "icons": [
     {
       "src": "favicon.ico",
