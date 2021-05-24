@@ -1,6 +1,8 @@
 const trollbotRouter = require('express').Router()
 
-let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
+const botGreeting = { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
+
+let messages = [botGreeting]
 
 trollbotRouter.get('/', (req, res) => {
   res.json(messages)
@@ -27,6 +29,11 @@ trollbotRouter.post('/', (req, res) => {
 
   messages = messages.concat(messageObject)
   messages = messages.concat(replyObject)
+  res.json(messages)
+})
+
+trollbotRouter.delete('/', (req, res) => {
+  messages = [botGreeting]
   res.json(messages)
 })
 

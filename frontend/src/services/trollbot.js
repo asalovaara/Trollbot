@@ -12,4 +12,8 @@ const addMessage = async message => {
   return response.data
 }
 
-export default { getMessages, addMessage }
+const clearMessages = () => {
+  return axios.delete(baseUrl).then(res => res.data)
+}
+
+export default { getMessages, addMessage, clearMessages }

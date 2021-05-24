@@ -18,7 +18,7 @@ const MessageBox = ({ setMessages }) => {
 
   const clearMessages = (event) => {
     event.preventDefault()
-    setMessages([])
+    trollbotService.clearMessages().then(res => setMessages(res))
   }
 
   return (
