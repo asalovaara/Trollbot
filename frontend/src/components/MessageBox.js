@@ -1,46 +1,15 @@
 import React, { useState } from 'react'
-const {inspect} = require('util');
-const MessageBox = ({ messages, setMessages }) => {
-  const [message, setMessage] = useState('')
-  
-  var botMessage;
+import trollbotService from '../services/trollbot'
 
-  // Calls the /trollbot route in the backend
-  fetch("/trollbot", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({message: message})
-    })
-    .then((res) => res.json())
-    .then((res) => {botMessage = res.message});
-  
+const MessageBox = ({ setMessages }) => {
+  const [message, setMessage] = useState('')
+
   const addMessage = (event) => {
     event.preventDefault()
     if (message !== '') {
-        
-      const messageObject = {
-        body: message,
-        user: 'Human',
-        date: new Date().toISOString(),
-        id: messages.length + 1
-      }
-      
-      const botObject = {
-        body: botMessage,
-        user: 'Bot',
-        date: new Date().toISOString(),
-        id: messages.length + 2
-      }
-      
-      console.log(`Bot answer: ${inspect(botMessage)}`);
-
-      var msgs = [messageObject, botObject];
-      setMessages(messages.concat(msgs));
+      trollbotService.addMessage(message).then(res => setMessages(res))
     }
-    setMessage('');
+    setMessage('')
   }
 
   const handleMessageChange = (event) => {
@@ -48,6 +17,7 @@ const MessageBox = ({ messages, setMessages }) => {
   }
 
   const clearMessages = (event) => {
+    event.preventDefault()
     setMessages([])
   }
 
