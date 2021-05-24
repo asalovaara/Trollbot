@@ -6,6 +6,7 @@ import MessageBox from './MessageBox'
 const Chat = () => {
   const [messages, setMessages] = useState([])
 
+  // Effect fetches current messages from backend everytime the component if refreshed
   useEffect(() => {
     trollbotService.getMessages().then(inital => setMessages(inital))
   }, [])
