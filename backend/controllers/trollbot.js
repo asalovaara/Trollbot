@@ -24,8 +24,6 @@ trollbotRouter.post('/', (req, res) => {
     date: new Date().toISOString(),
     id: messages.length + 2
   }
-  console.log(messageObject)
-  console.log(replyObject)
 
   messages = messages.concat(messageObject)
   messages = messages.concat(replyObject)
