@@ -4,9 +4,10 @@
   "description": "Node express backend",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "start:test": "cross-env NODE_ENV=test node index.js",
     "lint": "eslint .",
     "build": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend && cd ../frontend && rm -rf build",
     "clean": "rm -rf build"
@@ -20,7 +21,11 @@
     "express": "*"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
-    "nodemon": "^2.0.7"
+    "eslint-plugin-jest": "^24.3.6",
+    "jest": "^27.0.0",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
   }
 }

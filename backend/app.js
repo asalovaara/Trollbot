@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const trollbotRouter = require('./controllers/trollbot')
+const trollbotRouter = require('./controllers/trollbotRouter')
 
 const app = express()
 

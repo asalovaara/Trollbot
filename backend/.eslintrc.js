@@ -2,6 +2,7 @@ module.exports = {
   'env': {
     'node': true,
     'commonjs': true,
+    'jest/globals': true,
     'es2021': true
   },
   'extends': 'eslint:recommended',
@@ -22,5 +23,6 @@ module.exports = {
       'error',
       'never'
     ]
-  }
+  },
+  'plugins': ['jest']
 }

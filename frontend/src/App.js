@@ -3,7 +3,6 @@ import Chat from './components/Chat'
 
 const App = () => {
 
-
   return (
     <div>
       <h1>Trollbot</h1>
