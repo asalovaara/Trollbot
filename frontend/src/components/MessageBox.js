@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
+import trollbotService from '../services/trollbot'
 
-const MessageBox = ({ messages, setMessages }) => {
+const MessageBox = ({ setMessages }) => {
   const [message, setMessage] = useState('')
 
   const addMessage = (event) => {
     event.preventDefault()
     if (message !== '') {
-      const messageObject = {
-        body: message,
-        user: 'Human',
-        date: new Date().toISOString(),
-        id: messages.length + 1
-      }
-      setMessages(messages.concat(messageObject))
+      trollbotService.addMessage(message).then(res => setMessages(res))
     }
     setMessage('')
   }
@@ -22,7 +17,8 @@ const MessageBox = ({ messages, setMessages }) => {
   }
 
   const clearMessages = (event) => {
-    setMessages([])
+    event.preventDefault()
+    trollbotService.clearMessages().then(res => setMessages(res))
   }
 
   return (

@@ -11,7 +11,6 @@ test('Renders correctly', () => {
     body: 'Test message'
   }
   const component = render(<Message messageObject={message} />)
-
   expect(component.container).toHaveTextContent('1.1.2021')
   expect(component.container).toHaveTextContent('Human')
   expect(component.container).toHaveTextContent('Test message')
