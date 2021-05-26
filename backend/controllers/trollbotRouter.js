@@ -1,8 +1,11 @@
 const trollbotRouter = require('express').Router()
+const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
+const allRepliesTable = replies.opening.concat(replies.question, replies.closing, replies.other) // For testing. Delete once reply by identified category has been implemented.
 
 const botGreeting = { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
 
 let messages = [botGreeting]
+
 
 trollbotRouter.get('/', (req, res) => {
   res.json(messages)
@@ -19,7 +22,7 @@ trollbotRouter.post('/', (req, res) => {
     id: messages.length + 1
   }
   const replyObject = {
-    body: `You said "${body.message}".`,
+    body: allRepliesTable[Math.floor(Math.random() * allRepliesTable.length)],
     user: 'Bot',
     date: new Date().toISOString(),
     id: messages.length + 2
