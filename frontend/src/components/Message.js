@@ -1,8 +1,13 @@
 import React from 'react'
+import { Card, Grid, Typography } from '@material-ui/core'
 
 const Message = ({ messageObject }) => {
   return (
-    <p>{messageObject.date} - {messageObject.user}: <b>{messageObject.body}</b></p>
+    <Grid item xs={12}>
+      <Card color='primary'>
+        <Typography>{messageObject.date} - {messageObject.user}: <b>{messageObject.body}</b></Typography>
+      </Card>
+    </Grid>
   )
 }
 

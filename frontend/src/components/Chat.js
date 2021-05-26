@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import trollbotService from '../services/trollbot'
 import Message from './Message'
 import MessageBox from './MessageBox'
+import { Box, Typography, Grid } from '@material-ui/core'
 
 const Chat = () => {
   const [messages, setMessages] = useState([])
@@ -12,17 +13,17 @@ const Chat = () => {
   }, [])
 
   return (
-    <div>
-      <h2>Chat window</h2>
-      <ul>
-        {messages.map(m =>
-          <div key={m.id}>
-            <Message messageObject={m} />
-          </div>
-        )}
-      </ul>
+    <Box>
+      <Typography variant='h4'>Chat window</Typography>
+      <Box m={2}>
+        <Grid container spacing={3}>
+          {messages.map(m =>
+            <Message key={m.id} messageObject={m} />
+          )}
+        </Grid>
+      </Box>
       <MessageBox messages={messages} setMessages={setMessages} />
-    </div>
+    </Box>
   )
 }
 

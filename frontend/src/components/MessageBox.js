@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import trollbotService from '../services/trollbot'
+import { TextField, Box, Button, Grid } from '@material-ui/core'
 
 const MessageBox = ({ setMessages }) => {
   const [message, setMessage] = useState('')
@@ -22,15 +23,21 @@ const MessageBox = ({ setMessages }) => {
   }
 
   return (
-    <div>
+    <Box>
       <form onSubmit={addMessage}>
-        <div>
-          Message: <input value={message} onChange={handleMessageChange} />
-          <button type='submit'>Send</button>
-          <button onClick={clearMessages}>Clear</button>
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField value={message} onChange={handleMessageChange} label='Message' fullWidth/>
+          </Grid>
+          <Grid item>
+            <Button color='primary' variant='contained' type='submit'>Send</Button>
+          </Grid>
+          <Grid item>
+            <Button color='primary' variant='contained' onClick={clearMessages}>Clear</Button>
+          </Grid>
+        </Grid>
       </form>
-    </div>
+    </Box>
   )
 }
 
