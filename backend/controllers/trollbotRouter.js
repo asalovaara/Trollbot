@@ -1,22 +1,19 @@
 const trollbotRouter = require('express').Router()
-const {botAnswer, getGreeting} = require('./trollbotAnswerController')
+const {botAnswer, getGreeting, getAllMessages, deleteAllMessages} = require('./trollbotAnswerController')
 
 
-/* trollbotRouter.get('/', (req, res) => {
-  res.json(messages)
-}) */
-
-
+trollbotRouter.get('/', (req, res) => {
+  res.json(getAllMessages())
+})
 
 trollbotRouter.post('/', (req, res) => {
-  const response = botAnswer(req.body)
-  res.json(botAnswer(response)
+  botAnswer(req.body.message)
+  res.json(getAllMessages())
 })
 
 trollbotRouter.delete('/', (req, res) => {
-  message = getGreeting()
-  res.json(message)
+  deleteAllMessages()
+  res.json(getAllMessages())
 })
-
 
 module.exports = trollbotRouter

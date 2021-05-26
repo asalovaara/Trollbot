@@ -1,82 +1,81 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 
+let messageList = []
 
+const getAllMessages = () => {
+  return messageList
+}
 
+const deleteAllMessages = () => {
+  messageList = []
+}
 
-const botAnswer = ( {userMessage} ) => {
-
-    const response = getResponse(userMessage)
-    return response
-    
+const botAnswer = (userMessage) => {
+  const response = getResponse(userMessage)
+  return response
 }
 
 const getResponse = (userMessage) => {
 
-    const messageType = messageType(userMessage)
-    const reply = chooseReply(messageType)
+  const type = messageType(JSON.stringify(userMessage))
+  const reply = chooseReply(type)
 
-    const messageObject = {
-        body: body.message,
-        user: 'Human',
-        date: new Date().toISOString(),
-        id: messages.length + 1
-    }
-    const replyObject = {
+  const messageObject = {
+    body: userMessage,
+    user: 'Human',
+    date: new Date().toISOString(),
+    id: messageList.length
+  }
+  const replyObject = {
     body: reply,
     user: 'Bot',
     date: new Date().toISOString(),
-    id: messages.length + 2
-    }
-
-    messages = [messageObject, replyObject]
-
-    return messages
-}
-
-const getGreeting = () => {
-    return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
+    id: messageList.length + 1
   }
-  
+
+  messageList = messageList.concat(messageObject)
+  messageList = messageList.concat(replyObject)
+
+  const messages = [messageObject, replyObject]
+  return messages
+}
 
 const messageType = (userMessage) => {
 
-    userMessage = userMessage.toLowerCase()
-    
-    if (userMessage === 'hello') {
-        return 'greeting'
-    } else if (userMessage === "bye") {
-        return 'closing'
-    } else if (userMessage.includes("?")) {
-        return 'question'
-    } else {
-        return 'other'
-    }
+  userMessage = userMessage.toLowerCase()
+
+  if (userMessage == '"hello"') {
+      return 'greeting'
+  } else if (userMessage === '"bye"') {
+      return 'closing'
+  } else if (userMessage.includes("?")) {
+      return 'question'
+  } else {
+      return 'other'
+  }
 
 }
 
-const chooseReply = ( {messageType} ) => {
+const chooseReply = (messageType) => {
 
-    let repliesNumber = Math.floor(Math.random() * 3)
+  let repliesNumber = Math.floor(Math.random() * 3)
 
-    if (messageType == 'opening') {
-      // todo
+  if (messageType == 'greeting') {
       return replies.opening[repliesNumber]
-    }
-    if (messageType == 'closing') {
-      // todo
+  } else if (messageType == 'closing') {
       return replies.closing[repliesNumber]
-    }
-    if (messageType == 'question') {
-      // todo
+  } else if (messageType == 'question') {
       return replies.question[repliesNumber]
-    }
-    if (messageType == 'other') {
-      // todo
+  } else  if (messageType == 'other') {
       return replies.other[repliesNumber]
-    }
   }
+}
 
-
+const getGreeting = () => {
+  return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
+}
 
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting
+exports.getAllMessages = getAllMessages
+exports.deleteAllMessages = deleteAllMessages
