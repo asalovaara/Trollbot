@@ -1,5 +1,7 @@
 # Software development project 2021
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A project by students in the Computer Science department of University of Helsinki.
 
 ## Description
