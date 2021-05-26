@@ -27,13 +27,13 @@ const MessageBox = ({ setMessages }) => {
       <form onSubmit={addMessage}>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <TextField value={message} onChange={handleMessageChange} label='Message' fullWidth/>
+            <TextField id='message' value={message} onChange={handleMessageChange} label='Message' fullWidth />
           </Grid>
           <Grid item>
-            <Button color='primary' variant='contained' type='submit'>Send</Button>
+            <Button id='submit' color='primary' variant='contained' type='submit'>Send</Button>
           </Grid>
           <Grid item>
-            <Button color='primary' variant='contained' onClick={clearMessages}>Clear</Button>
+            <Button id='clear' color='primary' variant='contained' onClick={clearMessages}>Clear</Button>
           </Grid>
         </Grid>
       </form>
