@@ -19,5 +19,4 @@ test('Message is added ', async () => {
   const response = await api.get('/trollbot')
   const contents = response.body.map(r => r.body)
   expect(contents).toContain('Test')
-  expect(contents).toContain('You said "Test".')
 })
