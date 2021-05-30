@@ -48,7 +48,9 @@ const getMessages = () => {
     return messages
 }
 
-
+const clearMessages = () => {
+    messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
+}
 
 const getMessageType = (userMessage) => {
     console.log('Entered trollbotAnswerController:getMessageType()')
@@ -94,3 +96,4 @@ const getGreeting = () => {
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting
 exports.getMessages = getMessages
+exports.clearMessages = clearMessages
