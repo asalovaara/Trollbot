@@ -10,9 +10,6 @@ trollbotRouter.get('/', (req, res) => {
   res.json(getMessages())
 })
 
-trollbotRouter.get('/', (req, res) => {
-  res.json(getAllMessages())
-})
 
 trollbotRouter.post('/', (req, res) => {
   const response = botAnswer(req.body)
@@ -20,8 +17,9 @@ trollbotRouter.post('/', (req, res) => {
 })
 
 trollbotRouter.delete('/', (req, res) => {
-  deleteAllMessages()
-  res.json(getAllMessages())
+  message = getGreeting()
+  res.json(message)
 })
+
 
 module.exports = trollbotRouter

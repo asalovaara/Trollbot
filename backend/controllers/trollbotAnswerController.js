@@ -1,6 +1,5 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 
-let messageList = []
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
@@ -80,18 +79,22 @@ const chooseReply = ( messageType ) => {
     if (messageType == 'opening') {
       // todo
       return replies.opening[repliesNumber]
-  } else if (messageType == 'closing') {
+    }
+    if (messageType == 'closing') {
+      // todo
       return replies.closing[repliesNumber]
-  } else if (messageType == 'question') {
+    }
+    if (messageType == 'question') {
+      // todo
       return replies.question[repliesNumber]
-  } else  if (messageType == 'other') {
+    }
+    if (messageType == 'other') {
+      // todo
       return replies.other[repliesNumber]
+    }
   }
-}
 
-const getGreeting = () => {
-  return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
-}
+
 
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting
