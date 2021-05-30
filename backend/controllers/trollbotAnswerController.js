@@ -2,65 +2,81 @@ const replies = require('../data/replies.json') // JSON object containing bot's 
 
 let messageList = []
 
-const getAllMessages = () => {
-  return messageList
-}
+let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
-const deleteAllMessages = () => {
-  messageList = []
-}
+const botAnswer = ( {message} ) => {
+    const response = getResponse(message)
+    return response
 
-const botAnswer = (userMessage) => {
-  const response = getResponse(userMessage)
-  return response
 }
 
 const getResponse = (userMessage) => {
+    console.log('Entered trollbotAnswerController:getResponse().')
+    try {
+        const messageType = getMessageType(userMessage)
 
-  const type = messageType(JSON.stringify(userMessage))
-  const reply = chooseReply(type)
+        const reply = chooseReply(messageType)
+        console.log(`User message: ${userMessage}`)
+        console.log(`Bot reply: ${reply}`)
 
-  const messageObject = {
-    body: userMessage,
-    user: 'Human',
-    date: new Date().toISOString(),
-    id: messageList.length
-  }
-  const replyObject = {
-    body: reply,
-    user: 'Bot',
-    date: new Date().toISOString(),
-    id: messageList.length + 1
-  }
+        const messageObject = {
+            body: userMessage,
+            user: 'Human',
+            date: new Date().toISOString(),
+            id: messages.length + 1
+        }
+        const replyObject = {
+            body: reply,
+            user: 'Bot',
+            date: new Date().toISOString(),
+            id: messages.length + 2
+        }
 
-  messageList = messageList.concat(messageObject)
-  messageList = messageList.concat(replyObject)
+        messages = messages.concat([messageObject, replyObject])
 
-  const messages = [messageObject, replyObject]
-  return messages
+        return messages
+    } catch (e) {
+        console.error(e)
+    }
 }
 
-const messageType = (userMessage) => {
+const getGreeting = () => {
+    return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
+}
 
-  userMessage = userMessage.toLowerCase()
+const getMessages = () => {
+    return messages
+}
 
-  if (userMessage == '"hello"') {
-      return 'greeting'
-  } else if (userMessage === '"bye"') {
-      return 'closing'
-  } else if (userMessage.includes("?")) {
-      return 'question'
-  } else {
-      return 'other'
-  }
+
+
+const getMessageType = (userMessage) => {
+    console.log('Entered trollbotAnswerController:getMessageType()')
+    try {
+        userMessage = userMessage.toLowerCase()
+
+        if (userMessage === 'hello') {
+            return 'opening'
+        } else if (userMessage === "bye") {
+            return 'closing'
+        } else if (userMessage.includes("?")) {
+            return 'question'
+        } else {
+            return 'other'
+        }
+    } catch (e) {
+        console.error(e)
+    }
 
 }
 
-const chooseReply = (messageType) => {
+const chooseReply = ( messageType ) => {
+    console.log('Entered trollbotAnswerController:chooseReply()')
 
-  let repliesNumber = Math.floor(Math.random() * 3)
+    let repliesNumber = Math.floor(Math.random() * 3)
 
-  if (messageType == 'greeting') {
+    if (messageType == 'opening') {
+      // todo
       return replies.opening[repliesNumber]
   } else if (messageType == 'closing') {
       return replies.closing[repliesNumber]
@@ -77,5 +93,4 @@ const getGreeting = () => {
 
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting
-exports.getAllMessages = getAllMessages
-exports.deleteAllMessages = deleteAllMessages
+exports.getMessages = getMessages
