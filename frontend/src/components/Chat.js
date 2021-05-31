@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import trollbotService from '../services/trollbot'
-import Message from './Message'
+import MessageList from './MessageList'
 import MessageBox from './MessageBox'
-import { Box, Typography, Grid } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 
 const Chat = () => {
   const [messages, setMessages] = useState([])
@@ -15,13 +15,7 @@ const Chat = () => {
   return (
     <Box>
       <Typography variant='h4'>Chat window</Typography>
-      <Box m={2}>
-        <Grid container spacing={3}>
-          {messages.map(m =>
-            <Message key={m.id} messageObject={m} />
-          )}
-        </Grid>
-      </Box>
+      <MessageList messages={messages} />
       <MessageBox messages={messages} setMessages={setMessages} />
     </Box>
   )
