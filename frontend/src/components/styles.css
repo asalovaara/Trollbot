@@ -1,0 +1,16 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+.App {
+  display: flex;
+  height: 100%;
+  flex-direction: column-reverse;
+}
+.right {
+  justify-content: flex-end !important;
+}
+.left {
+  justify-content: flex-start !important;
+}
