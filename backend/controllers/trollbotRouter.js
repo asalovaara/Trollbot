@@ -3,7 +3,7 @@ const {botAnswer, getGreeting, getMessages} = require('./trollbotAnswerControlle
 
 
 
-let messages = [getGreeting()]
+
 
 
 trollbotRouter.get('/', (req, res) => {
@@ -17,7 +17,7 @@ trollbotRouter.post('/', (req, res) => {
 })
 
 trollbotRouter.delete('/', (req, res) => {
-  message = getGreeting()
+  let message = getGreeting()
   res.json(message)
 })
 
