@@ -1,4 +1,5 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
+const userIntentControl = require('./userIntentController')
 
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
@@ -54,13 +55,13 @@ const clearMessages = () => {
 const getMessageType = (userMessage) => {
   console.log('Entered trollbotAnswerController:getMessageType()')
   try {
-    userMessage = userMessage.toLowerCase()
+    const intent = userIntentControl(userMessage)
 
-    if (userMessage === 'hello') {
+    if (intent === 'opening') {
       return 'opening'
-    } else if (userMessage === 'bye') {
+    } else if (intent === 'closing') {
       return 'closing'
-    } else if (userMessage.includes('?')) {
+    } else if (intent == 'question') {
       return 'question'
     } else {
       return 'other'
