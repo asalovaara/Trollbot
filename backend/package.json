@@ -8,12 +8,14 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "start:test": "cross-env NODE_ENV=test node index.js",
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run",
     "lint": "eslint .",
     "build": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend && cd ../frontend && rm -rf build",
     "clean": "rm -rf build"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Helsingin Yliopisto",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "*",
     "cors": "*",
@@ -23,7 +25,9 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "cypress": "^7.4.0",
     "eslint": "^7.27.0",
+    "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^27.0.0",
     "nodemon": "^2.0.7",
