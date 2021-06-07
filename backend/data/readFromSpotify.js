@@ -1,15 +1,14 @@
 const axios = require('axios')
 const querystring = require('querystring');
+const {client_id, client_secret} = require('./spotifyClientData')
 
-const redirectUri = 'http://localhost:3000/';
+const redirectUri = 'http://localhost:3001/';
 
 process.on('unhandledRejection', error => {
   console.log('unhandledRejection', error.message);
 });
 
 let accessUrl = 'https://accounts.spotify.com/api/token'
-
-const {client_id, client_secret} = require('./spotifyClientData')
 
 const payload = client_id + ":" + client_secret
 const encodedPayload = Buffer.from(payload).toString('base64')
