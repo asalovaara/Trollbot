@@ -15,10 +15,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "body-parser": "*",
     "cors": "*",
     "dotenv": "^10.0.0",
-    "express": "*"
+    "express": "*",
+    "querystring": "^0.2.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
