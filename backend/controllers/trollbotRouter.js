@@ -6,7 +6,6 @@ const {botAnswer, getMessages, clearMessages} = require('./trollbotAnswerControl
 
 
 
-
 trollbotRouter.get('/', (req, res) => {
   res.json(getMessages())
 })

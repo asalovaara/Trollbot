@@ -1,6 +1,5 @@
 ## Node.js backend with react static frontend working as a Single-page-app
 
-
 To run this application locally you will need to have [Node.js](https://nodejs.org/en/) libary installed on your computer.
 
 ### Install
