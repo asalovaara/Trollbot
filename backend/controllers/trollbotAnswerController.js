@@ -10,13 +10,10 @@ const botAnswer = ( {message} ) => {
 }
 
 const getResponse = (userMessage) => {
-  console.log('Entered trollbotAnswerController:getResponse().')
   try {
     const messageType = getMessageType(userMessage)
 
     const reply = chooseReply(messageType)
-    console.log(`User message: ${userMessage}`)
-    console.log(`Bot reply: ${reply}`)
 
     const messageObject = {
       body: userMessage,
@@ -52,7 +49,6 @@ const clearMessages = () => {
 }
 
 const getMessageType = (userMessage) => {
-  console.log('Entered trollbotAnswerController:getMessageType()')
   try {
     userMessage = userMessage.toLowerCase()
 
@@ -72,7 +68,6 @@ const getMessageType = (userMessage) => {
 }
 
 const chooseReply = ( messageType ) => {
-  console.log('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
 
