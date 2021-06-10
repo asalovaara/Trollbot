@@ -11,11 +11,14 @@ const TextInput = (props) => {
   // const { messages, setMessages } = props
 
   const [message, setMessage] = useState('')
+  const [tmpMessages, setTmpMessages] = useState([])
+  // const [count, setCount] = useState(0)
 
-  //   const handleMessageChange = (event) => {
-  //     console.log(event.target.value)
-  //     setMessage(event.target.value)
-  //   }
+  // useEffect(() => {
+  //   console.log('test', count)
+  //   const timeout = setTimeout(() => setCount(1), 5000)
+  //   return () => clearTimeout(timeout)
+  // }, [count])
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value)
@@ -24,38 +27,19 @@ const TextInput = (props) => {
   const addMessage = (event) => {
     event.preventDefault()
     if (message !== '') {
-      trollbotService.addMessage(message).then(res => setMessages(res))
+      trollbotService.addMessage(message).then(res => setTmpMessages(res))
+      // console.log('x', tmpMessages)
+      setMessages(tmpMessages)
+
+      // trollbotService.addMessage(message).then(res => setMessages(res))
     }
+    tmp()
     setMessage('')
   }
 
-  //   const addMessage = (event) => {
-  //     console.log('addMessage', event.target.value)
-  //     event.preventDefault()
-
-  //     const msgObject = [
-  //       {
-  //         message: message,
-  //         timestamp: new Date().toISOString(),
-  //         photoURL: '',
-  //         displayName: 'Human',
-  //         avatarDisp: false,
-  //         position: 'left'
-  //       },
-  //       {
-  //         message: 'Bot says something',
-  //         timestamp: new Date().toISOString(),
-  //         photoURL: '',
-  //         displayName: 'Bot',
-  //         avatarDisp: false,
-  //         position: 'right'
-  //       }
-  //     ]
-
-  //     setMessages(messages.concat(msgObject))
-  //     setMessage('')
-
-  //   }
+  const tmp = () => {
+    console.log('x', tmpMessages)
+  }
 
   const classes = useTextInputStyles()
 

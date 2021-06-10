@@ -1,12 +1,21 @@
+// import React, { useState, useEffect } from 'react'
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import { useMessageStyles } from '../styles/MessageStyles.js'
 
 const Message = (props) => {
 
+  // const [count, setCount] = useState(0)
+
+  // useEffect(() => {
+  //   console.log('test', count)
+  //   const timeout = setTimeout(() => setCount(1), 5000)
+  //   return () => clearTimeout(timeout)
+  // }, [])
+
   const message = props.message ? props.message : 'no message'
   const timestamp = props.timestamp ? props.timestamp : ''
-  const photoURL = props.photoURL ? props.photoURL : 'dummy.js'
+  const photoURL = props.photoURL ? props.photoURL : ''
   const displayName = props.displayName ? props.displayName : 'dummy'
 
   const classes = useMessageStyles()
@@ -34,6 +43,7 @@ const Message = (props) => {
       </>
     )
   }
+
   return (
     <>
       <div className={classes.messageRowRight}>
@@ -58,18 +68,3 @@ const Message = (props) => {
 }
 
 export default Message
-
-// import React from 'react'
-// import { Card, Grid, Typography } from '@material-ui/core'
-
-// const Message = ({ messageObject }) => {
-//   return (
-//     <Grid item xs={12}>
-//       <Card color='primary'>
-//         <Typography>{messageObject.date} - {messageObject.user}: <b>{messageObject.body}</b></Typography>
-//       </Card>
-//     </Grid>
-//   )
-// }
-
-// export default Message
