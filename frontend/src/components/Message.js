@@ -1,17 +1,8 @@
-// import React, { useState, useEffect } from 'react'
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import { useMessageStyles } from '../styles/MessageStyles.js'
 
 const Message = (props) => {
-
-  // const [count, setCount] = useState(0)
-
-  // useEffect(() => {
-  //   console.log('test', count)
-  //   const timeout = setTimeout(() => setCount(1), 5000)
-  //   return () => clearTimeout(timeout)
-  // }, [])
 
   const message = props.message ? props.message : 'no message'
   const timestamp = props.timestamp ? props.timestamp : ''

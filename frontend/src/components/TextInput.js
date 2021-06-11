@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import trollbotService from '../services/trollbot'
 import TextField from '@material-ui/core/TextField'
 import SendIcon from '@material-ui/icons/Send'
@@ -7,18 +7,17 @@ import { useTextInputStyles } from '../styles/TextInputStyles.js'
 
 const TextInput = (props) => {
 
-  const { setMessages } = props
-  // const { messages, setMessages } = props
+  const { messages, setMessages, botReply, setBotReply } = props
 
   const [message, setMessage] = useState('')
-  const [tmpMessages, setTmpMessages] = useState([])
-  // const [count, setCount] = useState(0)
 
-  // useEffect(() => {
-  //   console.log('test', count)
-  //   const timeout = setTimeout(() => setCount(1), 5000)
-  //   return () => clearTimeout(timeout)
-  // }, [count])
+  useEffect(() => {
+    console.log('test timer', botReply)
+    if (botReply !== '') {
+      const timeout = setTimeout(() => setMessages(messages.concat(botReply)), 3000)
+      return () => clearTimeout(timeout)
+    }
+  }, [botReply])
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value)
@@ -27,18 +26,13 @@ const TextInput = (props) => {
   const addMessage = (event) => {
     event.preventDefault()
     if (message !== '') {
-      trollbotService.addMessage(message).then(res => setTmpMessages(res))
-      // console.log('x', tmpMessages)
-      setMessages(tmpMessages)
-
-      // trollbotService.addMessage(message).then(res => setMessages(res))
+      trollbotService.addMessage(message).then(res => {
+        setMessages(res.filter(r => r.id < res.length))
+        setBotReply(res.filter(r => r.id === res.length))
+        console.log('botReply', botReply)
+      })
     }
-    tmp()
     setMessage('')
-  }
-
-  const tmp = () => {
-    console.log('x', tmpMessages)
   }
 
   const classes = useTextInputStyles()
@@ -52,7 +46,6 @@ const TextInput = (props) => {
           className={classes.wrapText}
           onChange={handleMessageChange}
           value={message}
-          //margin='normal'
         />
         <Button id='submit' variant='contained' color='primary' className={classes.button} type='submit' >
           <SendIcon />

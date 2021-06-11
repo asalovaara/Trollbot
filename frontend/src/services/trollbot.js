@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = '/trollbot'
+const baseUrl = 'http://localhost:3001/trollbot'
 
 const getMessages = () => {
   return axios.get(baseUrl).then(res => res.data)
@@ -8,9 +8,7 @@ const getMessages = () => {
 
 // Adds a message and returns a list of current messages with the answer from the bot
 const addMessage = async message => {
-  console.log('message', message)
   const response = await axios.post(baseUrl, { message: message })
-  console.log('response', response.data)
   return response.data
 }
 
