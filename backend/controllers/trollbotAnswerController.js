@@ -1,5 +1,5 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
-
+const printInfo = require('../data/readFromSpotify')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
@@ -73,6 +73,7 @@ const getMessageType = (userMessage) => {
 
 const chooseReply = ( messageType ) => {
     console.log('Entered trollbotAnswerController:chooseReply()')
+
 
     let repliesNumber = Math.floor(Math.random() * 3)
 

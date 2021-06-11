@@ -25,7 +25,7 @@ const accessBody = {
 }
 
 //function for getting the access token
-function getAccessToken() {
+const getAccessToken = () => {
   return axios
     .post(accessUrl, data=querystring.stringify(accessBody), {
       headers: accessHeaders
@@ -58,26 +58,32 @@ let market = 'FI'
 let top_tracks_url = 'https://api.spotify.com/v1/artists/' + artist_id_Ariana_Grande + '/top-tracks?market=' + market
 
 //here we use the access token to get data from the api
-getAccessToken()
+const getArtistInfo = () => {
+  return getAccessToken()
   .then(token => {
-    axios
-      .get(artist_url, {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      })
-      .then((response) => {
-        console.log(parseInfo(response))
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    return axios.get(artist_url, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
   })
-  .catch(error => {
+  .then((response) => {
+    return parseInfo(response)
+  })
+  .catch((error) => {
     console.log(error)
+    throw error
   })
+}
 
-function parseInfo(data) {
+//how to get this to be the bot answer..???
+const printInfo = async () => {
+  await getArtistInfo().then(data => {
+    return data
+  })
+}
+
+const parseInfo = (data) => {
   let text = ''
   text += parseName(data) + '\n'
   text += parseGenre(data) + '\n'
@@ -85,13 +91,13 @@ function parseInfo(data) {
   return text
 }
 
-function parseName(data) {
+const parseName = (data) => {
   let text = 'The artist\'s name is '
   text += data.data.name
   return text
 }
 
-function parseGenre(data) {
+const parseGenre = (data) => {
   let genres = data.data.genres
 
   let i
@@ -106,8 +112,10 @@ function parseGenre(data) {
   return text
 }
 
-function parseFollowers(data) {
+const parseFollowers = (data) => {
   let text = 'They have '
   text += data.data.followers.total + ' followers!'
   return text
 }
+
+module.exports = printInfo
