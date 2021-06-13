@@ -9,6 +9,7 @@ import { useAppStyles } from '../styles/AppStyles.js'
 const Chat = () => {
 
   const classes = useAppStyles()
+  let messagesEnd = React.createElement()
 
   const [messages, setMessages] = useState([])
   const [botReply, setBotReply] = useState('')
@@ -18,10 +19,21 @@ const Chat = () => {
     trollbotService.getMessages().then(inital => console.log('initial', inital))
   }, [])
 
+  const scrollToBottom = () => {
+    messagesEnd.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  })
+
   return (
-    <Paper className={classes.paper} zdepth={2}>
+    <Paper className={classes.paper} zdepth={2} >
       <Paper id='style-1' className={classes.messagesBody}>
         <Messages messages={messages} />
+        <div style={{ float: 'left', clear: 'both' }}
+          ref={(el) => { {messagesEnd = el}}}>
+        </div>
       </Paper>
       <TextInput messages={messages} setMessages={setMessages} botReply={botReply} setBotReply={setBotReply} />
     </Paper>
