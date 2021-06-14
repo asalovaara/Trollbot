@@ -99,7 +99,6 @@ const parseName = (data) => {
 
 const parseGenre = (data) => {
   let genres = data.data.genres
-
   let i
   let text = 'The genre(s) are: '
   for (i = 0; i < genres.length; i++) {
