@@ -1,5 +1,6 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 const userIntentControl = require('./userIntentController')
+const wikiTool = require('../data/readWikiInfo')
 
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
@@ -15,7 +16,7 @@ const getResponse = (userMessage) => {
   try {
     const messageType = getMessageType(userMessage)
 
-    const reply = chooseReply(messageType)
+    const reply = chooseReply(messageType, userMessage)
     console.log(`User message: ${userMessage}`)
     console.log(`Bot reply: ${reply}`)
 
@@ -72,21 +73,22 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = ( messageType ) => {
+const chooseReply = (messageType, userMessage) => {
   console.log('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
-
-  if (messageType == 'opening') {
+  console.log(messageType)
+  console.log(userMessage)
+  if (messageType === 'opening') {
     return replies.opening[repliesNumber]
   }
-  if (messageType == 'closing') {
+  if (messageType === 'closing') {
     return replies.closing[repliesNumber]
   }
-  if (messageType == 'question') {
+  if (messageType === 'question') {
     return replies.question[repliesNumber]
   }
-  if (messageType == 'other') {
+  if (messageType === 'other') {
     return replies.other[repliesNumber]
   }
 }
