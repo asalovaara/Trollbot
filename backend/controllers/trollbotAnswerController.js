@@ -1,5 +1,5 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
-
+const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
@@ -9,12 +9,12 @@ const botAnswer = ( {message} ) => {
 
 }
 
-const getResponse = (userMessage) => {
+const getResponse = async (userMessage) => {
     console.log('Entered trollbotAnswerController:getResponse().')
     try {
         const messageType = getMessageType(userMessage)
 
-        const reply = chooseReply(messageType)
+        const reply = await chooseReply(userMessage, messageType)
         console.log(`User message: ${userMessage}`)
         console.log(`Bot reply: ${reply}`)
 
@@ -71,7 +71,7 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = ( messageType ) => {
+const chooseReply = async ( userMessage, messageType ) => {
     console.log('Entered trollbotAnswerController:chooseReply()')
 
     let repliesNumber = Math.floor(Math.random() * 3)
@@ -89,8 +89,7 @@ const chooseReply = ( messageType ) => {
       return replies.question[repliesNumber]
     }
     if (messageType == 'other') {
-      // todo
-      return replies.other[repliesNumber]
+        return await wiki(userMessage)
     }
   }
 

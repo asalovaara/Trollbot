@@ -1,24 +1,26 @@
 const axios = require('axios')
 
-let artist = 'The Beatles' // Example. Should work for most artists.
-let url = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=' + artist + '&rvsection=0'
+// I put the unused code in comment jail so it won't mess anything up but it might be useful later? -Luuranko
+
+// let artist = 'The Beatles' // Example. Should work for most artists.
+// let url = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=' + artist + '&rvsection=0'
 
 //Fetches artist's genre using WikiMedia Action API
-axios
-    .get(url)
-    .then(({ data }) => {
-        let key = Object.keys(data.query.pages)
-        infobox = data.query.pages[key].revisions[0]["*"]
+// axios
+//     .get(url)
+//     .then(({ data }) => {
+//         let key = Object.keys(data.query.pages)
+//         infobox = data.query.pages[key].revisions[0]["*"]
 
-        let genres = infobox.match(/genre([\s\S]*?)\]/)[0]
+//         let genres = infobox.match(/genre([\s\S]*?)\]/)[0]
 
-        let genre = genres.substring(
-            genres.indexOf('[') + 2, genres.indexOf(']')
-        ).toLowerCase().split('|')[0]
+//         let genre = genres.substring(
+//             genres.indexOf('[') + 2, genres.indexOf(']')
+//         ).toLowerCase().split('|')[0]
 
-        console.log('WikiMedia Action API (only first genre):\n\tArtist:', artist, '\n\tGenre: ',genre,'\n')
+//         console.log('WikiMedia Action API (only first genre):\n\tArtist:', artist, '\n\tGenre: ',genre,'\n')
 
-    })
+//     })
 
 //Alternative approach: Fetches artist's genre(s) from Wikidata
 
@@ -53,7 +55,12 @@ const getArtistID = async (artist) => {
 
     try {
         const response = await axios.get(url)
-        return response.data.search[0].id
+        // Gets the artist's name from the user, so could be undefined if the user makes a typo
+        if (response.data.search[0] !== undefined) {
+            return response.data.search[0].id
+        } else {
+            return false
+        }
     } catch (error) {
         console.log(error)
     }
@@ -61,9 +68,14 @@ const getArtistID = async (artist) => {
 
 
 // Get Wikidata ID for a given artist, create a query dispatcher, query db for associated genres, list genres
+// Artist = the message sent by the user, if it's "other"-category
 const getGenre = async (artist) => {
-
+    const failedMessage = 'Could not find information on this band.'
     const artistID = await getArtistID(artist)
+    if (artistID === false) {
+        return failedMessage
+    }
+    // console.log('artistID in getGenre', artistID)
     const endpointUrl = 'https://query.wikidata.org/sparql';
     const sparqlQuery = `SELECT ?genre ?genreLabel WHERE {
    wd:${artistID} wdt:P136 ?genre.
@@ -75,12 +87,15 @@ const getGenre = async (artist) => {
     const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
     const genres = await queryDispatcher.query(sparqlQuery)
 
-    console.log('Wikidata (all genres): \n\tArtist:', artist, '\n\tGenres:')
-    genres.forEach(gnr => console.log('\t\t', gnr.genreLabel.value))
-
+    // In case of typos
+    if (genres[0] !== undefined) {
+        return genres[0].genreLabel.value
+    } else {
+        return failedMessage
+    }
 }
 
-getGenre(artist)
+module.exports = getGenre
 
 
 
