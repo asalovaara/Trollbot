@@ -3,77 +3,69 @@ const getArtistInfo = require('../data/readFromSpotify')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
-const botAnswer = ( {message} ) => {
-    const response = getResponse(message)
-    return response
+const botAnswer = ({ message }) => {
+  return getResponse(message)
 }
 
-const getResponse = async ( userMessage ) => {
-    console.log('Entered trollbotAnswerController:getResponse().')
-    try {
-        const messageType = getMessageType(userMessage)
+const getResponse = async (userMessage) => {
+  try {
+    const messageType = getMessageType(userMessage)
 
-        const reply = await chooseReply(messageType)
+    const reply = await chooseReply(messageType)
 
-        console.log(`User message: ${userMessage}`)
-        console.log(`Bot reply: ${reply}`)
-
-        const messageObject = {
-            body: userMessage,
-            user: 'Human',
-            date: new Date().toISOString(),
-            id: messages.length + 1
-        }
-        const replyObject = {
-            body: reply,
-            user: 'Bot',
-            date: new Date().toISOString(),
-            id: messages.length + 2
-        }
-
-        messages = messages.concat([messageObject, replyObject])
-
-        return messages
-    } catch (e) {
-        console.error(e)
+    const messageObject = {
+      body: userMessage,
+      user: 'Human',
+      date: new Date().toISOString(),
+      id: messages.length + 1
     }
+    const replyObject = {
+      body: reply,
+      user: 'Bot',
+      date: new Date().toISOString(),
+      id: messages.length + 2
+    }
+
+    messages = messages.concat([messageObject, replyObject])
+
+    return messages
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const getGreeting = () => {
-    return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
+  return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
 }
 
 const getMessages = () => {
-  console.log(messages)
-    return messages
+  return messages
 }
 
 const clearMessages = () => {
-    messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
+  messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 }
 
-const getMessageType = ( userMessage ) => {
-    console.log('Entered trollbotAnswerController:getMessageType()')
-    try {
-        userMessage = userMessage.toLowerCase()
+const getMessageType = (userMessage) => {
+  try {
+    userMessage = userMessage.toLowerCase()
 
-        if (userMessage === 'hello') {
-            return 'opening'
-        } else if (userMessage === "bye") {
-            return 'closing'
-        } else if (userMessage.includes("?")) {
-            return 'question'
-        } else {
-            return 'other'
-        }
-    } catch (e) {
-        console.error(e)
+    if (userMessage === 'hello') {
+      return 'opening'
+    } else if (userMessage === 'bye') {
+      return 'closing'
+    } else if (userMessage.includes('?')) {
+      return 'question'
+    } else {
+      return 'other'
     }
+  } catch (e) {
+    console.error(e)
+  }
 
 }
 
 const chooseReply = async ( messageType ) => {
-    console.log('Entered trollbotAnswerController:chooseReply()')
 
     let repliesNumber = Math.floor(Math.random() * 3)
 
@@ -94,8 +86,7 @@ const chooseReply = async ( messageType ) => {
           return "ERROR"
       }
     }
-  }
-
+}
 
 
 exports.botAnswer = botAnswer
