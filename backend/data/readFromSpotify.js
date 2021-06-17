@@ -79,7 +79,7 @@ const getArtistInfo = () => {
 //how to get this to be the bot answer..???
 const printInfo = async () => {
   await getArtistInfo().then(data => {
-    return data
+    console.log(data)
   })
 }
 
@@ -118,4 +118,4 @@ const parseFollowers = (data) => {
   return text
 }
 
-module.exports = printInfo
+module.exports = getArtistInfo

@@ -1,20 +1,20 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
-const printInfo = require('../data/readFromSpotify')
+const getArtistInfo = require('../data/readFromSpotify')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
 const botAnswer = ( {message} ) => {
     const response = getResponse(message)
     return response
-
 }
 
-const getResponse = (userMessage) => {
+const getResponse = async ( userMessage ) => {
     console.log('Entered trollbotAnswerController:getResponse().')
     try {
         const messageType = getMessageType(userMessage)
 
-        const reply = chooseReply(messageType)
+        const reply = await chooseReply(messageType)
+
         console.log(`User message: ${userMessage}`)
         console.log(`Bot reply: ${reply}`)
 
@@ -44,6 +44,7 @@ const getGreeting = () => {
 }
 
 const getMessages = () => {
+  console.log(messages)
     return messages
 }
 
@@ -51,7 +52,7 @@ const clearMessages = () => {
     messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 }
 
-const getMessageType = (userMessage) => {
+const getMessageType = ( userMessage ) => {
     console.log('Entered trollbotAnswerController:getMessageType()')
     try {
         userMessage = userMessage.toLowerCase()
@@ -71,27 +72,27 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = ( messageType ) => {
+const chooseReply = async ( messageType ) => {
     console.log('Entered trollbotAnswerController:chooseReply()')
-
 
     let repliesNumber = Math.floor(Math.random() * 3)
 
     if (messageType == 'opening') {
-      // todo
       return replies.opening[repliesNumber]
     }
     if (messageType == 'closing') {
-      // todo
       return replies.closing[repliesNumber]
     }
     if (messageType == 'question') {
-      // todo
       return replies.question[repliesNumber]
     }
     if (messageType == 'other') {
-      // todo
-      return replies.other[repliesNumber]
+      const answer = await getArtistInfo()
+      if (typeof answer === "string" || answer instanceof String) {
+          return answer
+      } else {
+          return "ERROR"
+      }
     }
   }
 
