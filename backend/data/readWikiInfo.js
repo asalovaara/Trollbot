@@ -73,7 +73,7 @@ const getGenre = async (artist) => {
   if (artistID === false) {
     return failedMessage
   }
-  const endpointUrl = 'https://query.wikidata.org/sparql';
+  const endpointUrl = 'https://query.wikidata.org/sparql'
   const sparqlQuery = `SELECT ?genre ?genreLabel WHERE {
     wd:${artistID} wdt:P136 ?genre.
     SERVICE wikibase:label {
