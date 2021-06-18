@@ -10,33 +10,33 @@ const botAnswer = ( {message} ) => {
 }
 
 const getResponse = async (userMessage) => {
-    console.log('Entered trollbotAnswerController:getResponse().')
-    try {
-        const messageType = getMessageType(userMessage)
+  console.log('Entered trollbotAnswerController:getResponse().')
+  try {
+    const messageType = getMessageType(userMessage)
 
-        const reply = await chooseReply(userMessage, messageType)
-        console.log(`User message: ${userMessage}`)
-        console.log(`Bot reply: ${reply}`)
+    const reply = await chooseReply(userMessage, messageType)
+    console.log(`User message: ${userMessage}`)
+    console.log(`Bot reply: ${reply}`)
 
-        const messageObject = {
-            body: userMessage,
-            user: 'Human',
-            date: new Date().toISOString(),
-            id: messages.length + 1
-        }
-        const replyObject = {
-            body: reply,
-            user: 'Bot',
-            date: new Date().toISOString(),
-            id: messages.length + 2
-        }
-
-        messages = messages.concat([messageObject, replyObject])
-
-        return messages
-    } catch (e) {
-        console.error(e)
+    const messageObject = {
+      body: userMessage,
+      user: 'Human',
+      date: new Date().toISOString(),
+      id: messages.length + 1
     }
+    const replyObject = {
+      body: reply,
+      user: 'Bot',
+      date: new Date().toISOString(),
+      id: messages.length + 2
+    }
+
+    messages = messages.concat([messageObject, replyObject])
+
+    return messages
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const getGreeting = () => {
@@ -71,25 +71,25 @@ const getMessageType = (userMessage) => {
 }
 
 const chooseReply = async ( userMessage, messageType ) => {
-    console.log('Entered trollbotAnswerController:chooseReply()')
+  console.log('Entered trollbotAnswerController:chooseReply()')
 
-    let repliesNumber = Math.floor(Math.random() * 3)
+  let repliesNumber = Math.floor(Math.random() * 3)
 
-    if (messageType == 'opening') {
-      // todo
-      return replies.opening[repliesNumber]
-    }
-    if (messageType == 'closing') {
-      // todo
-      return replies.closing[repliesNumber]
-    }
-    if (messageType == 'question') {
-      // todo
-      return replies.question[repliesNumber]
-    }
-    if (messageType == 'other') {
-        return await wiki(userMessage)
-    }
+  if (messageType == 'opening') {
+    // todo
+    return replies.opening[repliesNumber]
+  }
+  if (messageType == 'closing') {
+    // todo
+    return replies.closing[repliesNumber]
+  }
+  if (messageType == 'question') {
+    // todo
+    return replies.question[repliesNumber]
+  }
+  if (messageType == 'other') {
+    return await wiki(userMessage)
+  }
 }
 
 
