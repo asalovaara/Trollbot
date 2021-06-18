@@ -2,7 +2,7 @@ const intents = require('../data/userIntents.json')
 
 const getIntent = (message) => {
   const msg = message.toLowerCase()
-  let intent = "other"
+  let intent = 'other'
   intents.intents.forEach(i => {
     i.startsWith.forEach(line => {
       if (msg.startsWith(line.toLowerCase())) {
@@ -16,7 +16,7 @@ const getIntent = (message) => {
         return intent
       }
     })
-  });
+  })
   return intent
 }
 
