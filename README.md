@@ -8,7 +8,10 @@ A project by students in the Computer Science department of University of Helsin
 
 An implementation of two chatbots for the purposes of a research that studies trolling on the internet.
 
+## Implementation
+
+Single page web application using Node.js and React.
+
 ## Installation
 
-## Usage
-
+Read the README at backend folder.

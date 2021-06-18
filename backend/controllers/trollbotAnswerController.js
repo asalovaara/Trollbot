@@ -4,8 +4,8 @@ const wiki = require('../data/readWikiInfo')
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
 const botAnswer = ( {message} ) => {
-    const response = getResponse(message)
-    return response
+  const response = getResponse(message)
+  return response
 
 }
 
@@ -40,34 +40,33 @@ const getResponse = async (userMessage) => {
 }
 
 const getGreeting = () => {
-    return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
+  return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
 }
 
 const getMessages = () => {
-    return messages
+  return messages
 }
 
 const clearMessages = () => {
-    messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
+  messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 }
 
 const getMessageType = (userMessage) => {
-    console.log('Entered trollbotAnswerController:getMessageType()')
-    try {
-        userMessage = userMessage.toLowerCase()
+  try {
+    userMessage = userMessage.toLowerCase()
 
-        if (userMessage === 'hello') {
-            return 'opening'
-        } else if (userMessage === "bye") {
-            return 'closing'
-        } else if (userMessage.includes("?")) {
-            return 'question'
-        } else {
-            return 'other'
-        }
-    } catch (e) {
-        console.error(e)
+    if (userMessage === 'hello') {
+      return 'opening'
+    } else if (userMessage === 'bye') {
+      return 'closing'
+    } else if (userMessage.includes('?')) {
+      return 'question'
+    } else {
+      return 'other'
     }
+  } catch (e) {
+    console.error(e)
+  }
 
 }
 
@@ -91,7 +90,7 @@ const chooseReply = async ( userMessage, messageType ) => {
     if (messageType == 'other') {
         return await wiki(userMessage)
     }
-  }
+}
 
 
 
