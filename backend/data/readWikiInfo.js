@@ -26,73 +26,70 @@ const axios = require('axios')
 
 // Dispatches SPARQL query to Wikidata Query Service, response in json format
 class SPARQLQueryDispatcher {
-    constructor(endpoint) {
-        this.endpoint = endpoint;
-    }
+  constructor(endpoint) {
+    this.endpoint = endpoint
+  }
 
-    query(sparqlQuery) {
-        const fullUrl = this.endpoint + '?query=' + encodeURIComponent(sparqlQuery);
+  query(sparqlQuery) {
+    const fullUrl = this.endpoint + '?query=' + encodeURIComponent(sparqlQuery)
 
-        return axios
-            .get(fullUrl, {
-                headers: {
-                    Accept: 'application/sparql-results+json'
-                }
-            })
-            .then((response) => {
-
-                let genres = response.data.results.bindings
-                return genres
-                
-            })
-    }
+    return axios
+      .get(fullUrl, {
+        headers: {
+          Accept: 'application/sparql-results+json'
+        }
+      })
+      .then((response) => {
+        let genres = response.data.results.bindings
+        return genres
+      })
+  }
 }
 
 // Fetch Wikidata ID for a given artist (returns the ID of the first result so not very sophisticated atm)
 const getArtistID = async (artist) => {
 
-    url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&type=item&continue=0&search=' + artist
+  let url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&type=item&continue=0&search=' + artist
 
-    try {
-        const response = await axios.get(url)
-        // Gets the artist's name from the user, so could be undefined if the user makes a typo
-        if (response.data.search[0] !== undefined) {
-            return response.data.search[0].id
-        } else {
-            return false
-        }
-    } catch (error) {
-        console.log(error)
+  try {
+    const response = await axios.get(url)
+    // Gets the artist's name from the user, so could be undefined if the user makes a typo
+    if (response.data.search[0] !== undefined) {
+      return response.data.search[0].id
+    } else {
+      return false
     }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 
 // Get Wikidata ID for a given artist, create a query dispatcher, query db for associated genres, list genres
 // Artist = the message sent by the user, if it's "other"-category
 const getGenre = async (artist) => {
-    const failedMessage = 'Could not find information on this band.'
-    const artistID = await getArtistID(artist)
-    if (artistID === false) {
-        return failedMessage
+  const failedMessage = 'Could not find information on this band.'
+  const artistID = await getArtistID(artist)
+  if (artistID === false) {
+    return failedMessage
+  }
+  const endpointUrl = 'https://query.wikidata.org/sparql';
+  const sparqlQuery = `SELECT ?genre ?genreLabel WHERE {
+    wd:${artistID} wdt:P136 ?genre.
+    SERVICE wikibase:label {
+      bd:serviceParam wikibase:language "en" .
     }
-    // console.log('artistID in getGenre', artistID)
-    const endpointUrl = 'https://query.wikidata.org/sparql';
-    const sparqlQuery = `SELECT ?genre ?genreLabel WHERE {
-   wd:${artistID} wdt:P136 ?genre.
-   SERVICE wikibase:label {
-     bd:serviceParam wikibase:language "en" .
-   }
-}`;
+  }`
 
-    const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
-    const genres = await queryDispatcher.query(sparqlQuery)
+  const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl)
+  const genres = await queryDispatcher.query(sparqlQuery)
 
-    // In case of typos
-    if (genres[0] !== undefined) {
-        return genres[0].genreLabel.value
-    } else {
-        return failedMessage
-    }
+  // In case of typos
+  if (genres[0] !== undefined) {
+    return genres[0].genreLabel.value
+  } else {
+    return failedMessage
+  }
 }
 
 module.exports = getGenre
