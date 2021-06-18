@@ -1,7 +1,6 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 const userIntentControl = require('./userIntentController')
-const wikiTool = require('../data/readWikiInfo')
-
+const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
@@ -11,12 +10,12 @@ const botAnswer = ( {message} ) => {
 
 }
 
-const getResponse = (userMessage) => {
+const getResponse = async (userMessage) => {
   console.log('Entered trollbotAnswerController:getResponse().')
   try {
     const messageType = getMessageType(userMessage)
 
-    const reply = chooseReply(messageType, userMessage)
+    const reply = await chooseReply(userMessage, messageType)
     console.log(`User message: ${userMessage}`)
     console.log(`Bot reply: ${reply}`)
 
@@ -54,7 +53,6 @@ const clearMessages = () => {
 }
 
 const getMessageType = (userMessage) => {
-  console.log('Entered trollbotAnswerController:getMessageType()')
   try {
     const intent = userIntentControl(userMessage)
 
@@ -73,27 +71,27 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = (messageType, userMessage) => {
+const chooseReply = async ( userMessage, messageType ) => {
   console.log('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
-  console.log(messageType)
-  console.log(userMessage)
-  if (messageType === 'opening') {
+
+  if (messageType == 'opening') {
+    // todo
     return replies.opening[repliesNumber]
   }
-  if (messageType === 'closing') {
+  if (messageType == 'closing') {
+    // todo
     return replies.closing[repliesNumber]
   }
-  if (messageType === 'question') {
+  if (messageType == 'question') {
+    // todo
     return replies.question[repliesNumber]
   }
-  if (messageType === 'other') {
-    return replies.other[repliesNumber]
+  if (messageType == 'other') {
+    return await wiki(userMessage)
   }
 }
-
-
 
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting
