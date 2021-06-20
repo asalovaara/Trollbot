@@ -41,12 +41,12 @@ test('Question returns correct bot response', async () => {
 
 test('Band genre query returns correct bot response', async () => {
   const response = await trollbot.botAnswer({message: 'The Hush Sound'})
-  expect('alternative rock').toContain(response[2].body)
+  expect('The genre(s) are: baroque pop, chicago indie, piano rock').toContain(response[2].body)
 })
 
 test('Other message returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({message: 'h'})
-  expect('Could not find information on this band.').toContain(response[2].body)
+  const response = await trollbot.botAnswer({message: 'hh'})
+  expect('The genre(s) are: ').toContain(response[2].body)
 })
 
 test('Messages contain previous messages', async () => {

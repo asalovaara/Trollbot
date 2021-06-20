@@ -15,7 +15,7 @@ const getResponse = async (userMessage) => {
   try {
     const messageType = getMessageType(userMessage)
 
-    const reply = await chooseReply(messageType)
+    const reply = await chooseReply(messageType, userMessage)
 
     const messageObject = {
       body: userMessage,
@@ -69,7 +69,7 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = async ( messageType ) => {
+const chooseReply = async ( messageType, userMessage ) => {
 
   let repliesNumber = Math.floor(Math.random() * 3)
 
@@ -87,7 +87,7 @@ const chooseReply = async ( messageType ) => {
     //return await wiki(userMessage)
 
     //spotify stuff
-    const artistId = await spotify.getArtistID('The beatles')
+    const artistId = await spotify.getArtistID(userMessage)
     const info = await spotify.getArtistInfo(artistId[0].id)
     const answer = parser.parseGenre(info)
 
