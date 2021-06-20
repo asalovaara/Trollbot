@@ -22,7 +22,7 @@ const parseGenre = (data) => {
     if (genres.length > 1 && i == genres.length - 1) {
       text += genres[i]
     } else {
-      text += genres[i] + ', ';
+      text += genres[i] + ', '
     }
   }
   return text

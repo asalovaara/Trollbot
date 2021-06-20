@@ -3,7 +3,7 @@ const replies = require('../data/replies.json') // JSON object containing bot's 
 const spotify = require('../services/spotifyService')
 const parser = require('../services/spotifyDataParser')
 const userIntentControl = require('./userIntentController')
-const wiki = require('../data/readWikiInfo')
+//const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
@@ -71,27 +71,33 @@ const getMessageType = (userMessage) => {
 
 const chooseReply = async ( messageType ) => {
 
-    let repliesNumber = Math.floor(Math.random() * 3)
+  let repliesNumber = Math.floor(Math.random() * 3)
 
-    if (messageType == 'opening') {
-      return replies.opening[repliesNumber]
+  if (messageType == 'opening') {
+    return replies.opening[repliesNumber]
+  }
+  if (messageType == 'closing') {
+    return replies.closing[repliesNumber]
+  }
+  if (messageType == 'question') {
+    return replies.question[repliesNumber]
+  }
+  if (messageType == 'other') {
+    //wiki stuff
+    //return await wiki(userMessage)
+
+    //spotify stuff
+    const artistId = await spotify.getArtistID('The beatles')
+    const info = await spotify.getArtistInfo(artistId[0].id)
+    const answer = parser.parseGenre(info)
+
+    if (typeof answer === 'string' || answer instanceof String) {
+      return answer
+    } else {
+      return 'ERROR'
     }
-    if (messageType == 'closing') {
-      return replies.closing[repliesNumber]
-    }
-    if (messageType == 'question') {
-      return replies.question[repliesNumber]
-    }
-    if (messageType == 'other') {
-      const artistId = await spotify.getArtistID('The beatles')
-      const info = await spotify.getArtistInfo(artistId[0].id)
-      const answer = parser.parseGenre(info)
-      if (typeof answer === "string" || answer instanceof String) {
-          return answer
-      } else {
-          return "ERROR"
-      }
-    }
+  }
+
 }
 
 exports.botAnswer = botAnswer
