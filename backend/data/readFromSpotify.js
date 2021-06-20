@@ -76,7 +76,6 @@ const getArtistInfo = () => {
   })
 }
 
-//how to get this to be the bot answer..???
 const printInfo = async () => {
   await getArtistInfo().then(data => {
     console.log(data)

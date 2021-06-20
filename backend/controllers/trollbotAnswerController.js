@@ -1,5 +1,9 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
+<<<<<<< HEAD
 const getArtistInfo = require('../data/readFromSpotify')
+=======
+const wiki = require('../data/readWikiInfo')
+>>>>>>> main
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 

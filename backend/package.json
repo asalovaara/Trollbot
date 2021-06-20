@@ -19,11 +19,12 @@
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "*",
+    "commander": "^5.1.0",
     "cors": "*",
     "dotenv": "^10.0.0",
     "express": "*",
     "path": "^0.12.7",
-    "querystring": "^0.2.1"
+    "querystring": "^0.2.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
