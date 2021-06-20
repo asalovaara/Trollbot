@@ -93,8 +93,3 @@ const getGenre = async (artist) => {
 }
 
 module.exports = getGenre
-
-
-
-
-
