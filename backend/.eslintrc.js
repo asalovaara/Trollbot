@@ -3,6 +3,7 @@ module.exports = {
     'node': true,
     'commonjs': true,
     'jest/globals': true,
+    'cypress/globals': true,
     'es2021': true
   },
   'extends': 'eslint:recommended',
@@ -24,5 +25,7 @@ module.exports = {
       'never'
     ]
   },
-  'plugins': ['jest']
+  'plugins': [
+    'jest', 'cypress'
+  ]
 }
