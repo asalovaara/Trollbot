@@ -1,9 +1,8 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
-<<<<<<< HEAD
-const getArtistInfo = require('../data/readFromSpotify')
-=======
+
+const spotify = require('../services/spotifyService')
+const parser = require('../services/spotifyDataParser')
 const wiki = require('../data/readWikiInfo')
->>>>>>> main
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
@@ -83,7 +82,9 @@ const chooseReply = async ( messageType ) => {
       return replies.question[repliesNumber]
     }
     if (messageType == 'other') {
-      const answer = await getArtistInfo()
+      const artistId = await spotify.getArtistID('The beatles')
+      const info = await spotify.getArtistInfo(artistId[0].id)
+      const answer = parser.parseGenre(info)
       if (typeof answer === "string" || answer instanceof String) {
           return answer
       } else {
