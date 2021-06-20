@@ -85,8 +85,8 @@ const printInfo = async () => {
 
 const parseInfo = (data) => {
   let text = ''
-  text += parseName(data) + '\n'
-  text += parseGenre(data) + '\n'
+  text += parseName(data) + '.\n'
+  text += parseGenre(data) + '.\n'
   text += parseFollowers(data)
   return text
 }
