@@ -2,10 +2,35 @@ const replies = require('../data/replies.json') // JSON object containing bot's 
 
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
+const {getRasaResponse} = require('./rasaController')
 
-const botAnswer = ( {message} ) => {
-  const response = getResponse(message)
+const botAnswer = async ( {message} ) => {
+  const response = await rasaTestResponse(message)
+  console.log(`rasa response: ${response}`)
   return response
+
+}
+
+const rasaTestResponse = async (userMessage) => {
+
+  const reply = await getRasaResponse()
+  console.log(`rasa reply : ${reply}`)
+  const messageObject = {
+    body: userMessage,
+    user: 'Human',
+    date: new Date().toISOString(),
+    id: messages.length + 1
+  }
+  const replyObject = {
+    body: reply,
+    user: 'Bot',
+    date: new Date().toISOString(),
+    id: messages.length + 2
+  }
+
+  messages = messages.concat([messageObject, replyObject])
+
+  return messages
 
 }
 
