@@ -1,6 +1,6 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-const useTextInputStyles = makeStyles((theme: Theme) =>
+const useTextInputStyles = makeStyles(theme =>
   createStyles({
     wrapForm : {
       display: 'flex',

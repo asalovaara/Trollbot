@@ -1,7 +1,7 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { deepOrange } from '@material-ui/core/colors'
 
-const useMessageStyles = makeStyles((theme: Theme) =>
+const useMessageStyles = makeStyles(theme =>
   createStyles({
     messageRow: {
       display: 'flex'

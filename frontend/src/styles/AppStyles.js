@@ -1,7 +1,8 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+// import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { deepOrange } from '@material-ui/core/colors'
 
-const useAppStyles = makeStyles((theme: Theme) =>
+const useAppStyles = makeStyles(theme =>
   createStyles({
     paper: {
       width: '80vw',
