@@ -16,7 +16,8 @@ const Chat = () => {
 
   // Effect fetches current messages from backend everytime the component if refreshed
   useEffect(() => {
-    trollbotService.getMessages().then(inital => console.log('initial', inital))
+    // trollbotService.getMessages().then(inital => console.log('initial', inital))
+    trollbotService.getMessages().then(inital => setMessages(inital))
   }, [])
 
   const scrollToBottom = () => {

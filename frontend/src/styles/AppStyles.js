@@ -9,7 +9,6 @@ const useAppStyles = makeStyles((theme: Theme) =>
       maxWidth: '500px',
       maxHeight: '700px',
       display: 'flex',
-      alignItems: 'center',
       flexDirection: 'column',
       position: 'relative'
     },

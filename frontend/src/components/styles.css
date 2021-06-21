@@ -28,7 +28,7 @@ body,
 .typing {
   align-items: center;
   display: flex;
-  height: 17px;
+  height: 7px;
 }
 .typing .dot {
   animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
