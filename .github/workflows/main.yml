@@ -28,6 +28,9 @@ jobs:
         working-directory: backend
       - name: Test backend
         run: npm test backend/tests
+        env:
+          CLIENT_ID: ${{secrets.CLIENT_ID}}
+          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
         working-directory: backend
       - name: Install frontend
         run: npm ci
