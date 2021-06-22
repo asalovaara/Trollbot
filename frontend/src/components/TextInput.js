@@ -41,7 +41,7 @@ const TextInput = (props) => {
     <>
       <form className={classes.wrapForm}  noValidate autoComplete='off' onSubmit={addMessage}>
         <TextField
-          id='standard-text'
+          id='message'
           label='Type message'
           className={classes.wrapText}
           onChange={handleMessageChange}
