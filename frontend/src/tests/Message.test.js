@@ -12,14 +12,14 @@ test('Renders correctly', () => {
   }
 
   const component = render(
-  <Message
-    message={message.body}
-    timestamp={message.date}
-    photoURL=''
-    displayName={message.user}
-    avatarDisp=''
-    position={message.user}
-  />)
+    <Message
+      message={message.body}
+      timestamp={message.date}
+      photoURL=''
+      displayName={message.user}
+      avatarDisp=''
+      position={message.user}
+    />)
   expect(component.container).toHaveTextContent('00:00')
   expect(component.container).toHaveTextContent('Human')
   expect(component.container).toHaveTextContent('Test message')
