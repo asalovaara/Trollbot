@@ -2,21 +2,21 @@ const replies = require('../data/replies.json') // JSON object containing bot's 
 
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
-const {getRasaResponse} = require('./rasaController')
+const {getRasaRESTResponse} = require('./rasaController')
 
 const botAnswer = async ( {message} ) => {
-  const response = await rasaTestResponse(message)
-  console.log(`rasa response: ${response}`)
+  const response = await getRasaResponse(message)
+  
   return response
 
 }
 
-const rasaTestResponse = async (userMessage) => {
+const getRasaResponse = async (message) => {
 
-  const reply = await getRasaResponse()
-  console.log(`rasa reply : ${reply}`)
+  const reply = await getRasaRESTResponse(message)
+  
   const messageObject = {
-    body: userMessage,
+    body: message,
     user: 'Human',
     date: new Date().toISOString(),
     id: messages.length + 1
@@ -34,7 +34,8 @@ const rasaTestResponse = async (userMessage) => {
 
 }
 
-const getResponse = (userMessage) => {
+// deprecated
+/* const getResponse = (userMessage) => {
   try {
     const messageType = getMessageType(userMessage)
 
@@ -59,7 +60,7 @@ const getResponse = (userMessage) => {
   } catch (e) {
     console.error(e)
   }
-}
+} */
 
 const getGreeting = () => {
   return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
@@ -73,7 +74,8 @@ const clearMessages = () => {
   messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 }
 
-const getMessageType = (userMessage) => {
+// deprecated
+/* const getMessageType = (userMessage) => {
   try {
     userMessage = userMessage.toLowerCase()
 
@@ -108,7 +110,7 @@ const chooseReply = ( messageType ) => {
   if (messageType == 'other') {
     return replies.other[repliesNumber]
   }
-}
+} */
 
 
 

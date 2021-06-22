@@ -1,11 +1,14 @@
 const axios = require('axios')
-
-async function getRasaResponse() {
-    const response = await axios.get('http://localhost:5005/')
-    console.log(`response: ${response.data}`)
-    return response.data
+const {inspect} = require('util')
+async function getRasaRESTResponse(message) {
+    const response = await axios.post('http://localhost:5005/webhooks/rest/webhook', {
+        "sender": "test_user",
+        "message": message
+    })
+    console.log(`response: ${inspect(response.data[0].text)}`)
+    return response.data[0].text
 
 
 }
 
-exports.getRasaResponse = getRasaResponse;
+exports.getRasaRESTResponse = getRasaRESTResponse;
