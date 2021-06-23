@@ -1,23 +1,24 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 const userIntentControl = require('./userIntentController')
+const logger = require('../utils/logger')
 const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
-const botAnswer = ( {message} ) => {
+const botAnswer = ({ message }) => {
   const response = getResponse(message)
   return response
 
 }
 
 const getResponse = async (userMessage) => {
-  console.log('Entered trollbotAnswerController:getResponse().')
+  logger.info('Entered trollbotAnswerController:getResponse().')
   try {
     const messageType = getMessageType(userMessage)
 
     const reply = await chooseReply(userMessage, messageType)
-    console.log(`User message: ${userMessage}`)
-    console.log(`Bot reply: ${reply}`)
+    logger.info(`User message: ${userMessage}`)
+    logger.info(`Bot reply: ${reply}`)
 
     const messageObject = {
       body: userMessage,
@@ -71,8 +72,8 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = async ( userMessage, messageType ) => {
-  console.log('Entered trollbotAnswerController:chooseReply()')
+const chooseReply = async (userMessage, messageType) => {
+  logger.info('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
 

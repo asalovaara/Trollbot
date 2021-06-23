@@ -1,4 +1,5 @@
 const axios = require('axios')
+const logger = require('../utils/logger')
 const querystring = require('querystring')
 const { CLIENT_ID, CLIENT_SECRET } = require('../utils/config')
 
@@ -11,7 +12,7 @@ const client_id = CLIENT_ID
 const client_secret = CLIENT_SECRET
 
 process.on('unhandledRejection', error => {
-  console.log('unhandledRejection', error.message)
+  logger.info('unhandledRejection', error.message)
 })
 
 const accessUrl = 'https://accounts.spotify.com/api/token'
@@ -39,7 +40,7 @@ const getAccessToken = () => {
       return response.data.access_token
     })
     .catch((error) => {
-      console.log('Token error:', error)
+      logger.error('Token error:', error)
       throw (error)
     })
 }
@@ -57,7 +58,7 @@ const getArtistID = (artist) => {
       return response.data.artists.items
     })
     .catch((error) => {
-      console.log(error)
+      logger.error(error)
       throw error
     })
 
@@ -76,7 +77,7 @@ const getArtistInfo = (artist_id) => {
       return response.data
     })
     .catch((error) => {
-      console.log(error)
+      logger.error(error)
       throw error
     })
 }
@@ -94,7 +95,7 @@ const getArtistAlbums = (artist_id) => {
       return response.data
     })
     .catch((error) => {
-      console.log(error)
+      logger.error(error)
       throw error
     })
 }

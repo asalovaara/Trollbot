@@ -1,4 +1,5 @@
 const axios = require('axios')
+const logger = require('../utils/logger')
 
 // I put the unused code in comment jail so it won't mess anything up but it might be useful later? -Luuranko
 
@@ -60,7 +61,7 @@ const getArtistID = async (artist) => {
       return false
     }
   } catch (error) {
-    console.log(error)
+    logger.error(error)
   }
 }
 
