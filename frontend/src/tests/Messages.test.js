@@ -1,7 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render } from '@testing-library/react'
-import MessageList from '../components/MessageList'
+import Messages from '../components/Messages'
 
 test('Renders correctly', () => {
   const messages = [{
@@ -16,8 +16,8 @@ test('Renders correctly', () => {
     user: 'Human',
     body: 'Test message 2'
   }]
-  const component = render(<MessageList messages={messages} />)
-  expect(component.container).toHaveTextContent('1.1.2021')
+  const component = render(<Messages messages={messages} />)
+  expect(component.container).toHaveTextContent('00:00')
   expect(component.container).toHaveTextContent('Human')
   expect(component.container).toHaveTextContent('Test message')
   expect(component.container).toHaveTextContent('Test message 2')

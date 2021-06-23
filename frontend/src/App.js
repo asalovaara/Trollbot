@@ -1,14 +1,22 @@
 import React from 'react'
 import Chat from './components/Chat'
-import { Typography, Container } from '@material-ui/core'
+// import { Typography, Container } from '@material-ui/core'
+import { useAppStyles } from './styles/AppStyles.js'
 
 const App = () => {
 
+  const classes = useAppStyles()
+
+
   return (
-    <Container>
-      <Typography variant='h2' gutterBottom>Trollbot</Typography>
+    <div className={classes.container}>
       <Chat />
-    </Container>
+    </div>
+
+  // <Container>
+  //   <Typography variant='h2' gutterBottom>Trollbot</Typography>
+  //   <Chat />
+  // </Container>
   )
 }
 
