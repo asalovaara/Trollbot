@@ -29,7 +29,7 @@ const accessBody = {
 }
 
 const getAccessToken = () => {
-  const data = querystring.stringify(accessBody)
+  const data = querystring.stringify(accessBody, { encodeURIComponent: querystring.unescape })
   return axios
     .post(accessUrl, data,
       {
