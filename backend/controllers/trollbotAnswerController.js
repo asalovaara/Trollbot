@@ -3,19 +3,24 @@ const replies = require('../data/replies.json') // JSON object containing bot's 
 const spotify = require('../services/spotifyService')
 const parser = require('../services/spotifyDataParser')
 const userIntentControl = require('./userIntentController')
-//const wiki = require('../data/readWikiInfo')
+const logger = require('../utils/logger')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 
 const botAnswer = ({ message }) => {
-  return getResponse(message)
+  const response = getResponse(message)
+  return response
+
 }
 
 const getResponse = async (userMessage) => {
+  logger.info('Entered trollbotAnswerController:getResponse().')
   try {
     const messageType = getMessageType(userMessage)
 
-    const reply = await chooseReply(messageType, userMessage)
+    const reply = await chooseReply(userMessage, messageType)
+    logger.info(`User message: ${userMessage}`)
+    logger.info(`Bot reply: ${reply}`)
 
     const messageObject = {
       body: userMessage,
@@ -69,7 +74,8 @@ const getMessageType = (userMessage) => {
 
 }
 
-const chooseReply = async ( messageType, userMessage ) => {
+const chooseReply = async (userMessage, messageType) => {
+  logger.info('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
 

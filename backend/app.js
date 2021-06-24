@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
+const middleware = require('./utils/middleware')
+const logger = require('./utils/logger')
 const trollbotRouter = require('./controllers/trollbotRouter')
 
 const app = express()
@@ -21,7 +23,10 @@ app.get('/*', (request, response) => {
 })
 
 if (process.env.NODE_ENV === 'test') {
-  console.log('Testing mode detected')
+  logger.info('Testing mode detected')
 }
+
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
