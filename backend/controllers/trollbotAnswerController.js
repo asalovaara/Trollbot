@@ -35,6 +35,7 @@ const getRasaResponse = async (message) => {
 
 }
 
+// eslint-disable-next-line no-unused-vars
 const getResponse = async (userMessage) => {
   logger.info('Entered trollbotAnswerController:getResponse().')
   try {

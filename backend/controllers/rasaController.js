@@ -13,9 +13,6 @@ async function getRasaRESTResponse(message) {
   } catch (error) {
     logger.error(`An error occurred during rasaController:getRasaRESTResponse: ${error}`)
   }
-
-
-
 }
 
-exports.getRasaRESTResponse = getRasaRESTResponse;
+exports.getRasaRESTResponse = getRasaRESTResponse
