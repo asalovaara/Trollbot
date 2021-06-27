@@ -42,6 +42,7 @@ nlu:
     - are you sure
     - can you help me
     - what is going on
+    - hmm?
 
 - intent: likes_artist
   examples: |
