@@ -1,5 +1,6 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
-
+const userIntentControl = require('./userIntentController')
+const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 const {getRasaRESTResponse} = require('./rasaController')
@@ -36,10 +37,14 @@ const getRasaResponse = async (message) => {
 
 // deprecated
 /* const getResponse = (userMessage) => {
+const getResponse = async (userMessage) => {
+  console.log('Entered trollbotAnswerController:getResponse().')
   try {
     const messageType = getMessageType(userMessage)
 
-    const reply = chooseReply(messageType)
+    const reply = await chooseReply(userMessage, messageType)
+    console.log(`User message: ${userMessage}`)
+    console.log(`Bot reply: ${reply}`)
 
     const messageObject = {
       body: userMessage,
@@ -77,13 +82,13 @@ const clearMessages = () => {
 // deprecated
 /* const getMessageType = (userMessage) => {
   try {
-    userMessage = userMessage.toLowerCase()
+    const intent = userIntentControl(userMessage)
 
-    if (userMessage === 'hello') {
+    if (intent === 'opening') {
       return 'opening'
-    } else if (userMessage === 'bye') {
+    } else if (intent === 'closing') {
       return 'closing'
-    } else if (userMessage.includes('?')) {
+    } else if (intent == 'question') {
       return 'question'
     } else {
       return 'other'
@@ -94,25 +99,27 @@ const clearMessages = () => {
 
 }
 
-const chooseReply = ( messageType ) => {
+const chooseReply = async ( userMessage, messageType ) => {
+  console.log('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
 
   if (messageType == 'opening') {
+    // todo
     return replies.opening[repliesNumber]
   }
   if (messageType == 'closing') {
+    // todo
     return replies.closing[repliesNumber]
   }
   if (messageType == 'question') {
+    // todo
     return replies.question[repliesNumber]
   }
   if (messageType == 'other') {
-    return replies.other[repliesNumber]
+    return await wiki(userMessage)
   }
 } */
-
-
 
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting

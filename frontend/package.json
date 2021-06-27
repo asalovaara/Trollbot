@@ -2,7 +2,11 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+<<<<<<< HEAD
   "proxy": "http://localhost:3001",
+=======
+  "proxy": "http://trollbot:3001",
+>>>>>>> main
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -1,0 +1,35 @@
+{
+  "intents" : [
+    {
+      "name": "opening",
+      "startsWith":[
+        "Hi",
+        "Hello"
+      ],
+      "includes": [
+      ]
+    },
+    {
+      "name": "closing",
+      "startsWith":[
+        "Bye"
+      ],
+      "includes": [
+        "Goodbye"
+      ]
+    },
+    {
+      "name": "question",
+      "startsWith":[
+        "What",
+        "Where",
+        "Why",
+        "Who",
+        "Do you"
+      ],
+      "includes": [
+        "?"
+      ]
+    }
+  ]
+}
