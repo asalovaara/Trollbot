@@ -3,6 +3,9 @@ import Message from './Message'
 import { Box, Grid } from '@material-ui/core'
 
 const MessageList = ({ messages }) => {
+
+  console.log('messages', messages)
+
   return (
     <Box m={2}>
       <Grid container spacing={3}>

@@ -1,13 +1,13 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 const userIntentControl = require('./userIntentController')
+const logger = require('../utils/logger')
 const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
-const {getRasaRESTResponse} = require('./rasaController')
+const { getRasaRESTResponse } = require('./rasaController')
 
-const botAnswer = async ( {message} ) => {
+const botAnswer = async ({ message }) => {
   const response = await getRasaResponse(message)
-  
   return response
 
 }
@@ -15,7 +15,7 @@ const botAnswer = async ( {message} ) => {
 const getRasaResponse = async (message) => {
 
   const reply = await getRasaRESTResponse(message)
-  
+
   const messageObject = {
     body: message,
     user: 'Human',
@@ -35,16 +35,14 @@ const getRasaResponse = async (message) => {
 
 }
 
-// deprecated
-/* const getResponse = (userMessage) => {
 const getResponse = async (userMessage) => {
-  console.log('Entered trollbotAnswerController:getResponse().')
+  logger.info('Entered trollbotAnswerController:getResponse().')
   try {
     const messageType = getMessageType(userMessage)
 
     const reply = await chooseReply(userMessage, messageType)
-    console.log(`User message: ${userMessage}`)
-    console.log(`Bot reply: ${reply}`)
+    logger.info(`User message: ${userMessage}`)
+    logger.info(`Bot reply: ${reply}`)
 
     const messageObject = {
       body: userMessage,
@@ -65,7 +63,7 @@ const getResponse = async (userMessage) => {
   } catch (e) {
     console.error(e)
   }
-} */
+}
 
 const getGreeting = () => {
   return { body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
@@ -79,8 +77,7 @@ const clearMessages = () => {
   messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 }
 
-// deprecated
-/* const getMessageType = (userMessage) => {
+const getMessageType = (userMessage) => {
   try {
     const intent = userIntentControl(userMessage)
 
@@ -99,8 +96,8 @@ const clearMessages = () => {
 
 }
 
-const chooseReply = async ( userMessage, messageType ) => {
-  console.log('Entered trollbotAnswerController:chooseReply()')
+const chooseReply = async (userMessage, messageType) => {
+  logger.info('Entered trollbotAnswerController:chooseReply()')
 
   let repliesNumber = Math.floor(Math.random() * 3)
 
@@ -119,7 +116,7 @@ const chooseReply = async ( userMessage, messageType ) => {
   if (messageType == 'other') {
     return await wiki(userMessage)
   }
-} */
+}
 
 exports.botAnswer = botAnswer
 exports.getGreeting = getGreeting
