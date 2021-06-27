@@ -6,10 +6,12 @@ const wiki = require('../data/readWikiInfo')
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 const { getRasaRESTResponse } = require('./rasaController')
 
-const botAnswer = async ({ message }) => {
-  const response = await getRasaResponse(message)
-  return response
+const rasaAnswer = ({ message }) => {
+  return getRasaResponse(message)
+}
 
+const botAnswer = ({ message }) => {
+  return getResponse(message)
 }
 
 const getRasaResponse = async (message) => {
@@ -35,7 +37,6 @@ const getRasaResponse = async (message) => {
 
 }
 
-// eslint-disable-next-line no-unused-vars
 const getResponse = async (userMessage) => {
   logger.info('Entered trollbotAnswerController:getResponse().')
   try {
@@ -119,7 +120,4 @@ const chooseReply = async (userMessage, messageType) => {
   }
 }
 
-exports.botAnswer = botAnswer
-exports.getGreeting = getGreeting
-exports.getMessages = getMessages
-exports.clearMessages = clearMessages
+module.exports = { botAnswer, rasaAnswer, getGreeting, getMessages, getResponse, clearMessages }
