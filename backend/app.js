@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
-app.use('/api', trollbotRouter)
+app.use('/trollbot/api', trollbotRouter)
 
 app.get('/*', (request, response) => {
   response.sendFile(path.join(__dirname, './build/index.html'), (error) => {
