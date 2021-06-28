@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/trollbot'
+const baseUrl = 'trollbot/api' // Server address
 
 const getMessages = () => {
   return axios.get(baseUrl).then(res => res.data)
