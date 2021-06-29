@@ -1,0 +1,24 @@
+version: "2.0"
+
+stories:
+
+- story: question path
+  steps:
+  - intent: opening
+  - action: utter_opening
+  - intent: question
+  - action: utter_answer
+
+- story: user likes artist path
+  steps:
+  - intent: opening
+  - action: utter_opening
+  - intent: likes_artist
+  - action: utter_artist_dismissal
+
+- story: user dislikes artist path
+  steps:
+  - intent: opening
+  - action: utter_opening
+  - intent: dislikes_artist
+  - action: utter_artist_praise

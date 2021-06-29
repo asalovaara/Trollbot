@@ -1,58 +1,34 @@
-var trollbot = require('../controllers/trollbotAnswerController')
+const trollbot = require('../controllers/trollbotAnswerController')
+const { getResponse } = require('../controllers/trollbotAnswerController')
 
 afterEach(() => {
   trollbot.clearMessages()
 })
 
 test('Opening message returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'hello' })
-  expect(['Hi!', 'Hello!', 'Howdy!']).toContain(response[2].body)
-})
-
-test('Opening message returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'hi' })
-  expect(['Hi!', 'Hello!', 'Howdy!']).toContain(response[2].body)
+  const response = await getResponse('hello')
+  expect(['Hi!', 'Hey!', 'Hello!', 'Howdy!']).toContain(response[2].body)
 })
 
 test('Closing message returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'bye' })
-  expect(['Goodbye!', 'Cya!', 'So long!']).toContain(response[2].body)
-})
-
-test('Closing message returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'ok goodbye' })
+  const response = await getResponse('bye')
   expect(['Goodbye!', 'Cya!', 'So long!']).toContain(response[2].body)
 })
 
 test('Question returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'hmm?' })
+  const response = await getResponse('hmm?')
   expect(['What did you ask?', 'Why are you asking me?', 'Any other questions?']).toContain(response[2].body)
-})
-
-test('Question returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'What' })
-  expect(['What did you ask?', 'Why are you asking me?', 'Any other questions?']).toContain(response[2].body)
-})
-
-test('Question returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'Where' })
-  expect(['What did you ask?', 'Why are you asking me?', 'Any other questions?']).toContain(response[2].body)
-})
-
-test('Band genre query returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'The Hush Sound' })
-  expect('alternative rock').toContain(response[2].body)
 })
 
 test('Other message returns correct bot response', async () => {
-  const response = await trollbot.botAnswer({ message: 'h' })
+  const response = await getResponse('hshjsksh')
   expect('Could not find information on this band.').toContain(response[2].body)
 })
 
 test('Messages contain previous messages', async () => {
   await trollbot.botAnswer({ message: 'hello' })
   await trollbot.botAnswer({ message: 'bye' })
-  await trollbot.botAnswer({ message: '?' })
+  await trollbot.botAnswer({ message: 'hmm?' })
   await trollbot.botAnswer({ message: 'The Hush Sound' })
   const messages = trollbot.getMessages()
   expect(messages.length).toBe(9) // initial bot message, three user messages and three bot responses

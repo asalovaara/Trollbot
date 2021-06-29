@@ -4,10 +4,36 @@ const logger = require('../utils/logger')
 const wiki = require('../data/readWikiInfo')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
+const { getRasaRESTResponse } = require('./rasaController')
+
+const rasaAnswer = ({ message }) => {
+  return getRasaResponse(message)
+}
 
 const botAnswer = ({ message }) => {
-  const response = getResponse(message)
-  return response
+  return getResponse(message)
+}
+
+const getRasaResponse = async (message) => {
+
+  const reply = await getRasaRESTResponse(message)
+
+  const messageObject = {
+    body: message,
+    user: 'Human',
+    date: new Date().toISOString(),
+    id: messages.length + 1
+  }
+  const replyObject = {
+    body: reply,
+    user: 'Bot',
+    date: new Date().toISOString(),
+    id: messages.length + 2
+  }
+
+  messages = messages.concat([messageObject, replyObject])
+
+  return messages
 
 }
 
@@ -94,7 +120,4 @@ const chooseReply = async (userMessage, messageType) => {
   }
 }
 
-exports.botAnswer = botAnswer
-exports.getGreeting = getGreeting
-exports.getMessages = getMessages
-exports.clearMessages = clearMessages
+module.exports = { botAnswer, rasaAnswer, getGreeting, getMessages, getResponse, clearMessages }

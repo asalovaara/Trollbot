@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# rasa
+/rasa/models/*
+
 # testing
 /coverage
 
