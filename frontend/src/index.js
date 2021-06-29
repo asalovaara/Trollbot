@@ -4,7 +4,7 @@ import App from './App'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 ReactDOM.render(
-  <BrowserRouter basename={'/trollbot'}>
+  <BrowserRouter>
     <Route path='/' />
     <React.StrictMode>
       <App />

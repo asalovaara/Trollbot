@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://trollbot:3001",
-  "homepage": "https://ohtup-staging.cs.helsinki.fi/trollbot",
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
