@@ -16,7 +16,7 @@ RUN npm install react-scripts@3.4.1 -g
 # Build app
 
 WORKDIR /app/frontend
-RUN npm run build
+RUN npm run build-staging
 WORKDIR /app
 RUN cp -r frontend/build/ backend/build
 RUN rm -r frontend
@@ -31,4 +31,4 @@ EXPOSE 3001
 
 # Start app 
 
-CMD npm start --prefix backend
+CMD npm run start-staging --prefix backend

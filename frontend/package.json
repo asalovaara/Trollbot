@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://trollbot:3001",
-  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build ",
+	"build-staging": "set PUBLIC_URL=/trollbot && react-scripts build ",
     "lint": "eslint .",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
