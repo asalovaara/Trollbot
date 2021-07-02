@@ -54,5 +54,7 @@ jobs:
       - name: Rasa Train and Test GitHub Action
         uses: RasaHQ/rasa-train-test-gha@main
         with:
+          rasa_version: 2.7.1
           data_validate: true
           rasa_train: true
+          working-directory: rasa
