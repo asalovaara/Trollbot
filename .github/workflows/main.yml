@@ -51,10 +51,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Rasa Train and Test GitHub Action
-        uses: RasaHQ/rasa-train-test-gha@main
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
         with:
-          rasa_version: 2.7.1
-          data_validate: true
-          rasa_train: true
-          working-directory: rasa
+          python-version: 3.7
+      - name: Install rasa
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+      - name: Train rasa
+        run: rasa train
+        working-directory: rasa
