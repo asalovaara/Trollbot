@@ -16,7 +16,7 @@ RUN npm install react-scripts@3.4.1 -g
 # Build app
 
 WORKDIR /app/frontend
-RUN npm run build-staging
+RUN npm run build
 WORKDIR /app
 RUN cp -r frontend/build/ backend/build
 RUN rm -r frontend

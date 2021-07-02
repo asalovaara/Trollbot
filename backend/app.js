@@ -7,12 +7,17 @@ const trollbotRouter = require('./controllers/trollbotRouter')
 
 const app = express()
 
+const API_URL = process.env.API_URL || '/api/trollbot'
+
 app.use(express.json()) // for parsing JSON
 app.use(express.urlencoded({ extended: true }))
 app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
-app.use(process.env.PUBLIC_URL + '/api/trollbot', trollbotRouter)
+
+console.log('api is located at ', API_URL)
+
+app.use(API_URL, trollbotRouter)
 
 app.get('/*', (request, response) => {
   response.sendFile(path.join(__dirname, './build/index.html'), (error) => {
