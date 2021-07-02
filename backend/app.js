@@ -4,6 +4,7 @@ const path = require('path')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const trollbotRouter = require('./controllers/trollbotRouter')
+const rasaRouter = require('./controllers/rasaRouter')
 
 const app = express()
 
@@ -13,6 +14,7 @@ app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
 app.use('/api/trollbot', trollbotRouter)
+app.use('/api/rasa', rasaRouter)
 
 app.get('/*', (request, response) => {
   response.sendFile(path.join(__dirname, './build/index.html'), (error) => {
