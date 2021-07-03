@@ -4,10 +4,9 @@ const path = require('path')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const trollbotRouter = require('./controllers/trollbotRouter')
+const { API_URL } = require('./utils/config')
 
 const app = express()
-
-const API_URL = process.env.API_URL || '/api/trollbot'
 
 app.use(express.json()) // for parsing JSON
 app.use(express.urlencoded({ extended: true }))
@@ -15,13 +14,14 @@ app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
 
-console.log('api is located at ', API_URL)
+logger.info('api is located at ', API_URL)
 
-app.use(API_URL, trollbotRouter)
+app.use(`${API_URL}/trollbot`, trollbotRouter)
 
 app.get('/*', (request, response) => {
   response.sendFile(path.join(__dirname, './build/index.html'), (error) => {
     if (error) {
+      logger.error('Error finding static build')
       response.status(500).send(error)
     }
   })
