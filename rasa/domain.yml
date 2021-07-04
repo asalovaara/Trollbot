@@ -3,20 +3,27 @@ version: "2.0"
 intents:
   - opening
   - closing
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
   - question
-  - likes_artist
-  - dislikes_artist
+  - likes_artist:
+      use_entities:
+        - artist
+  - dislikes_artist:
+      use_entities:
+        - artist
+  - self_introduction:
+      use_entities:
+        - name
+  - task_introduction
 
 entities:
   - artist
+  - name
 
 slots: 
   artist:
+    type: text
+    auto_fill: true
+  name:
     type: text
     auto_fill: true
 
@@ -43,6 +50,27 @@ responses:
   - text: "Any other questions?"
   - text: "What did you ask?"
   - text: "Why are you asking me?"
+
+  utter_introduction:
+  - text: "I'm Bot!"
+  - text: "You can call me Bot!"
+  - text: "My name's Bot."
+  - text: "I'll go by Bot here."
+
+  utter_nice_to_meet_you:
+  - text: "Nice to meet you, {name}!"
+  - text: "Hi {name}!"
+  - text: "A pleasure to meet you, {name}."
+
+  utter_task_introduction:
+  - text: "So we need to decide on the best band or artist..."
+  - text: "We've been tasked with deciding on the best band or artist."
+
+  utter_question_suggestions:
+  - text: "I don't know... do you have any suggestions?"
+  - text: "Who would you suggest?"
+  - text: "What do you think?"
+  - text: "Ehh... what's your pick?"
 
   utter_artist_dismissal:
   - text: "Ew, {artist}, really? I guess there's no accounting for taste."

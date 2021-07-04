@@ -1,5 +1,5 @@
 const trollbotRouter = require('express').Router()
-const {botAnswer, getMessages, clearMessages} = require('./trollbotAnswerController')
+const {botAnswer, rasaAnswer, getMessages, clearMessages} = require('./trollbotAnswerController')
 
 
 
