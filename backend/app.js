@@ -4,6 +4,7 @@ const path = require('path')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const trollbotRouter = require('./controllers/trollbotRouter')
+const rasaRouter = require('./controllers/rasaRouter')
 const { API_URL } = require('./utils/config')
 
 const app = express()
@@ -17,6 +18,7 @@ app.use(express.static(path.join(__dirname, 'build')))
 logger.info('api is located at ', API_URL)
 
 app.use(`${API_URL}/trollbot`, trollbotRouter)
+app.use(`${API_URL}/rasa`, rasaRouter)
 
 app.get('/*', (request, response) => {
   response.sendFile(path.join(__dirname, './build/index.html'), (error) => {

@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
 // eslint-disable-next-line no-unused-vars
-const { getRasaRESTResponse } = require('../controllers/rasaController')
+//const { getRasaRESTResponse } = require('../services/rasaService')
 
 test('Placeholder test', () => {
   expect(1).toBe(1)
