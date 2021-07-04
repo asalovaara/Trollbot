@@ -2,7 +2,7 @@ FROM node:13.12.0-alpine
 
 ENV SKIP_PREFLIGHT_CHECK=true
 ENV PUBLIC_URL=/trollbot
-ENV API_URL=/api
+ENV API_URL=/trollbot/api
 
 # Install app dependencies
 
