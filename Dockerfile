@@ -1,6 +1,8 @@
 FROM node:13.12.0-alpine
 
 ENV SKIP_PREFLIGHT_CHECK=true
+ENV PUBLIC_URL=/trollbot
+ENV API_URL=/trollbot/api
 
 # Install app dependencies
 
@@ -15,7 +17,6 @@ RUN npm install react-scripts@3.4.1 -g
 
 # Build app
 
-WORKDIR /app/frontend
 RUN npm run build
 WORKDIR /app
 RUN cp -r frontend/build/ backend/build
@@ -31,4 +32,4 @@ EXPOSE 3001
 
 # Start app 
 
-CMD npm start --prefix backend
+CMD npm run start-staging --prefix backend

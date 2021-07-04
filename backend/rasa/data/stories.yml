@@ -1,0 +1,62 @@
+version: "2.0"
+
+stories:
+
+- story: opening pattern 1
+  steps:
+  - intent: opening
+  - action: utter_opening
+  - action: utter_introduction
+  - checkpoint: check_user_introduces_self
+
+- story: user does not introduce self
+  steps:
+  - checkpoint: check_user_introduces_self
+  - intent: opening
+  - action: utter_opening
+  - checkpoint: check_task_introduced
+
+- story: user introduces self
+  steps:
+  - checkpoint: check_user_introduces_self
+  - intent: self_introduction
+  - action: utter_nice_to_meet_you
+  - checkpoint: check_task_introduced
+
+- story: handle user introducing task
+  steps:
+  - checkpoint: check_task_introduced
+  - intent: task_introduction
+  - action: utter_question_suggestions
+  - checkpoint: check_artist_suggestions
+
+- story: handle introducing task
+  steps:
+  - checkpoint: check_task_introduced
+  - or:
+    - intent: opening
+    - intent: closing
+    - intent: question
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - checkpoint: check_artist_suggestions
+
+- story: user likes artist path
+  steps:
+  - checkpoint: check_artist_suggestions
+  - intent: likes_artist
+  - action: utter_artist_dismissal
+  - checkpoint: check_artist_suggestions
+
+- story: user dislikes artist path
+  steps:
+  - checkpoint: check_artist_suggestions
+  - intent: dislikes_artist
+  - action: utter_artist_praise
+  - checkpoint: check_artist_suggestions
+
+- story: user gets tired
+  steps:
+  - checkpoint: check_artist_suggestions
+  - intent: closing
+  - action: utter_closing
