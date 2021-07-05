@@ -31,8 +31,4 @@ EXPOSE 3001
 
 # Start app 
 
-<<<<<<< HEAD
-CMD npm  run start-staging --prefix backend
-=======
 CMD npm run start-staging --prefix backend
->>>>>>> aa2459bdeb062b6ced8c41661656e58cc2ace6c6
