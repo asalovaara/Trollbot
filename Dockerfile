@@ -2,7 +2,7 @@ FROM node:13.12.0-alpine
 
 ENV SKIP_PREFLIGHT_CHECK=true
 ENV PUBLIC_URL=/trollbot
-ENV API_URL=/trollbot/api
+ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
 
 # Install app dependencies
 
