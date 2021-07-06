@@ -6,6 +6,7 @@ const logger = require('./utils/logger')
 const trollbotRouter = require('./controllers/trollbotRouter')
 const rasaRouter = require('./controllers/rasaRouter')
 const { API_URL } = require('./utils/config')
+const { getGenre } = require('./services/trollbot')
 
 const app = express()
 

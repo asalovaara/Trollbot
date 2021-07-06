@@ -93,6 +93,12 @@ nlu:
     - [Abba]{"entity": "artist"} is garbage
     - i don't think [Abba]{"entity": "artist"} is so good
 
+# for testing genre fetch
+- intent: get_genre
+  examples: |
+    - get genre
+    - fetch genre
+
 # todo: fetch from api or build a more comprehensive list in other ways
 
 - lookup: name

@@ -5,6 +5,7 @@ const wiki = require('./wikiService')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 const { getRasaRESTResponse } = require('./rasaService')
+const getGenre = require('./wikiService')
 
 const rasaAnswer = ({ message }) => {
   return getRasaResponse(message)
@@ -120,4 +121,11 @@ const chooseReply = async (userMessage, messageType) => {
   }
 }
 
-module.exports = { botAnswer, rasaAnswer, getGreeting, getMessages, getResponse, clearMessages }
+const genreToRasa = async (artist) => {
+
+  const genre = await getGenre(artist)
+  return genre
+}
+
+
+module.exports = { botAnswer, rasaAnswer, getGreeting, getMessages, getResponse, clearMessages, genreToRasa }

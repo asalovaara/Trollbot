@@ -10,7 +10,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.events import SlotSet
-
+import requests
 
 class ActionBotOpening(Action):
 
@@ -37,3 +37,21 @@ class ActionSetTaskSlot(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         return [SlotSet("task_activated", True)]
+
+class ActionSetGenreSlot(Action):
+
+    def name(self) -> Text:
+
+        return "action_set_genre_slot"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        artist = tracker.get_slot('artist')
+
+        genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
+        genre = genre.json()
+
+        return [SlotSet("genre", genre)]

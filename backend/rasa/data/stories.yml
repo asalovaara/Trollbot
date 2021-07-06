@@ -48,6 +48,7 @@ stories:
   - intent: likes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_set_genre_slot
   - action: utter_artist_dismissal
 
 - story: user dislikes artist path
@@ -55,6 +56,7 @@ stories:
   - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_set_genre_slot
   - action: utter_artist_praise
 
 - story: user gets tired
@@ -73,3 +75,9 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
+
+- story: get genre data
+  steps: 
+    - intent: get_genre
+    - action: action_set_genre_slot
+    - action: utter_genre
