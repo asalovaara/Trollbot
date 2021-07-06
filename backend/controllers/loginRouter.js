@@ -1,9 +1,11 @@
 const loginRouter = require('express').Router()
+const logger = require('../utils/logger')
 const { getUsers, login } = require('../services/userService')
 
 loginRouter.post('/', async (request, response) => {
   const body = request.body
   const logginUser = login(body.username)
+  logger.info('Logged in as:', logginUser)
   response.status(200).send(logginUser)
 })
 
