@@ -22,3 +22,11 @@ Rasa: run `rasa train` when you first pull the new directory to initialise the
 Rasa model.
 
 To start the Rasa HTTP API server, run the command `rasa run --enable-api --cors "*"`.
+
+## Testing conversations in Rasa Shell
+
+Use `rasa run actions` to run Rasa action server (required for custom actions).
+
+Use `rasa shell` to test conversations on the command line.
+
+

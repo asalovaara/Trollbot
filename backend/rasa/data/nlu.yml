@@ -44,6 +44,30 @@ nlu:
     - what is going on
     - hmm?
 
+- intent: self_introduction
+  examples: |
+    - Hi I'm [Alex]{"entity": "name"}
+    - My name is [Alex]{"entity": "name"}
+    - [Alex]{"entity": "name"} reporting in!
+    - [Alex]{"entity": "name"} here!
+    - you may call me [Alex]{"entity": "name"}
+    - I'm [Alex]{"entity": "name"}
+    - call me [Alex]{"entity": "name"}
+    - i go by [Alex]{"entity": "name"}
+    - im [Alex]{"entity": "name"}
+
+- intent: task_introduction
+  examples: |
+    - "So apparently we need to decide on the best band or something"
+    - "It says here that we need to decide on the best band"
+    - "We need to decide on the best band"
+    - "Let's decide on the best band or artist"
+    - "So deciding on the superior band or artist..."
+    - "Let's get to choosing the artist"
+    - "Let's pick a band now"
+    - "Ok let's make a decision on the best artist"
+    - "Okay so we gotta choose the best band"
+
 - intent: likes_artist
   examples: |
     - my favourite band is [Abba]{"entity": "artist"}
@@ -55,6 +79,7 @@ nlu:
     - [Abba]{"entity": "artist"} is so good
     - [Adele]{"entity": "artist"} is such a great singer
     - [Abba]{"entity": "artist"} has a great sound
+    - i think [Abba]{"entity": "artist"} is the best
 
 - intent: dislikes_artist
   examples: |
@@ -66,6 +91,29 @@ nlu:
     - [Abba]{"entity": "artist"} is so bad
     - [Queen]{"entity": "artist"} is so overrated
     - [Abba]{"entity": "artist"} is garbage
+    - i don't think [Abba]{"entity": "artist"} is so good
+
+# todo: fetch from api or build a more comprehensive list in other ways
+
+- lookup: name
+  examples: |
+    - Alex
+    - Elliott
+    - Sam
+    - Emily
+    - Haley
+    - Penny
+    - Caroline
+    - Robin
+    - Daisy
+    - Sami
+    - Lauri
+    - Ruben
+    - Ville
+    - Antti
+    - Suski
+
+# todo: fetch from api
 
 - lookup: artist
   examples: |
