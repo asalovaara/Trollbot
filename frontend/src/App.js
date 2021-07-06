@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Chat from './components/Chat'
 import Login from './components/Login'
-
 import loginService from './services/login'
 import { useAppStyles } from './styles/AppStyles.js'
 
@@ -11,19 +10,15 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    const tryLogin = async () => {
-      try {
-        const userObject = await loginService.login({
-          username: loggedUserJSON.username,
-        })
-        window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
-        console.log('Frontend got response', userObject)
-        setUser(userObject)
-      } catch (exception) {
-        console.log('Exception logging in', exception)
-      }
-    }
     if (loggedUserJSON) {
+      console.log('Found user in localstorage')
+      const tryLogin = async () => {
+        const loggedUser = JSON.parse(loggedUserJSON)
+        const userObject = await loginService.login({
+          username: loggedUser.username
+        })
+        setUser(userObject)
+      }
       tryLogin()
     }
   }, [])

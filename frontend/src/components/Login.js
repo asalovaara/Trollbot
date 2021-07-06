@@ -22,13 +22,12 @@ const Login = ({ user, setUser }) => {
     event.preventDefault()
     try {
       const userObject = await loginService.login({
-        username: username,
+        username: username
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
-      console.log('Frontend got response', userObject)
       setUser(userObject)
     } catch (exception) {
-      console.log('Exception logging in', exception)
+      console.log('Exception when logging in', exception)
     }
   }
 
