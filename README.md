@@ -19,6 +19,8 @@ Read the README at backend folder.
 Rasa: run `rasa train` when you first pull the new directory to initialise the
 Rasa model.
 
+To start the Rasa action server (required for custom actions), run the command `rasa run actions`.
+
 To start the Rasa HTTP API server, run the command `rasa run --enable-api --cors "*"`.
 
 ## Testing conversations in Rasa Shell
