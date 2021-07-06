@@ -1,5 +1,5 @@
 const trollbotRouter = require('express').Router()
-const {botAnswer, rasaAnswer, getMessages, clearMessages} = require('../services/trollbot')
+const {rasaAnswer, getMessages, clearMessages} = require('../services/trollbot')
 
 trollbotRouter.get('/', (req, res) => {
   res.json(getMessages())
