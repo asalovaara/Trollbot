@@ -15,7 +15,7 @@ app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
 
-logger.error('api is located at ', API_URL)
+logger.error('api is located at ', `${API_URL}/trollbot`)
 
 app.use(`${API_URL}/trollbot`, trollbotRouter)
 app.use(`${API_URL}/rasa`, rasaRouter)

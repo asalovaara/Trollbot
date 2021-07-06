@@ -4,6 +4,8 @@
 
 A project by students in the Computer Science department of University of Helsinki.
 
+### [DEMO](https://ohtup-staging.cs.helsinki.fi/trollbot)
+
 ## Description
 
 An implementation of two chatbots for the purposes of a research that studies trolling on the internet.

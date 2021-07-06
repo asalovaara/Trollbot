@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { API_URL } from '../config'
 
-const baseUrl = API_URL // Server address
+const baseUrl = `${API_URL}/trollbot` // Server address
 
 const getMessages = () => {
   return axios.get(baseUrl).then(res => res.data)
