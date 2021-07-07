@@ -11,14 +11,16 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = (message) => {
-  console.log('message', message.body)
+const getAnswer = async (message) => {
+  console.log('getAnswer - Input', message.body)
   const botMessage = { message: message.body }
-  const answer = botAnswer(botMessage)
-  let msg = ''
-  answer.then(response => {
-    const res = response[response.length - 1]
-    msg = {
+  const response = await botAnswer(botMessage)
+  const json = response //  await response.json()
+  console.log('getAnswer - json', json)
+  // let msg = ''
+  // answer.then(response => {
+    const res = json[json.length - 1]
+    const msg = {
       id: 'botanswerid' + res.id,
       room: 'Test',
       body: res.body,
@@ -28,11 +30,14 @@ const getAnswer = (message) => {
         picture: 'https://media.wired.com/photos/5cdefb92b86e041493d389df/1:1/w_988,h_988,c_limit/Culture-Grumpy-Cat-487386121.jpg'
       }
     } //response[response.length - 1]
-    console.log('answer',msg)
+    console.log('getAnswer - Return',msg)
     messages.push(msg)
-  })
+
+    return msg
+  // }).catch()
+  console.log('getAnswer - Return (out of then)', msg)
   // console.log('answer', answer)
-  return msg
+  // return msg
 }
 
 const removeMessage = (id) => {

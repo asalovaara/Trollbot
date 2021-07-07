@@ -38,15 +38,19 @@ io.on('connection', (socket) => {
   // Listen for new messages
   socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
     const message = addMessage(roomId, data)
+    console.log('user message from backend', message)
     // const answer = getAnswer(message)
     io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, message)
     // io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, answer)
   })
 
   // Bot reply
-  socket.on(BOT_ANSWER_EVENT, (data) => {
-    const answer = getAnswer(data)
-    io.in(roomId).emit(BOT_ANSWER_EVENT, answer)
+  socket.on(BOT_ANSWER_EVENT, async (data) => {
+    const answer = await getAnswer(data)
+    console.log('bot reply from backend', answer)
+    if (answer !== '') {
+      io.in(roomId).emit(BOT_ANSWER_EVENT, answer)  
+    }
   })
   
   // Listen typing events

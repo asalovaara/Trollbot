@@ -17,6 +17,7 @@ const ChatRoom = (props) => {
     users,
     typingUsers,
     sendMessage,
+    sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
   } = useChat(roomId)
@@ -33,6 +34,7 @@ const ChatRoom = (props) => {
     cancelTyping()
     console.log('newMessage, handleSendMessage', newMessage)
     sendMessage(newMessage)
+    sendMessageToBot(newMessage)
     setNewMessage('')
   }
 
