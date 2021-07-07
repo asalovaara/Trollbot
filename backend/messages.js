@@ -11,28 +11,29 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = (message) => {
+const getAnswer = async (message) => {
   console.log('message', message.body)
   const botMessage = { message: message.body }
-  const answer = botAnswer(botMessage)
+  const response = await botAnswer(botMessage)
   let msg = ''
-  answer.then(response => {
-    const res = response[response.length - 1]
-    msg = {
-      id: 'botanswerid' + res.id,
-      room: 'Test',
-      body: res.body,
-      senderId: 'bot',
-      user: {
-        name: 'Bot',
-        picture: 'https://media.wired.com/photos/5cdefb92b86e041493d389df/1:1/w_988,h_988,c_limit/Culture-Grumpy-Cat-487386121.jpg'
-      }
-    } //response[response.length - 1]
-    console.log('answer',msg)
-    messages.push(msg)
-  })
-  // console.log('answer', answer)
+  //answer.then(response => {
+  const res = response[response.length - 1]
+  msg = {
+    id: 'botanswerid' + res.id,
+    room: 'Test',
+    body: res.body,
+    senderId: 'bot',
+    user: {
+      name: 'Bot',
+      picture: 'https://media.wired.com/photos/5cdefb92b86e041493d389df/1:1/w_988,h_988,c_limit/Culture-Grumpy-Cat-487386121.jpg'
+    }
+  } //response[response.length - 1]
+  console.log('answer',msg)
+  messages.push(msg)
   return msg
+  //})
+  // console.log('answer', answer)
+  
 }
 
 const removeMessage = (id) => {
