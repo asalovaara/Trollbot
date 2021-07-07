@@ -6,7 +6,8 @@ trollbotRouter.get('/', (req, res) => {
 })
 
 trollbotRouter.post('/', async (req, res) => {
-  const response = await botAnswer(req.body)
+  console.log('trollbotrouter', req.body)
+  const response = botAnswer(req.body)
   res.json(response)
 })
 

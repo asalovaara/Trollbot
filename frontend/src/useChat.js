@@ -5,6 +5,7 @@ import axios from 'axios'
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
+const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
 const SOCKET_SERVER_URL = 'http://localhost:4000'
@@ -85,6 +86,15 @@ const useChat = (roomId) => {
       setMessages((messages) => [...messages, incomingMessage])
     })
 
+    socketRef.current.on(BOT_ANSWER_EVENT, (message) => {
+      console.log('SL - incoming bot answer', message)
+      const incomingMessage = {
+        ...message,
+        ownedByCurrentUser: message.senderId === socketRef.current.id,
+      }
+      setMessages((messages) => [...messages, incomingMessage])
+    })
+
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {
       if (typingInfo.senderId !== socketRef.current.id) {
         const user = typingInfo.user
@@ -115,6 +125,15 @@ const useChat = (roomId) => {
     })
   }
 
+  const sendMessageToBot = (messageBody) => {
+    if (!socketRef.current) return
+    socketRef.current.emit(BOT_ANSWER_EVENT, {
+      body: messageBody,
+      senderId: socketRef.current.id,
+      user: user,
+    })
+  }
+
   const startTypingMessage = () => {
     if (!socketRef.current) return
     socketRef.current.emit(START_TYPING_MESSAGE_EVENT, {
@@ -137,6 +156,7 @@ const useChat = (roomId) => {
     users,
     typingUsers,
     sendMessage,
+    sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
   }

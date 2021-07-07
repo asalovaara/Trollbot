@@ -21,6 +21,7 @@ const PORT = 4000
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
+const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
 
@@ -37,11 +38,17 @@ io.on('connection', (socket) => {
   // Listen for new messages
   socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
     const message = addMessage(roomId, data)
-    const answer = getAnswer(message)
+    // const answer = getAnswer(message)
     io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, message)
-    io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, answer)
+    // io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, answer)
   })
 
+  // Bot reply
+  socket.on(BOT_ANSWER_EVENT, (data) => {
+    const answer = getAnswer(data)
+    io.in(roomId).emit(BOT_ANSWER_EVENT, answer)
+  })
+  
   // Listen typing events
   socket.on(START_TYPING_MESSAGE_EVENT, (data) => {
     io.in(roomId).emit(START_TYPING_MESSAGE_EVENT, data)

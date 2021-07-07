@@ -4,6 +4,7 @@ import UserAvatar from '../UserAvatar/UserAvatar'
 import './ChatMessage.css'
 
 const ChatMessage = ({ message }) => {
+  console.log('chatmessage', message)
   return (
     <div
       className={`message-item ${
