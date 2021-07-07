@@ -11,6 +11,7 @@ const rasaAnswer = ({ message }) => {
 }
 
 const botAnswer = ({ message }) => {
+  console.log('botAnswer', message)
   return getResponse(message)
 }
 
@@ -39,6 +40,7 @@ const getRasaResponse = async (message) => {
 
 const getResponse = async (userMessage) => {
   logger.info('Entered trollbotAnswerController:getResponse().')
+  console.log('getResponse msg', userMessage)
   try {
     const messageType = getMessageType(userMessage)
 
