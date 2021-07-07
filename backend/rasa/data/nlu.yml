@@ -70,28 +70,28 @@ nlu:
 
 - intent: likes_artist
   examples: |
-    - my favourite band is [Abba]{"entity": "artist"}
-    - i like [Queen]{"entity": "artist"}
-    - i really like [Abba]{"entity": "artist"}
-    - i enjoy listening to [Queen] {"entity": "artist"}
-    - i love [Abba]{"entity": "artist"}
-    - [Queen]{"entity": "artist"} rocks
-    - [Abba]{"entity": "artist"} is so good
-    - [Adele]{"entity": "artist"} is such a great singer
-    - [Abba]{"entity": "artist"} has a great sound
-    - i think [Abba]{"entity": "artist"} is the best
+    - my favourite band is [Ariana Grande]{"entity": "artist"}
+    - i like [Ariana Grande]{"entity": "artist"}
+    - i really like [Ariana Grande]{"entity": "artist"}
+    - i enjoy listening to [Ariana Grande] {"entity": "artist"}
+    - i love [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} rocks
+    - [Ariana Grande]{"entity": "artist"} is so good
+    - [Ariana Grande]{"entity": "artist"} is such a great singer
+    - [Ariana Grande]{"entity": "artist"} has a great sound
+    - i think [Ariana Grande]{"entity": "artist"} is the best
 
 - intent: dislikes_artist
   examples: |
-    - my least favourite band is [Abba]{"entity": "artist"}
-    - i don't like [Abba]{"entity": "artist"}
-    - i really don't like [Queen]{"entity": "artist"}
-    - i hate [Queen]{"entity": "artist"}
-    - [Abba]{"entity": "artist"} sucks
-    - [Abba]{"entity": "artist"} is so bad
-    - [Queen]{"entity": "artist"} is so overrated
-    - [Abba]{"entity": "artist"} is garbage
-    - i don't think [Abba]{"entity": "artist"} is so good
+    - my least favourite band is [Ariana Grande]{"entity": "artist"}
+    - i don't like [Ariana Grande]{"entity": "artist"}
+    - i really don't like [Ariana Grande]{"entity": "artist"}
+    - i hate [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} sucks
+    - [Ariana Grande]{"entity": "artist"} is so bad
+    - [Ariana Grande]{"entity": "artist"} is so overrated
+    - [Ariana Grande]{"entity": "artist"} is garbage
+    - i don't think [Ariana Grande]{"entity": "artist"} is so good
 
 # for testing genre fetch
 - intent: get_genre
@@ -103,7 +103,6 @@ nlu:
 
 - lookup: name
   examples: |
-    - Alex
     - Elliott
     - Sam
     - Emily
@@ -127,7 +126,6 @@ nlu:
     - Adele
     - Aphex Twin
     - Arcade Fire
-    - Ariana Grande
     - The Beatles
     - Black Sabbath
     - Bob Dylan

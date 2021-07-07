@@ -24,11 +24,14 @@ slots:
   artist:
     type: text
     auto_fill: true
+    influence_conversation: false
   name:
     type: text
     auto_fill: true
+    influence_conversation: false
   genre:
     type: text
+    influence_conversation: false
   task_activated:
     type: bool
     initial_value: false

@@ -24,13 +24,13 @@ stories:
 
 - story: from no introduction to task
   steps:
+  - slot_was_set:
+    - task_activated: false
   - or:
     - intent: closing
     - intent: question
     - intent: likes_artist
     - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: false
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
