@@ -43,6 +43,15 @@ stories:
   - action: action_set_task_slot
   - action: utter_question_suggestions
 
+- story: user suggests artist
+  steps:
+  - intent: suggest_artist
+  - slot_was_set:
+    - task_activated: true
+    - artist
+  - action: action_set_genre_slot
+  - action: utter_artist_dismissal
+
 - story: user likes artist path
   steps:
   - intent: likes_artist

@@ -68,6 +68,42 @@ nlu:
     - "Ok let's make a decision on the best artist"
     - "Okay so we gotta choose the best band"
 
+- intent: suggest_artist
+  examples: |
+    - [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} then?
+    - ok then [Ariana Grande]{"entity": "artist"}
+    - well is [Ariana Grande]{"entity": "artist"} okay
+    - how about [Ariana Grande]{"entity": "artist"}?
+    - I suggest [Ariana Grande]{"entity": "artist"}
+    - what about [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} maybe?
+    - i think [Ariana Grande]{"entity": "artist"}
+    - Consider: [Ariana Grande]{"entity": "artist"}
+    - My proposal is [Ariana Grande]{"entity": "artist"}
+    - i'd go for [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} is my pick
+    - I choose [Ariana Grande]{"entity": "artist"}
+    - obviously [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} obviously
+    - Clearly [Ariana Grande]{"entity": "artist"} is our choice
+    - [Ariana Grande]{"entity": "artist"}, no question
+    - [Ariana Grande]{"entity": "artist"}!
+    - [Ariana Grande]{"entity": "artist"}? how about it?
+    - [Ariana Grande]{"entity": "artist"} right
+    - ok so [Ariana Grande]{"entity": "artist"}
+    - I say [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} always
+    - Hard to say... maybe [Ariana Grande]{"entity": "artist"}?
+    - ohh i can't choose... but if i had to, then [Ariana Grande]{"entity": "artist"}
+    - hmm this is hard... [Ariana Grande]{"entity": "artist"}?
+    - possibly [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} but I'm not sure at all! 
+    - I'm not sure but [Ariana Grande]{"entity": "artist"} maybe
+    - are you fine with [Ariana Grande]{"entity": "artist"} then?
+    - Is [Ariana Grande]{"entity": "artist"} okay?
+    - then... [Ariana Grande]{"entity": "artist"}?
+
 - intent: likes_artist
   examples: |
     - my favourite band is [Ariana Grande]{"entity": "artist"}

@@ -4,6 +4,9 @@ intents:
   - opening
   - closing
   - question
+  - suggest_artist:
+      use_entities:
+        - artist
   - likes_artist:
       use_entities:
         - artist
