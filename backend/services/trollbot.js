@@ -6,6 +6,7 @@ const wiki = require('./wikiService')
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 const { getRasaRESTResponse } = require('./rasaService')
 const getGenre = require('./wikiService')
+const { getGenreByName } = require('./spotifyService')
 
 const rasaAnswer = ({ message }) => {
   return getRasaResponse(message)
@@ -105,26 +106,29 @@ const chooseReply = async (userMessage, messageType) => {
   let repliesNumber = Math.floor(Math.random() * 3)
 
   if (messageType == 'opening') {
-    // todo
     return replies.opening[repliesNumber]
   }
   if (messageType == 'closing') {
-    // todo
     return replies.closing[repliesNumber]
   }
   if (messageType == 'question') {
-    // todo
     return replies.question[repliesNumber]
   }
   if (messageType == 'other') {
-    return await wiki(userMessage)
+    return await genreToRasa(userMessage)
   }
 }
 
 const genreToRasa = async (artist) => {
 
-  const genre = await getGenre(artist)
+  //get genre from wikipedia
+  //const genre = await getGenre(artist)
+
+  //get genre from spotify
+  const genre = await getGenreByName(artist)
+
   return genre
+
 }
 
 
