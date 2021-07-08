@@ -106,15 +106,12 @@ const chooseReply = async (userMessage, messageType) => {
   let repliesNumber = Math.floor(Math.random() * 3)
 
   if (messageType == 'opening') {
-    // todo
     return replies.opening[repliesNumber]
   }
   if (messageType == 'closing') {
-    // todo
     return replies.closing[repliesNumber]
   }
   if (messageType == 'question') {
-    // todo
     return replies.question[repliesNumber]
   }
   if (messageType == 'other') {
