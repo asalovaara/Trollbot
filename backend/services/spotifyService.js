@@ -3,7 +3,7 @@ const logger = require('../utils/logger')
 const querystring = require('querystring')
 const { CLIENT_ID, CLIENT_SECRET } = require('../utils/config')
 
-/* 
+/*
 This module requires .env file in the root folder that contains Client ID and Client secret from the spotify app dashboard.
 See {@link https://developer.spotify.com/dashboard/applications}.
 */
@@ -55,7 +55,7 @@ const getArtistID = (artist) => {
       })
     })
     .then((response) => {
-      return response.data.artists.items
+      return response.data.artists.items[0].id
     })
     .catch((error) => {
       logger.error(error)
@@ -82,6 +82,35 @@ const getArtistInfo = (artist_id) => {
     })
 }
 
+const getGenreByName = async (artist_name) => {
+  return getArtistID(artist_name)
+    .then (id => {
+      return getGenreById(id)
+    })
+    .catch((error) => {
+      logger.error(error)
+      throw error
+    })
+}
+
+const getGenreById = (artist_id) => {
+  return getAccessToken()
+    .then(token => {
+      return axios.get(`https://api.spotify.com/v1/artists/${artist_id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      })
+    })
+    .then((response) => {
+      return response.data.genres[0]
+    })
+    .catch((error) => {
+      logger.error(error)
+      throw error
+    })
+}
+
 const getArtistAlbums = (artist_id) => {
   return getAccessToken()
     .then(token => {
@@ -100,4 +129,4 @@ const getArtistAlbums = (artist_id) => {
     })
 }
 
-module.exports = { getArtistID, getArtistInfo, getArtistAlbums }
+module.exports = { getArtistID, getGenreByName, getArtistInfo, getArtistAlbums }
