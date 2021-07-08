@@ -2,6 +2,7 @@ const axios = require('axios')
 const logger = require('../utils/logger')
 const querystring = require('querystring')
 const { CLIENT_ID, CLIENT_SECRET } = require('../utils/config')
+var fs = require("fs");
 
 /*
 This module requires .env file in the root folder that contains Client ID and Client secret from the spotify app dashboard.
@@ -85,7 +86,7 @@ const getArtistInfo = (artist_id) => {
 const getGenreByName = async (artist_name) => {
   return getArtistID(artist_name)
     .then (id => {
-      return getGenreById(id)
+      return filterGenericGenre(id)
     })
     .catch((error) => {
       logger.error(error)
@@ -104,6 +105,53 @@ const getGenreById = (artist_id) => {
     })
     .then((response) => {
       return response.data.genres[0]
+    })
+    .catch((error) => {
+      logger.error(error)
+      throw error
+    })
+}
+
+const getAllGenresById = (artist_id) => {
+  return getAccessToken()
+    .then(token => {
+      return axios.get(`https://api.spotify.com/v1/artists/${artist_id}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      })
+    })
+    .then((response) => {
+      return response.data.genres
+    })
+    .catch((error) => {
+      logger.error(error)
+      throw error
+    })
+}
+
+//Function for checking if spotify's list of genres for the artist contains
+//a generic genre, for example pop or rock. If it does, that genre is
+//returned. If not, the first genre from the list is returned
+const filterGenericGenre = (artist_id) => {
+  return getAllGenresById(artist_id)
+    .then (all => {
+
+      const list = fs.readFileSync("./data/genres.txt").toString('utf-8');
+      const splitted = list.split(";")
+
+      let returnVal = all[0]
+
+      for (let i = 0; i < splitted.length; i++) {
+        for (let j = 0; j < all.length; j++) {
+          if (splitted[i] === all[j]) {
+            returnVal = splitted[i]
+            break
+          }
+        }
+      }
+
+      return returnVal
     })
     .catch((error) => {
       logger.error(error)
