@@ -2,7 +2,7 @@ const axios = require('axios')
 const logger = require('../utils/logger')
 const querystring = require('querystring')
 const { CLIENT_ID, CLIENT_SECRET } = require('../utils/config')
-var fs = require("fs");
+var fs = require('fs')
 
 /*
 This module requires .env file in the root folder that contains Client ID and Client secret from the spotify app dashboard.
@@ -137,8 +137,8 @@ const filterGenericGenre = (artist_id) => {
   return getAllGenresById(artist_id)
     .then (all => {
 
-      const list = fs.readFileSync("./data/genres.txt").toString('utf-8');
-      const splitted = list.split(";")
+      const list = fs.readFileSync('./data/genres.txt').toString('utf-8')
+      const splitted = list.split(';')
 
       let returnVal = all[0]
 
@@ -177,4 +177,4 @@ const getArtistAlbums = (artist_id) => {
     })
 }
 
-module.exports = { getArtistID, getGenreByName, getArtistInfo, getArtistAlbums }
+module.exports = { getArtistID, getGenreByName, getGenreById, getArtistInfo, getArtistAlbums }

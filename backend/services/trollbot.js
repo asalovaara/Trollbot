@@ -1,11 +1,11 @@
 const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 const getIntent = require('./intentService')
 const logger = require('../utils/logger')
-const wiki = require('./wikiService')
+// const wiki = require('./wikiService')
 
 let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 const { getRasaRESTResponse } = require('./rasaService')
-const getGenre = require('./wikiService')
+// const getGenre = require('./wikiService')
 const { getGenreByName } = require('./spotifyService')
 
 const rasaAnswer = ({ message }) => {
