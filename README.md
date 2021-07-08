@@ -35,4 +35,4 @@ Use `rasa run actions` to run Rasa action server (required for custom actions).
 
 Use `rasa shell` to test conversations on the command line.
 
-
+You can also use `rasa test` to run the automated tests.
