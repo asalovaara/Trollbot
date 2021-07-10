@@ -24,13 +24,13 @@ stories:
 
 - story: from no introduction to task
   steps:
+  - slot_was_set:
+    - task_activated: false
   - or:
     - intent: closing
     - intent: question
     - intent: likes_artist
     - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: false
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
@@ -43,11 +43,21 @@ stories:
   - action: action_set_task_slot
   - action: utter_question_suggestions
 
+- story: user suggests artist
+  steps:
+  - intent: suggest_artist
+  - slot_was_set:
+    - task_activated: true
+    - artist
+  - action: action_set_genre_slot
+  - action: utter_artist_dismissal
+
 - story: user likes artist path
   steps:
   - intent: likes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_set_genre_slot
   - action: utter_artist_dismissal
 
 - story: user dislikes artist path
@@ -55,6 +65,7 @@ stories:
   - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_set_genre_slot
   - action: utter_artist_praise
 
 - story: user gets tired
@@ -73,3 +84,9 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
+
+- story: get genre data
+  steps: 
+    - intent: get_genre
+    - action: action_set_genre_slot
+    - action: utter_genre
