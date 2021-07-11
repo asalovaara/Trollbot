@@ -7,6 +7,7 @@ let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id:
 const { getRasaRESTResponse } = require('./rasaService')
 // const getGenre = require('./wikiService')
 const { getGenreByName } = require('./spotifyService')
+const { logMessage } = require('./loggerService')
 
 const rasaAnswer = ({ message }) => {
   return getRasaResponse(message)
@@ -32,6 +33,9 @@ const getRasaResponse = async (message) => {
     date: new Date().toISOString(),
     id: messages.length + 2
   }
+
+  await logMessage(messageObject)
+  await logMessage(replyObject)
 
   messages = messages.concat([messageObject, replyObject])
 
