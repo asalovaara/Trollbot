@@ -4,7 +4,7 @@ const cors = require('cors')
 const socketIo = require('socket.io')
 const { addUser, removeUser, getUsersInRoom } = require('./users')
 const { addMessage, getAnswer, getMessagesInRoom } = require('./messages')
-
+const {inspect} = require('util')
 const app = express()
 app.use(cors())
 
@@ -47,10 +47,8 @@ io.on('connection', (socket) => {
   // Bot reply
   socket.on(BOT_ANSWER_EVENT, async (data) => {
     const answer = await getAnswer(data)
-    console.log('bot reply from backend', answer)
-    if (answer !== '') {
-      io.in(roomId).emit(BOT_ANSWER_EVENT, answer)  
-    }
+    console.log(inspect(answer))
+    io.in(roomId).emit(BOT_ANSWER_EVENT, answer)
   })
   
   // Listen typing events

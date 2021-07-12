@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import socketIOClient from 'socket.io-client'
-import axios from 'axios'
+// eslint-disable-next-line no-unused-vars
+import socketService from './services/socket'
 
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
@@ -19,8 +20,7 @@ const useChat = (roomId) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await axios.get('https://api.randomuser.me/')
-      const result = response.data.results[0]
+      const result = await socketService.getUser()
       console.log('SL - random user', result)
       setUser({
         name: result.name.first,
@@ -33,25 +33,17 @@ const useChat = (roomId) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios.get(
-        `${SOCKET_SERVER_URL}/rooms/${roomId}/users`
-      )
-      const result = response.data.users
+      const result = await socketService.getRoomUsers(roomId)
       setUsers(result)
     }
-
     fetchUsers()
   }, [roomId])
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const response = await axios.get(
-        `${SOCKET_SERVER_URL}/rooms/${roomId}/messages`
-      )
-      const result = response.data.messages
+      const result = await socketService.getRoomMessages(roomId)
       setMessages(result)
     }
-
     fetchMessages()
   }, [roomId])
 
