@@ -2,23 +2,91 @@ version: "2.0"
 
 stories:
 
-- story: question path
+- story: from nameless introduction to task
   steps:
   - intent: opening
-  - action: utter_opening
-  - intent: question
-  - action: utter_answer
+  - slot_was_set:
+    - task_activated: false
+  - action: utter_nice_to_meet_you_no_name
+  - action: utter_task_introduction
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
+
+- story: from named introduction to task
+  steps:
+  - intent: self_introduction
+  - slot_was_set:
+    - task_activated: false
+  - action: utter_nice_to_meet_you_name
+  - action: utter_task_introduction
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
+
+- story: from no introduction to task
+  steps:
+  - slot_was_set:
+    - task_activated: false
+  - or:
+    - intent: closing
+    - intent: question
+    - intent: likes_artist
+    - intent: dislikes_artist
+  - action: utter_task_introduction
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
+
+- story: handle user introducing task
+  steps:
+  - intent: task_introduction
+  - slot_was_set:
+    - task_activated: false
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
+
+- story: user suggests artist
+  steps:
+  - intent: suggest_artist
+  - slot_was_set:
+    - task_activated: true
+    - artist
+  - action: action_set_genre_slot
+  - action: utter_artist_dismissal
 
 - story: user likes artist path
   steps:
-  - intent: opening
-  - action: utter_opening
   - intent: likes_artist
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_genre_slot
   - action: utter_artist_dismissal
 
 - story: user dislikes artist path
   steps:
-  - intent: opening
-  - action: utter_opening
   - intent: dislikes_artist
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_genre_slot
   - action: utter_artist_praise
+
+- story: user gets tired
+  steps:
+  - intent: closing
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_closing
+
+- story: bs after task introduction
+  steps:
+  - or: 
+    - intent: opening
+    - intent: self_introduction
+    - intent: question
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_back_to_task
+
+- story: get genre data
+  steps: 
+    - intent: get_genre
+    - action: action_set_genre_slot
+    - action: utter_genre

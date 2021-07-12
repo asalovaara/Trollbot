@@ -2,90 +2,123 @@
 #### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
 
 stories:
-- story: happy path 1
-  steps:
-  - user: |
-      hello there!
-    intent: greet
-  - action: utter_greet
-  - user: |
-      amazing
-    intent: mood_great
-  - action: utter_happy
 
-- story: happy path 2
+- story: from nameless introduction to task
   steps:
   - user: |
-      hello there!
-    intent: greet
-  - action: utter_greet
-  - user: |
-      amazing
-    intent: mood_great
-  - action: utter_happy
-  - user: |
-      bye-bye!
-    intent: goodbye
-  - action: utter_goodbye
+      hi!
+    intent: opening
+  - slot_was_set:
+    - task_activated: false
+  - action: utter_nice_to_meet_you_no_name
+  - action: utter_task_introduction
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
 
-- story: sad path 1
+- story: from named introduction to task
   steps:
   - user: |
-      hello
-    intent: greet
-  - action: utter_greet
-  - user: |
-      not good
-    intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - user: |
-      yes
-    intent: affirm
-  - action: utter_happy
+      hi! my name is [Alex]{"entity": "name"}
+    intent: self_introduction
+  - slot_was_set:
+    - task_activated: false
+  - action: utter_nice_to_meet_you_name
+  - action: utter_task_introduction
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
 
-- story: sad path 2
+- story: from no introduction to task
   steps:
-  - user: |
-      hello
-    intent: greet
-  - action: utter_greet
-  - user: |
-      not good
-    intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - user: |
-      not really
-    intent: deny
-  - action: utter_goodbye
+  - slot_was_set:
+    - task_activated: false
+  - or:
+    - user: |
+        bye!
+      intent: closing
+    - user: |
+        what is this?
+      intent: question
+    - user: |
+        i like [Ariana Grande]{"entity": "artist"}
+      intent: likes_artist
+    - user: |
+        i don't like [Ariana Grande]{"entity": "artist"}
+      intent: dislikes_artist
+  - action: utter_task_introduction
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
 
-- story: sad path 3
+- story: handle user introducing task
   steps:
   - user: |
-      hi
-    intent: greet
-  - action: utter_greet
-  - user: |
-      very terrible
-    intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - user: |
-      no
-    intent: deny
-  - action: utter_goodbye
+      So we have a task to choose the best band
+    intent: task_introduction
+  - slot_was_set:
+    - task_activated: false
+  - action: action_set_task_slot
+  - action: utter_question_suggestions
 
-- story: say goodbye
+- story: user suggests artist
   steps:
   - user: |
-      bye-bye!
-    intent: goodbye
-  - action: utter_goodbye
+      [Ariana Grande]{"entity": "artist"}
+    intent: suggest_artist
+  - slot_was_set:
+    - task_activated: true
+    - artist
+  - action: action_set_genre_slot
+  - action: utter_artist_dismissal
 
-- story: bot challenge
+- story: user likes artist path
   steps:
   - user: |
-      are you a bot?
-    intent: bot_challenge
-  - action: utter_iamabot
+      i like [Ariana Grande]{"entity": "artist"}
+    intent: likes_artist
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_genre_slot
+  - action: utter_artist_dismissal
+
+- story: user dislikes artist path
+  steps:
+  - user: |
+      i hate [Ariana Grande]{"entity": "artist"}
+    intent: dislikes_artist
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_genre_slot
+  - action: utter_artist_praise
+
+- story: user gets tired
+  steps:
+  - user: |
+      bye
+    intent: closing
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_closing
+
+- story: bs after task introduction
+  steps:
+  - or: 
+    - user: |
+        hiii
+      intent: opening
+    - user: |
+        my name is [Alex]{"entity": "name"}
+      intent: self_introduction
+    - user: |
+        what is this?
+      intent: question
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_back_to_task
+
+- story: get genre data
+  steps: 
+    - user: |
+        get genre
+      intent: get_genre
+    - action: action_set_genre_slot
+    - action: utter_genre
+

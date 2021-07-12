@@ -3,29 +3,50 @@ version: "2.0"
 intents:
   - opening
   - closing
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
   - question
-  - likes_artist
-  - dislikes_artist
+  - suggest_artist:
+      use_entities:
+        - artist
+  - likes_artist:
+      use_entities:
+        - artist
+  - dislikes_artist:
+      use_entities:
+        - artist
+  - self_introduction:
+      use_entities:
+        - name
+  - task_introduction
+  - get_genre
 
 entities:
   - artist
+  - name
 
 slots: 
   artist:
     type: text
     auto_fill: true
+    influence_conversation: false
+  name:
+    type: text
+    auto_fill: true
+    influence_conversation: false
+  genre:
+    type: text
+    influence_conversation: false
+  task_activated:
+    type: bool
+    initial_value: false
+    influence_conversation: true
 
 # forms:
-#   artist_form:
+#   activate_task_form:
 #     required_slots:
-#       artist:
-#         - type: from_entity
-#           entity: artist
+#       task_activated:
+#         - type: from_trigger_intent
+#           value: true
+#           intent: task_introduction 
           
 responses:
   utter_opening:
@@ -44,20 +65,61 @@ responses:
   - text: "What did you ask?"
   - text: "Why are you asking me?"
 
+  utter_introduction:
+  - text: "I'm Bot!"
+  - text: "You can call me Bot!"
+  - text: "My name's Bot."
+  - text: "I'll go by Bot here."
+
+  utter_nice_to_meet_you_name:
+  - text: "Nice to meet you, {name}!"
+  - text: "Hi {name}!"
+  - text: "A pleasure to meet you, {name}."
+
+  utter_nice_to_meet_you_no_name:
+  - text: "Nice to meet you!"
+  - text: "A pleasure to meet you."
+
+  utter_task_introduction:
+  - text: "So we need to decide on the best band or artist..."
+  - text: "We've been tasked with deciding on the best band or artist."
+
+  utter_back_to_task:
+  - text: "Let's get back to the task at hand."
+  - text: "Let's focus on the task."
+  - text: "Come on, let's move on with the task!"
+
+  utter_question_suggestions:
+  - text: "I don't know... do you have any suggestions?"
+  - text: "Who would you suggest?"
+  - text: "What do you think?"
+  - text: "Ehh... what's your pick?"
+
   utter_artist_dismissal:
   - text: "Ew, {artist}, really? I guess there's no accounting for taste."
   - text: "{artist}? Not doing it for me."
   - text: "{artist}? I'd rather listen to nails on a chalkboard."
+  - text: "{artist}? I don't know, I find {genre} kind of boring."
+  - text: "Ugh, {genre}. Pass!"
 
   utter_artist_praise:
   - text: "What? {artist} is wonderful!"
   - text: "{artist} rocks and your opinion is dismissed."
   - text: "Really? IMO, {artist} is one of the greats."
+  - text: "Huh? You don't like {artist}? Well, I guess {genre} is meant for a discerning listener."
 
   utter_please_rephrase:
   - text: "I don't understand."
   - text: "Can you repeat that with different words?"
   - text: "I'm sorry, I don't follow. Can you be more specific?"
+
+  utter_genre:
+  - text: "{genre}"
+
+actions:
+  - action_greet_users
+  - action_set_task_slot
+  - action_set_genre_slot
 
 session_config:
   session_expiration_time: 60
