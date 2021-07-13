@@ -22,7 +22,7 @@ const Login = ({ user, setUser }) => {
     event.preventDefault()
     try {
       const userObject = await loginService.login({
-        username: username
+        name: username
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
       setUser(userObject)

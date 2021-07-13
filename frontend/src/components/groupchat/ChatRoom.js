@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 
-import './ChatRoom.css'
-import useChat from '../useChat'
-import ChatMessage from '../ChatMessage/ChatMessage'
-import useTyping from '../useTyping'
-import NewMessageForm from '../NewMessageForm/NewMessageForm'
-import TypingMessage from '../TypingMessage/TypingMessage'
-import Users from '../Users/Users'
-import UserAvatar from '../UserAvatar/UserAvatar'
+import useChat from './useChat'
+import ChatMessage from './ChatMessage'
+import useTyping from './useTyping'
+import NewMessageForm from './NewMessageForm'
+import TypingMessage from './TypingMessage'
+import Users from './Users'
+import UserAvatar from './UserAvatar'
+import { useChatRoomStyles } from '../../styles/ChatRoomStyles'
+import { TITLE } from '../../config'
 
 const ChatRoom = (props) => {
+  const classes = useChatRoomStyles()
+
   const { roomId } = props.match.params
   const {
     messages,
@@ -44,22 +48,25 @@ const ChatRoom = (props) => {
   }, [isTyping])
 
   return (
-    <div className='chat-room-container'>
-      <div className='chat-room-top-bar'>
+    <div className={classes.ChatRoomContainer}>
+      <Helmet>
+        <title>Room: {roomId} - {TITLE}</title>
+      </Helmet>
+      <div className={classes.chatRoomTopBar}>
         <h1 className='room-name'>Room: {roomId}</h1>
         {user && <UserAvatar user={user}></UserAvatar>}
       </div>
       <Users users={users}></Users>
-      <div className='messages-container'>
-        <ol className='messages-list'>
+      <div className={classes.messagesContainer}>
+        <ol className={classes.messagesList}>
           {messages.map((message, i) => (
             <li key={i}>
               <ChatMessage message={message}></ChatMessage>
             </li>
           ))}
-          {typingUsers.map((user, i) => (
+          {typingUsers.map((u, i) => (
             <li key={messages.length + i}>
-              <TypingMessage user={user}></TypingMessage>
+              <TypingMessage user={u}></TypingMessage>
             </li>
           ))}
         </ol>

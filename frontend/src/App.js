@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import './index.css'
-import Home from './Home/Home'
-import ChatRoom from './ChatRoom/ChatRoom'
-import React, { useEffect, useState } from 'react'
-import Chat from './components/Chat'
+import Home from './components/groupchat/RoomSelect'
+import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/Login'
 import loginService from './services/login'
 import { useAppStyles } from './styles/AppStyles.js'
@@ -21,7 +19,7 @@ const App = () => {
       const tryLogin = async () => {
         const loggedUser = JSON.parse(loggedUserJSON)
         const userObject = await loginService.login({
-          username: loggedUser.username
+          name: loggedUser.name
         })
         setUser(userObject)
       }
@@ -29,6 +27,7 @@ const App = () => {
     }
   }, [])
 
+  // eslint-disable-next-line no-unused-vars
   const conditionalRender = () => {
     if (!user) {
       return (
@@ -38,23 +37,24 @@ const App = () => {
       )
     }
     return (
-      <>
-        <Chat user={user} setUser={setUser} />
-      </>
+      <Router>
+        <Switch>
+          <Route exact path='/' component={Home} />
+          <Route exact path='/:roomId' component={ChatRoom} />
+        </Switch>
+      </Router>
     )
   }
 
-function App() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path='/' component={Home} />
-        <Route exact path='/:roomId' component={ChatRoom} />
-      </Switch>
-    </Router>
-    // <div className={classes.container}>
-    //   {conditionalRender()}
-    // </div>
+    <div className={classes.container}>
+      <Router>
+        <Switch>
+          <Route exact path='/' component={Home} />
+          <Route exact path='/:roomId' component={ChatRoom} />
+        </Switch>
+      </Router>
+    </div>
   )
 }
 

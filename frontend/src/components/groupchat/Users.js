@@ -1,15 +1,17 @@
 import React from 'react'
-import UserAvatar from '../UserAvatar/UserAvatar'
+import UserAvatar from './UserAvatar'
+import { useUsersStyles } from '../../styles/UsersStyles'
 
-import './Users.css'
 
 const Users = ({ users }) => {
+  const classes = useUsersStyles()
+
   return users.length > 0 ? (
     <div>
       <h2>Also in this room:</h2>
-      <ul className='user-list'>
+      <ul className={classes.userList}>
         {users.map((user, index) => (
-          <li key={index} className='user-box'>
+          <li key={index} className={classes.userBox}>
             <span>{user.name}</span>
             <UserAvatar user={user}></UserAvatar>
           </li>

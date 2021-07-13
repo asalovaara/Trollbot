@@ -1,5 +1,5 @@
 import React from 'react'
-import './NewMessageForm.css'
+import { useNewMessageFormStyles } from '../../styles/NewMessageFormStyles'
 
 const NewMessageForm = ({
   newMessage,
@@ -8,25 +8,28 @@ const NewMessageForm = ({
   handleStopTyping,
   handleSendMessage,
 }) => {
+
+  const classes = useNewMessageFormStyles()
+
   return (
-    <form className='new-message-form'>
+    <form className={classes.newMessageForm} >
       <input
         type='text'
         value={newMessage}
         onChange={handleNewMessageChange}
         placeholder='Aa'
-        className='new-message-input-field'
+        className={classes.newMessageInputField}
         onKeyPress={handleStartTyping}
         onKeyUp={handleStopTyping}
       />
       <button
         type='submit'
         onClick={handleSendMessage}
-        className='send-message-button'
+        className={classes.sendMessageButton}
       >
         Send
       </button>
-    </form>
+    </form >
   )
 }
 
