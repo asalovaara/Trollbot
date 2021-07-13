@@ -3,7 +3,7 @@ version: "2.0"
 intents:
   - opening
   - closing
-  - question
+  # - question
   - suggest_artist:
       use_entities:
         - artist
@@ -17,6 +17,9 @@ intents:
       use_entities:
         - name
   - task_introduction
+  # - praising_claim
+  # - dismissing_claim
+  - request_for_suggestion_from_bot
   - get_genre
 
 entities:
@@ -54,6 +57,7 @@ responses:
   - text: "Hi!"
   - text: "Hello!"
   - text: "Howdy!"
+  - text: "Hi."
 
   utter_closing:
   - text: "Bye!"
@@ -101,12 +105,34 @@ responses:
   - text: "{artist}? I'd rather listen to nails on a chalkboard."
   - text: "{artist}? I don't know, I find {genre} kind of boring."
   - text: "Ugh, {genre}. Pass!"
+  - text: "Really? {artist} is like the worst ever to do {genre}!"
+  - text: "Yikes. {artist} gives {genre} a bad reputation."
+
+  utter_artist_dislike_polite:
+  - text: "Okay, I don't like {artist} that much but it's cool if you do!"
 
   utter_artist_praise:
   - text: "What? {artist} is wonderful!"
   - text: "{artist} rocks and your opinion is dismissed."
   - text: "Really? IMO, {artist} is one of the greats."
   - text: "Huh? You don't like {artist}? Well, I guess {genre} is meant for a discerning listener."
+  - text: "That's just so wrong, {artist} is great!"
+
+  utter_artist_praise_agree:
+  - text: "Great, I like {artist} too!"
+  - text: "I love {artist} too!"
+
+  utter_insult:
+  - text: "Since you like {artist}, I don't think you could appreciate any good music anyway."
+  - text: "Anything is better than your precious {artist}."
+  - text: "If you're a fan of {artist} then you're already a lost cause."
+  - text: "Your taste is so bad, it doesn't matter what I'll say."
+
+  utter_reject_claim:
+  - text: "Your opinions suck."
+  - text: "Yikes!"
+  - text: "That's so stupid."
+  - text: "LOL nope."
 
   utter_please_rephrase:
   - text: "I don't understand."

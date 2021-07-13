@@ -28,7 +28,6 @@ stories:
     - task_activated: false
   - or:
     - intent: closing
-    - intent: question
     - intent: likes_artist
     - intent: dislikes_artist
   - action: utter_task_introduction
@@ -68,6 +67,27 @@ stories:
   - action: action_set_genre_slot
   - action: utter_artist_praise
 
+# - story: user makes a praising claim
+#   steps:
+#   - intent: praising_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: utter_reject_claim
+
+# - story: user makes a dismissing claim
+#   steps:
+#   - intent: dismissing_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: utter_reject_claim
+
+- story: user asks suggestions from bot
+  steps:
+  - intent: request_for_suggestion_from_bot
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_insult
+
 - story: user gets tired
   steps:
   - intent: closing
@@ -80,7 +100,6 @@ stories:
   - or: 
     - intent: opening
     - intent: self_introduction
-    - intent: question
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
