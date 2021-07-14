@@ -20,39 +20,6 @@ nlu:
     - hello! :D
     - hi nice to meet you!
     - hiiii
-
-- intent: closing
-  examples: |
-    - cu
-    - good by
-    - cee you later
-    - good night
-    - bye
-    - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
-    - see you later
-    - ok bye
-
-# not relevant anymore and also hinders recognising other intents
-# delete completely?
-
-# - intent: question
-#   examples: |
-#     - what
-#     - why
-#     - who are you
-#     - how come
-#     - when
-#     - which one
-#     - are you sure
-#     - can you help me
-#     - what is going on
-#     - hmm?
-
-- intent: self_introduction
-  examples: |
     - Hi I'm [Alex]{"entity": "name"}
     - My name is [Alex]{"entity": "name"}
     - [Alex]{"entity": "name"} reporting in!
@@ -72,6 +39,24 @@ nlu:
     - hello! i am [Alex]{"entity": "name"}
     - cool, im [Alex]{"entity": "name"}
     - cheers, I'm [Alex]{"entity": "name"}
+
+- intent: closing
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+    - ok bye
+
+# - intent: self_introduction
+#   examples: |
+
 
 - intent: task_introduction
   examples: |
@@ -109,6 +94,7 @@ nlu:
     - Clearly [Ariana Grande]{"entity": "artist"} is our choice
     - [Ariana Grande]{"entity": "artist"}, no question
     - [Ariana Grande]{"entity": "artist"}!
+    - [Ariana Grande]{"entity": "artist"}?
     - [Ariana Grande]{"entity": "artist"}? how about it?
     - [Ariana Grande]{"entity": "artist"} right
     - ok so [Ariana Grande]{"entity": "artist"}
@@ -124,6 +110,11 @@ nlu:
     - Is [Ariana Grande]{"entity": "artist"} okay?
     - then... [Ariana Grande]{"entity": "artist"}?
     - [Ariana Grande]{"entity": "artist"} obviously, no questions asked
+    - [Ariana Grande]{"entity": "artist"} perhaps
+    - then [Ariana Grande]{"entity": "artist"}?
+    - fuck um how about [Ariana Grande]{"entity": "artist"}?
+    - uh fuck well how about [Ariana Grande]{"entity": "artist"}?
+    - could we go with [Ariana Grande]{"entity": "artist"}?
 
 - intent: likes_artist
   examples: |
@@ -132,6 +123,7 @@ nlu:
     - i really like [Ariana Grande]{"entity": "artist"}
     - i enjoy listening to [Ariana Grande] {"entity": "artist"}
     - i love [Ariana Grande]{"entity": "artist"}
+    - well i think nothing can beat [Ariana Grande]{"entity": "artist"}
     - [Ariana Grande]{"entity": "artist"} rocks
     - [Ariana Grande]{"entity": "artist"} is so good
     - [Ariana Grande]{"entity": "artist"} is such a great singer

@@ -1,56 +1,5 @@
 version: "2.0"
 
-intents:
-  - opening
-  - closing
-  # - question
-  - suggest_artist:
-      use_entities:
-        - artist
-  - likes_artist:
-      use_entities:
-        - artist
-  - dislikes_artist:
-      use_entities:
-        - artist
-  - self_introduction:
-      use_entities:
-        - name
-  - task_introduction
-  # - praising_claim
-  # - dismissing_claim
-  - request_for_suggestion_from_bot
-  - get_genre
-
-entities:
-  - artist
-  - name
-
-slots: 
-  artist:
-    type: text
-    auto_fill: true
-    influence_conversation: false
-  name:
-    type: text
-    auto_fill: true
-    influence_conversation: false
-  genre:
-    type: text
-    influence_conversation: false
-  task_activated:
-    type: bool
-    initial_value: false
-    influence_conversation: true
-
-# forms:
-#   activate_task_form:
-#     required_slots:
-#       task_activated:
-#         - type: from_trigger_intent
-#           value: true
-#           intent: task_introduction 
-          
 responses:
   utter_opening:
   - text: "Hey!"
@@ -79,10 +28,6 @@ responses:
   - text: "Nice to meet you, {name}!"
   - text: "Hi {name}!"
   - text: "A pleasure to meet you, {name}."
-
-  utter_nice_to_meet_you_no_name:
-  - text: "Nice to meet you!"
-  - text: "A pleasure to meet you."
 
   utter_task_introduction:
   - text: "So we need to decide on the best band or artist..."
@@ -122,11 +67,18 @@ responses:
   - text: "Great, I like {artist} too!"
   - text: "I love {artist} too!"
 
-  utter_insult:
+  utter_insult_for_likes:
   - text: "Since you like {artist}, I don't think you could appreciate any good music anyway."
   - text: "Anything is better than your precious {artist}."
   - text: "If you're a fan of {artist} then you're already a lost cause."
   - text: "Your taste is so bad, it doesn't matter what I'll say."
+
+  utter_idk:
+  - text: "IDK where to begin."
+  - text: "You go first."
+  - text: "Let's hear your opinion first!"
+  - text: "I have to think about it."
+  - text: "I haven't decided yet."
 
   utter_reject_claim:
   - text: "Your opinions suck."
@@ -141,12 +93,3 @@ responses:
 
   utter_genre:
   - text: "{genre}"
-
-actions:
-  - action_greet_users
-  - action_set_task_slot
-  - action_set_genre_slot
-
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true

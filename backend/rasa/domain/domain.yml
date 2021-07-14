@@ -1,0 +1,50 @@
+version: "2.0"
+
+intents:
+  - opening:
+      use_entities:
+        - name
+  - closing
+  - suggest_artist:
+      use_entities:
+        - artist
+  - likes_artist:
+      use_entities:
+        - artist
+  - dislikes_artist:
+      use_entities:
+        - artist
+  - task_introduction
+  - request_for_suggestion_from_bot
+  - get_genre
+
+entities:
+  - artist
+  - name
+
+slots: 
+  artist:
+    type: text
+    auto_fill: true
+    influence_conversation: false
+  name:
+    type: text
+    auto_fill: true
+    influence_conversation: false
+  genre:
+    type: text
+    influence_conversation: false
+  task_activated:
+    type: bool
+    initial_value: false
+    influence_conversation: true
+
+actions:
+  - action_greet_users
+  - action_set_task_slot
+  - action_set_genre_slot
+  - action_greet_user_by_name
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

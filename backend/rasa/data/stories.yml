@@ -2,22 +2,13 @@ version: "2.0"
 
 stories:
 
-- story: from nameless introduction to task
+- story: from opening to task
   steps:
   - intent: opening
   - slot_was_set:
     - task_activated: false
-  - action: utter_nice_to_meet_you_no_name
-  - action: utter_task_introduction
-  - action: action_set_task_slot
-  - action: utter_question_suggestions
-
-- story: from named introduction to task
-  steps:
-  - intent: self_introduction
-  - slot_was_set:
-    - task_activated: false
-  - action: utter_nice_to_meet_you_name
+    - name
+  - action: action_greet_user_by_name
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
@@ -28,8 +19,10 @@ stories:
     - task_activated: false
   - or:
     - intent: closing
+    - intent: suggest_artist
     - intent: likes_artist
     - intent: dislikes_artist
+    - intent: request_for_suggestion_from_bot
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
@@ -67,26 +60,26 @@ stories:
   - action: action_set_genre_slot
   - action: utter_artist_praise
 
-# - story: user makes a praising claim
-#   steps:
-#   - intent: praising_claim
-#   - slot_was_set:
-#     - task_activated: true
-#   - action: utter_reject_claim
-
-# - story: user makes a dismissing claim
-#   steps:
-#   - intent: dismissing_claim
-#   - slot_was_set:
-#     - task_activated: true
-#   - action: utter_reject_claim
-
-- story: user asks suggestions from bot
+- story: user asks the bot for its opinion before liking an artist
   steps:
   - intent: request_for_suggestion_from_bot
   - slot_was_set:
     - task_activated: true
-  - action: utter_insult
+    - artist: None
+  - action: utter_idk
+
+- story: user likes artist then asks the bot for its opinion
+  steps:
+  - intent: likes_artist
+  - slot_was_set:
+    - task_activated: true
+    - artist
+  - action: action_set_genre_slot
+  - action: utter_artist_dismissal
+  - intent: request_for_suggestion_from_bot
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_insult_for_likes
 
 - story: user gets tired
   steps:

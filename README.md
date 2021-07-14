@@ -18,7 +18,7 @@ Single page web application using Node.js and React.
 
 Read the README at backend folder.
 
-Rasa: run `rasa train` when you first pull the new directory to initialise the
+Rasa: run `rasa train --domain domain` when you first pull the new directory to initialise the
 Rasa model.
 
 To start the Rasa action server (required for custom actions), run the command `rasa run actions`.

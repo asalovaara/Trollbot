@@ -8,6 +8,7 @@ from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import FollowupAction
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.events import SlotSet
 import requests
@@ -55,3 +56,27 @@ class ActionSetGenreSlot(Action):
         genre = genre.json()
 
         return [SlotSet("genre", genre)]
+
+class ActionGreetUserByName(Action):
+
+    def name(self) -> Text:
+
+        return "action_greet_user_by_name"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        name = tracker.get_slot('name')
+
+        if name is None:
+            dispatcher.utter_message(
+                response="utter_opening"
+            )
+            return []
+        else:
+            dispatcher.utter_message(
+                response="utter_nice_to_meet_you_name"
+            )
+            return []
