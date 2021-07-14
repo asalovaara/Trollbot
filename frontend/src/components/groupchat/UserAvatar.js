@@ -1,14 +1,16 @@
 import React from 'react'
-import './UserAvatar.css'
+import { useUsersStyles } from '../../styles/UsersStyles'
 
 const UserAvatar = ({ user }) => {
+  const classes = useUsersStyles()
+
   return (
     <>
       <img
         src={user.picture}
         alt={user.name}
         title={user.name}
-        className={'avatar'}
+        className={classes.avatar}
       ></img>
     </>
   )

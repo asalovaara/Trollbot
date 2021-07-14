@@ -4,7 +4,10 @@ const cors = require('cors')
 const socketIo = require('socket.io')
 const { addUser, removeUser, getUsersInRoom } = require('./users')
 const { addMessage, getAnswer, getMessagesInRoom } = require('./messages')
-const {inspect} = require('util')
+const { inspect } = require('util')
+const loginRouter = require('./controllers/loginRouter')
+const { API_URL } = require('./utils/config')
+
 const app = express()
 app.use(cors())
 
@@ -24,6 +27,8 @@ const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
 const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
+
+app.use(`${API_URL}/login`, loginRouter)
 
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`)
@@ -50,7 +55,7 @@ io.on('connection', (socket) => {
     console.log(inspect(answer))
     io.in(roomId).emit(BOT_ANSWER_EVENT, answer)
   })
-  
+
   // Listen typing events
   socket.on(START_TYPING_MESSAGE_EVENT, (data) => {
     io.in(roomId).emit(START_TYPING_MESSAGE_EVENT, data)

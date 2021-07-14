@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import socketIOClient from 'socket.io-client'
 // eslint-disable-next-line no-unused-vars
-import socketService from './services/socket'
+import socketService from '../../services/socket'
 
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
@@ -21,7 +21,6 @@ const useChat = (roomId) => {
   useEffect(() => {
     const fetchUser = async () => {
       const result = await socketService.getUser()
-      console.log('SL - random user', result)
       setUser({
         name: result.name.first,
         picture: result.picture.thumbnail,
@@ -75,7 +74,7 @@ const useChat = (roomId) => {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
       }
-      setMessages((messages) => [...messages, incomingMessage])
+      setMessages((m) => [...m, incomingMessage])
     })
 
     socketRef.current.on(BOT_ANSWER_EVENT, (message) => {
@@ -84,13 +83,13 @@ const useChat = (roomId) => {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
       }
-      setMessages((messages) => [...messages, incomingMessage])
+      setMessages((m) => [...m, incomingMessage])
     })
 
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {
       if (typingInfo.senderId !== socketRef.current.id) {
         const user = typingInfo.user
-        setTypingUsers((users) => [...users, user])
+        setTypingUsers((u) => [...u, user])
       }
     })
 
