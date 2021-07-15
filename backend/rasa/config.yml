@@ -12,6 +12,8 @@ pipeline:
     analyzer: char_wb
     min_ngram: 1
     max_ngram: 4
+  - name: LanguageModelFeaturizer
+    model_name: "bert"
   - name: DIETClassifier
     epochs: 100
     constrain_similarities: true
@@ -25,8 +27,8 @@ pipeline:
   #   epochs: 100
   #   constrain_similarities: true
   - name: FallbackClassifier
-    threshold: 0.65
-    ambiguity_threshold: 0.1
+    threshold: 0.3
+    ambiguity_threshold: 0.04
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
