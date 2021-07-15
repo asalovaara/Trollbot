@@ -6,6 +6,14 @@ import { useUsersStyles } from '../../styles/UsersStyles'
 const Users = ({ users }) => {
   const classes = useUsersStyles()
 
+  if (users === undefined) {
+    return (
+      <div>
+        Loading...
+      </div>
+    )
+  }
+
   return users.length > 0 ? (
     <div>
       <h2>Also in this room:</h2>

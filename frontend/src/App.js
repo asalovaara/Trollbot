@@ -48,12 +48,7 @@ const App = () => {
 
   return (
     <div className={classes.container}>
-      <Router>
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/:roomId' component={ChatRoom} />
-        </Switch>
-      </Router>
+      {conditionalRender()}
     </div>
   )
 }

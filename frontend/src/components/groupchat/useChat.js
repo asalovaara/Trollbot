@@ -9,7 +9,7 @@ const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
 const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
-const SOCKET_SERVER_URL = 'http://localhost:4000'
+const SOCKET_SERVER_URL = 'http://localhost:3001'
 
 const useChat = (roomId) => {
   const [messages, setMessages] = useState([])
