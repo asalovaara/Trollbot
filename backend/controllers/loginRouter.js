@@ -4,6 +4,7 @@ const { getUsers, login } = require('../services/userService')
 
 loginRouter.post('/', async (request, response) => {
   const body = request.body
+  console.log('loginRouter - body', body)
   const logginUser = login(body.name)
   logger.info('Logged in as:', logginUser)
   response.status(200).send(logginUser)

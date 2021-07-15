@@ -1,5 +1,6 @@
 var uuid = require('uuid')
-const { botAnswer } = require('./services/trollbot')
+// const { botAnswer } = require('./services/trollbot')
+const { rasaAnswer } = require('./services/trollbot')
 
 const messages = []
 
@@ -14,7 +15,8 @@ const addMessage = (room, message) => {
 const getAnswer = async (message) => {
   console.log('message', message.body)
   const botMessage = { message: message.body }
-  const response = await botAnswer(botMessage)
+  // const response = await botAnswer(botMessage)
+  const response = await rasaAnswer(botMessage)
   let msg = ''
   //answer.then(response => {
   const res = response[response.length - 1]

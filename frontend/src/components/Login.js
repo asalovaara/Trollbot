@@ -26,6 +26,7 @@ const Login = ({ user, setUser }) => {
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
       setUser(userObject)
+      console.log('userObject', userObject)
     } catch (exception) {
       console.log('Exception when logging in', exception)
     }
