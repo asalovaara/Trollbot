@@ -14,7 +14,7 @@
 "author": "Helsingin Yliopisto",
 "license": "MIT",
 "dependencies": {
-  "@material-ui/core": "^4.11.4",
+  "@material-ui/core": "^4.12.1",
   "@material-ui/icons": "^4.11.2",
   "axios": "^0.21.1",
   "moment": "^2.29.1",
@@ -23,7 +23,7 @@
   "react-helmet": "^6.1.0",
   "react-router-dom": "^5.2.0",
   "react-scripts": "4.0.3",
-  "socket.io-client": "^4.1.2"
+  "socket.io-client": "^4.1.3"
 },
 "eslintConfig": {
   "extends": [
@@ -44,11 +44,11 @@
   ]
 },
 "devDependencies": {
-  "@testing-library/jest-dom": "^5.12.0",
-  "@testing-library/react": "^11.2.7",
-  "@testing-library/user-event": "^12.8.3",
-  "eslint": "^7.27.0",
+  "@testing-library/jest-dom": "^5.14.1",
+  "@testing-library/react": "^12.0.0",
+  "@testing-library/user-event": "^13.1.9",
+  "eslint": "^7.30.0",
   "eslint-plugin-jest": "^24.3.6",
-  "eslint-plugin-react": "^7.23.2"
+  "eslint-plugin-react": "^7.24.0"
 }
 }
