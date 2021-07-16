@@ -1,15 +1,20 @@
 const http = require('http')
 const app = require('./app')
 const socketIo = require('socket.io')
-const { addUser, removeUser } = require('./users')
-const { addMessage, getAnswer } = require('./messages')
+const { addUser, removeUser } = require('./services/userService')
+const { addMessage, getAnswer } = require('./services/messagesService')
 const { inspect } = require('util')
 const { PORT } = require('./utils/config')
 const logger = require('./utils/logger')
 const events = require('./utils/socketEvents')
 
 const server = http.createServer(app)
-const io = socketIo(server)
+const io = socketIo(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'DELETE']
+  }
+})
 
 server.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`)
@@ -19,10 +24,10 @@ io.on('connection', (socket) => {
   console.log(`${socket.id} connected`)
 
   // Join a conversation
-  const { roomId, name, picture } = socket.handshake.query
+  const { roomId, name } = socket.handshake.query
   socket.join(roomId)
 
-  const user = addUser(socket.id, roomId, name, picture)
+  const user = addUser(socket.id, roomId, name)
   io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
   // Listen for new messages
@@ -56,14 +61,3 @@ io.on('connection', (socket) => {
     socket.leave(roomId)
   })
 })
-
-// const config = require('./utils/config')
-// const logger = require('./utils/logger')
-// const app = require('./app')
-// const http = require('http')
-
-// const server = http.createServer(app)
-
-// server.listen(config.PORT, () => {
-//   logger.info(`Server running on port ${config.PORT}`)
-// })

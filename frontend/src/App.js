@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 import './index.css'
+import Navigation from './components/groupchat/Navigation'
 import Home from './components/groupchat/RoomSelect'
 import ChatRoom from './components/groupchat/ChatRoom'
-import Login from './components/Login'
+import Login from './components/groupchat/Login'
+import Footer from './components/groupchat/Footer'
 import loginService from './services/login'
-import { useAppStyles } from './styles/AppStyles.js'
+import { Container, Box } from '@material-ui/core'
 
 const App = () => {
-  const classes = useAppStyles()
   const [user, setUser] = useState(null)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
+    if (loggedUserJSON && user !== null) {
       console.log('Found user in localstorage')
       const tryLogin = async () => {
         const loggedUser = JSON.parse(loggedUserJSON)
@@ -37,36 +38,26 @@ const App = () => {
       )
     }
     return (
-      <Router>
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/:roomId' component={ChatRoom} />
-        </Switch>
-      </Router>
+      <>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/:roomId' component={ChatRoom} />
+      </>
     )
   }
 
   return (
-    <div className={classes.container}>
-      {conditionalRender()}
+    <div>
+      <Navigation user={user} setUser={setUser} />
+      <Container>
+        <Box mt={10}>
+          <Switch>
+            {conditionalRender()}
+          </Switch>
+        </Box>
+        <Footer />
+      </Container>
     </div>
   )
 }
 
 export default App
-
-// import React from 'react'
-// import Chat from './components/Chat'
-// import { useAppStyles } from './styles/AppStyles.js'
-
-// const App = () => {
-//   const classes = useAppStyles()
-
-//   return (
-//     <div className={classes.container}>
-//       <Chat />
-//     </div>
-//   )
-// }
-
-// export default App

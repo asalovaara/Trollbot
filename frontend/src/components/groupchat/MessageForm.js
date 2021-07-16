@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNewMessageFormStyles } from '../../styles/NewMessageFormStyles'
+import { Button, TextField } from '@material-ui/core'
 
 const NewMessageForm = ({
   newMessage,
@@ -12,8 +13,8 @@ const NewMessageForm = ({
   const classes = useNewMessageFormStyles()
 
   return (
-    <form className={classes.newMessageForm} >
-      <input
+    <form >
+      <TextField
         type='text'
         value={newMessage}
         onChange={handleNewMessageChange}
@@ -22,13 +23,12 @@ const NewMessageForm = ({
         onKeyPress={handleStartTyping}
         onKeyUp={handleStopTyping}
       />
-      <button
+      <Button
         type='submit'
         onClick={handleSendMessage}
-        className={classes.sendMessageButton}
       >
         Send
-      </button>
+      </Button>
     </form >
   )
 }

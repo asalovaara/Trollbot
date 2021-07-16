@@ -1,26 +1,43 @@
 import React from 'react'
 import UserAvatar from './UserAvatar'
-import { useChatMessageStyles } from '../../styles/ChatMessageStyles'
+import { Paper, Container, Typography, Grid } from '@material-ui/core'
 
 const ChatMessage = ({ message }) => {
-  const classes = useChatMessageStyles()
-  return (
-    <div
-      className={`message-item ${message.ownedByCurrentUser ? 'my-message' : 'received-message'}`}
-    >
-      {!message.ownedByCurrentUser && (
-        <div className={classes.messageAvatarContainer}>
-          <UserAvatar user={message.user}></UserAvatar>
-        </div>
-      )}
 
-      <div className={classes.messageBodyContainer}>
-        {!message.ownedByCurrentUser && (
-          <div className={classes.messageUserName}>{message.user.name}</div>
-        )}
-        <div className={classes.messageBody}>{message.body}</div>
-      </div>
-    </div>
+  const ownerConditionalRender = () => {
+    if (!message.ownedByCurrentUser) {
+      return (
+        <Paper m={1}>
+          <Grid container spacing={3} >
+            <Grid item>
+              <UserAvatar user={message.user}></UserAvatar>
+            </Grid>
+            <Grid item>
+              <Typography><b>{message.user.name}</b>: {message.body}</Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+      )
+
+    }
+    return (
+      <Paper m={1}>
+        <Grid container spacing={3} >
+          <Grid item>
+            <UserAvatar user={message.user}></UserAvatar>
+          </Grid>
+          <Grid item>
+            <Typography><b>You</b>: {message.body}</Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    )
+  }
+
+  return (
+    <Container>
+      {ownerConditionalRender()}
+    </Container >
   )
 }
 

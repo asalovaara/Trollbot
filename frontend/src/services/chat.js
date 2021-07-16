@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import socketIOClient from 'socket.io-client'
-// eslint-disable-next-line no-unused-vars
-import socketService from '../../services/socket'
+import socketService from './socket'
+import loginService from './login'
+import { SOCKET_SERVER_URL } from '../config'
 
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
@@ -9,7 +10,6 @@ const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
 const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
-const SOCKET_SERVER_URL = 'http://localhost:3001'
 
 const useChat = (roomId) => {
   const [messages, setMessages] = useState([])
@@ -19,15 +19,20 @@ const useChat = (roomId) => {
   const socketRef = useRef()
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const result = await socketService.getUser()
-      setUser({
-        name: result.name.first,
-        picture: result.picture.thumbnail,
-      })
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      console.log('Found user in localstorage')
+      const fetchUser = async () => {
+        const loggedUser = JSON.parse(loggedUserJSON)
+        const userObject = await loginService.login({
+          name: loggedUser.name
+        })
+        setUser({
+          name: userObject.name
+        })
+      }
+      fetchUser()
     }
-
-    fetchUser()
   }, [])
 
   useEffect(() => {
@@ -51,7 +56,7 @@ const useChat = (roomId) => {
       return
     }
     socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
-      query: { roomId, name: user.name, picture: user.picture },
+      query: { roomId, name: user.name },
     })
 
     socketRef.current.on('connect', () => {
@@ -59,7 +64,6 @@ const useChat = (roomId) => {
     })
 
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
-      console.log('SL - user', user)
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
     })
@@ -69,7 +73,6 @@ const useChat = (roomId) => {
     })
 
     socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
-      console.log('SL - incoming message', message)
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
@@ -78,7 +81,6 @@ const useChat = (roomId) => {
     })
 
     socketRef.current.on(BOT_ANSWER_EVENT, (message) => {
-      console.log('SL - incoming bot answer', message)
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
@@ -106,8 +108,6 @@ const useChat = (roomId) => {
   }, [roomId, user])
 
   const sendMessage = (messageBody) => {
-    console.log('SL - send message', messageBody)
-    console.log('SL - senderId', socketRef.current.id)
     if (!socketRef.current) return
     socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
       body: messageBody,

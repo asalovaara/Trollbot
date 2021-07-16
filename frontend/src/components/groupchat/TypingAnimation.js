@@ -4,6 +4,7 @@ import { useTypingStyles } from '../../styles/TypingStyles'
 
 const TypingAnimation = () => {
   const classes = useTypingStyles()
+
   return (
     <div className={classes.dotsContainer}>
       <span id='dot1'></span>

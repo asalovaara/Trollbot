@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { Link } from 'react-router-dom'
+import { Link as ReactLink } from 'react-router-dom'
 import { useRoomSelectStyles } from '../../styles/RoomSelectStyles'
 import { TITLE } from '../../config'
+import { Container, TextField, Button } from '@material-ui/core'
 
 const RoomSelect = () => {
   const classes = useRoomSelectStyles()
@@ -13,21 +14,22 @@ const RoomSelect = () => {
   }
 
   return (
-    <div className={classes.homeContainer}>
+    <Container className={classes.homeContainer}>
       <Helmet>
         <title>Select Room - {TITLE}</title>
       </Helmet>
-      <input
-        type='text'
+      <TextField
         placeholder='Room'
         value={roomName}
         onChange={handleRoomNameChange}
         className={classes.textInputField}
       />
-      <Link to={`/${roomName}`} className={classes.enterRoomButton}>
+      <Button
+        component={ReactLink}
+        to={`/${roomName}`}>
         Join room
-      </Link>
-    </div>
+      </Button>
+    </Container>
   )
 }
 

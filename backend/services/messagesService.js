@@ -1,5 +1,5 @@
 var uuid = require('uuid')
-const { botAnswer } = require('./services/trollbot')
+const { botAnswer } = require('./trollbot')
 
 const messages = []
 
@@ -28,12 +28,12 @@ const getAnswer = async (message) => {
       picture: 'https://media.wired.com/photos/5cdefb92b86e041493d389df/1:1/w_988,h_988,c_limit/Culture-Grumpy-Cat-487386121.jpg'
     }
   } //response[response.length - 1]
-  console.log('answer',msg)
+  console.log('answer', msg)
   messages.push(msg)
   return msg
   //})
   // console.log('answer', answer)
-  
+
 }
 
 const removeMessage = (id) => {
