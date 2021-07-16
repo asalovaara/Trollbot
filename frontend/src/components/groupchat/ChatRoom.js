@@ -28,7 +28,7 @@ const ChatRoom = ({ roomId, loginUser }) => {
     sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
-  } = useChat(roomId, myUser)
+  } = useChat(roomId, loginUser)
   const [newMessage, setNewMessage] = useState('')
 
   const { isTyping, startTyping, stopTyping, cancelTyping } = useTyping()

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-// import React, { useEffect, useState } from 'react'
+// import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import './index.css'
 import Home from './components/groupchat/RoomSelect'
 import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/Login'
-// import loginService from './services/login'
+import loginService from './services/login'
 import { useAppStyles } from './styles/AppStyles.js'
 
 const App = () => {
