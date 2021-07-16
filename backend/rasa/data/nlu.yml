@@ -54,10 +54,6 @@ nlu:
     - see you later
     - ok bye
 
-# - intent: self_introduction
-#   examples: |
-
-
 - intent: task_introduction
   examples: |
     - So apparently we need to decide on the best band or something
@@ -263,7 +259,8 @@ nlu:
     - fetch genre
 
 # todo: fetch from api or build a more comprehensive list in other ways
-
+# or will be deprecated when name can be pulled from username
+# or then names will be added to list dynamically during conversations?
 - lookup: name
   examples: |
     - Elliott

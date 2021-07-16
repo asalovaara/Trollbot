@@ -73,6 +73,11 @@ responses:
   - text: "If you're a fan of {artist} then you're already a lost cause."
   - text: "Your taste is so bad, it doesn't matter what I'll say."
 
+  utter_insult_for_dislikes:
+  - text: "Since you hate {artist}, I don't think you could appreciate any good music anyway."
+  - text: "If you're not a fan of {artist} then you're already a lost cause."
+  - text: "Your taste is so bad, it doesn't matter what I'll say."
+
   utter_idk:
   - text: "IDK where to begin."
   - text: "You go first."

@@ -7,11 +7,10 @@ stories:
   - intent: opening
   - slot_was_set:
     - task_activated: false
-    - name
   - action: action_greet_user_by_name
   - action: utter_task_introduction
-  - action: action_set_task_slot
   - action: utter_question_suggestions
+  - action: action_set_task_slot
 
 - story: from no introduction to task
   steps:
@@ -24,8 +23,8 @@ stories:
     - intent: dislikes_artist
     - intent: request_for_suggestion_from_bot
   - action: utter_task_introduction
-  - action: action_set_task_slot
   - action: utter_question_suggestions
+  - action: action_set_task_slot
 
 - story: handle user introducing task
   steps:
@@ -42,6 +41,7 @@ stories:
     - task_activated: true
     - artist
   - action: action_set_genre_slot
+  - action: action_set_opinion_slot_as_good
   - action: utter_artist_dismissal
 
 - story: user likes artist path
@@ -50,6 +50,7 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: action_set_genre_slot
+  - action: action_set_opinion_slot_as_good
   - action: utter_artist_dismissal
 
 - story: user dislikes artist path
@@ -58,28 +59,15 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: action_set_genre_slot
+  - action: action_set_opinion_slot_as_bad
   - action: utter_artist_praise
 
-- story: user asks the bot for its opinion before liking an artist
+- story: user asks the bot for its opinion
   steps:
   - intent: request_for_suggestion_from_bot
   - slot_was_set:
     - task_activated: true
-    - artist: None
-  - action: utter_idk
-
-- story: user likes artist then asks the bot for its opinion
-  steps:
-  - intent: likes_artist
-  - slot_was_set:
-    - task_activated: true
-    - artist
-  - action: action_set_genre_slot
-  - action: utter_artist_dismissal
-  - intent: request_for_suggestion_from_bot
-  - slot_was_set:
-    - task_activated: true
-  - action: utter_insult_for_likes
+  - action: action_deflect_opinion_question
 
 - story: user gets tired
   steps:

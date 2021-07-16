@@ -80,3 +80,63 @@ class ActionGreetUserByName(Action):
                 response="utter_nice_to_meet_you_name"
             )
             return []
+
+class ActionSetOpinionSlotAsGood(Action):
+
+    def name(self) -> Text:
+
+        return "action_set_opinion_slot_as_good"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        return [SlotSet("opinion", "good")]
+
+class ActionSetOpinionSlotAsBad(Action):
+
+    def name(self) -> Text:
+
+        return "action_set_opinion_slot_as_bad"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        return [SlotSet("opinion", "bad")]
+
+class ActionDeflectOpinionQuestion(Action):
+
+    def name(self) -> Text:
+
+        return "action_deflect_opinion_question"
+    
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        opinion = tracker.get_slot('opinion')
+        
+        if opinion is None:
+            dispatcher.utter_message(
+                response="utter_idk"
+            )
+            return []
+        elif opinion == "good":
+            dispatcher.utter_message(
+                response="utter_insult_for_likes"
+            )
+            return []
+        elif opinion == "bad":
+            dispatcher.utter_message(
+                response="utter_insult_for_dislikes"
+            )
+            return []
+        else:
+            dispatcher.utter_message(
+                response="utter_idk"
+            )
+            return []

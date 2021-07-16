@@ -38,12 +38,18 @@ slots:
     type: bool
     initial_value: false
     influence_conversation: true
+  opinion:
+    type: text
+    influence_conversation: false
 
 actions:
   - action_greet_users
   - action_set_task_slot
   - action_set_genre_slot
   - action_greet_user_by_name
+  - action_set_opinion_slot_as_good
+  - action_set_opinion_slot_as_bad
+  - action_deflect_opinion_question
 
 session_config:
   session_expiration_time: 60

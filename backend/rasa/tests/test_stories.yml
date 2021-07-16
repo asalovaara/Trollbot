@@ -3,26 +3,28 @@
 
 stories:
 
-- story: from nameless introduction to task
+- story: from opening to task, no name
   steps:
-  - user: |
+  - user:
       hi!
     intent: opening
   - slot_was_set:
     - task_activated: false
-  - action: utter_nice_to_meet_you_no_name
+    - name: None
+  - action: action_greet_user_by_name
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
 
-- story: from named introduction to task
+- story: from opening to task, name
   steps:
-  - user: |
-      hi! my name is [Alex]{"entity": "name"}
-    intent: self_introduction
+  - user:
+      hi im Alex!
+    intent: opening
   - slot_was_set:
     - task_activated: false
-  - action: utter_nice_to_meet_you_name
+    - name
+  - action: action_greet_user_by_name
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
@@ -36,11 +38,17 @@ stories:
         bye!
       intent: closing
     - user: |
+        how about [Ariana Grande]{"entity": "artist"}?
+      intent: suggest_artist
+    - user: |
         i like [Ariana Grande]{"entity": "artist"}
       intent: likes_artist
     - user: |
         i don't like [Ariana Grande]{"entity": "artist"}
       intent: dislikes_artist
+    - user: |
+        what do you think then?
+      intent: request_for_suggestion_from_bot
   - action: utter_task_introduction
   - action: action_set_task_slot
   - action: utter_question_suggestions
