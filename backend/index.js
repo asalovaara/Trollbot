@@ -1,34 +1,22 @@
 const http = require('http')
-const express = require('express')
-const cors = require('cors')
+const app = require('./app')
 const socketIo = require('socket.io')
-const { addUser, removeUser, getUsersInRoom } = require('./users')
-const { addMessage, getAnswer, getMessagesInRoom } = require('./messages')
+const cors = require('cors')
+const { addUser, removeUser } = require('./users')
+const { addMessage, getAnswer } = require('./messages')
 const { inspect } = require('util')
-const loginRouter = require('./controllers/loginRouter')
-const { API_URL } = require('./utils/config')
-
-const app = express()
-app.use(cors())
+const { PORT } = require('./utils/config')
+const logger = require('./utils/logger')
+const events = require('./utils/socketEvents')
 
 const server = http.createServer(app)
-const io = socketIo(server, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
+const io = socketIo(server)
+
+app.use(cors())
+
+server.listen(PORT, () => {
+  logger.info(`Server running on port ${PORT}`)
 })
-
-const PORT = 4000
-const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
-const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
-const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
-const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
-const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
-const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
-
-app.use(`${API_URL}/login`, loginRouter)
 
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`)
@@ -38,53 +26,40 @@ io.on('connection', (socket) => {
   socket.join(roomId)
 
   const user = addUser(socket.id, roomId, name, picture)
-  io.in(roomId).emit(USER_JOIN_CHAT_EVENT, user)
+  io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
   // Listen for new messages
-  socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
+  socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
     const message = addMessage(roomId, data)
     console.log('user message from backend', message)
     // const answer = getAnswer(message)
-    io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, message)
+    io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
     // io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, answer)
   })
 
   // Bot reply
-  socket.on(BOT_ANSWER_EVENT, async (data) => {
+  socket.on(events.BOT_ANSWER_EVENT, async (data) => {
     const answer = await getAnswer(data)
     console.log(inspect(answer))
-    io.in(roomId).emit(BOT_ANSWER_EVENT, answer)
+    io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
   })
 
   // Listen typing events
-  socket.on(START_TYPING_MESSAGE_EVENT, (data) => {
-    io.in(roomId).emit(START_TYPING_MESSAGE_EVENT, data)
+  socket.on(events.START_TYPING_MESSAGE_EVENT, (data) => {
+    io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, data)
   })
-  socket.on(STOP_TYPING_MESSAGE_EVENT, (data) => {
-    io.in(roomId).emit(STOP_TYPING_MESSAGE_EVENT, data)
+  socket.on(events.STOP_TYPING_MESSAGE_EVENT, (data) => {
+    io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
   })
 
   // Leave the room if the user closes the socket
   socket.on('disconnect', () => {
     removeUser(socket.id)
-    io.in(roomId).emit(USER_LEAVE_CHAT_EVENT, user)
+    io.in(roomId).emit(events.USER_LEAVE_CHAT_EVENT, user)
     socket.leave(roomId)
   })
 })
 
-server.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`)
-})
-
-app.get('/rooms/:roomId/users', (req, res) => {
-  const users = getUsersInRoom(req.params.roomId)
-  return res.json({ users })
-})
-
-app.get('/rooms/:roomId/messages', (req, res) => {
-  const messages = getMessagesInRoom(req.params.roomId)
-  return res.json({ messages })
-})
 
 // const config = require('./utils/config')
 // const logger = require('./utils/logger')

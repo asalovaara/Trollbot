@@ -11,10 +11,14 @@ import UserAvatar from './UserAvatar'
 import { useChatRoomStyles } from '../../styles/ChatRoomStyles'
 import { TITLE } from '../../config'
 
-const ChatRoom = (props) => {
+const ChatRoom = ({ roomId, loginUser }) => {
   const classes = useChatRoomStyles()
 
-  const { roomId } = props.match.params
+  // const { roomId } = props.match.params
+  // console.log('roomId', roomId)
+  // const { roomId } = props.roomId
+  // const { myUser } = props.user
+  console.log('myUser', loginUser)
   const {
     messages,
     user,
@@ -24,7 +28,7 @@ const ChatRoom = (props) => {
     sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
-  } = useChat(roomId)
+  } = useChat(roomId, myUser)
   const [newMessage, setNewMessage] = useState('')
 
   const { isTyping, startTyping, stopTyping, cancelTyping } = useTyping()
@@ -50,7 +54,7 @@ const ChatRoom = (props) => {
   return (
     <div className={classes.ChatRoomContainer}>
       <Helmet>
-        <title>Room: {roomId} - {TITLE}</title>
+        <title>{`Room: ${roomId} - ${TITLE}`}</title>
       </Helmet>
       <div className={classes.chatRoomTopBar}>
         <h1 className='room-name'>Room: {roomId}</h1>

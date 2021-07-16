@@ -24,6 +24,7 @@ const removeUser = (id) => {
 }
 
 const getUsers = () => {
+  console.log('userService - users', users)
   return users
 }
 

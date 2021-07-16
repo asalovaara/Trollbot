@@ -20,6 +20,7 @@ const login = (name) => {
 }
 
 const addUser = (id, room, name, picture) => {
+  console.log('users - addUser', name)
   const existingUser = users.find((u) => u.room === room && u.name === name)
 
   if (!name || !room) return { error: 'Username and room are required.' }
