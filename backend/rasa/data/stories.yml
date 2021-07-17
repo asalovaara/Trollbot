@@ -50,6 +50,8 @@ stories:
   - slot_was_set:
     - genre
   - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
   - action: utter_artist_dismissal
 
 - story: user likes artist path
@@ -61,6 +63,8 @@ stories:
   - slot_was_set:
     - genre
   - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
   - action: utter_artist_dismissal
 
 - story: user dislikes artist path
@@ -72,6 +76,8 @@ stories:
   - slot_was_set:
     - genre
   - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion
   - action: utter_artist_praise
 
 - story: user praises artist
@@ -80,6 +86,8 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
   - action: action_handle_claim
 
 - story: user dismisses artist
@@ -88,6 +96,8 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion
   - action: action_handle_claim
 
 - story: user asks the bot for its opinion

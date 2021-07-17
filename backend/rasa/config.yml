@@ -18,11 +18,11 @@ pipeline:
 # Increasing epochs makes training time much longer,
 # but is useful when trying to make a specific distinction clear in nlu
   - name: DIETClassifier
-    use_masked_language_model: true
-    transformers_layers: 4
+    use_masked_language_model: True
+    number_of_transformer_layers: 4
     embedding_dimension: 25
     epochs: 100
-    constrain_similarities: true
+    constrain_similarities: True
   - name: RegexEntityExtractor
     case_sensitive: False
     use_lookup_tables: True
@@ -33,7 +33,7 @@ pipeline:
   #   epochs: 100
   #   constrain_similarities: true
   - name: FallbackClassifier
-    threshold: 0.55
+    threshold: 0.4
     ambiguity_threshold: 0.04
 
 # Configuration for Rasa Core.
