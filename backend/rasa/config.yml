@@ -14,7 +14,13 @@ pipeline:
     max_ngram: 4
   - name: LanguageModelFeaturizer
     model_name: "bert"
+# Added some tweaks here. Feel free to change
+# Increasing epochs makes training time much longer,
+# but is useful when trying to make a specific distinction clear in nlu
   - name: DIETClassifier
+    use_masked_language_model: true
+    transformers_layers: 4
+    embedding_dimension: 25
     epochs: 100
     constrain_similarities: true
   - name: RegexEntityExtractor

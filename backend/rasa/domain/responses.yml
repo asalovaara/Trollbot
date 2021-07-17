@@ -90,6 +90,13 @@ responses:
   - text: "Yikes!"
   - text: "That's so stupid."
   - text: "LOL nope."
+  - text: "I doubt that."
+  - text: "Yeah I'm not convinced."
+
+  utter_ask_clarification_of_artist:
+  - text: "Who do you mean?"
+  - text: "Who are you talking about?"
+  - text: "Huh? Who?"
 
   utter_please_rephrase:
   - text: "I don't understand."

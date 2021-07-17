@@ -15,6 +15,8 @@ intents:
       use_entities:
         - artist
   - task_introduction
+  - praising_claim
+  - dismissing_claim
   - request_for_suggestion_from_bot
   - get_genre
 
@@ -50,6 +52,7 @@ actions:
   - action_set_opinion_slot_as_good
   - action_set_opinion_slot_as_bad
   - action_deflect_opinion_question
+  - action_handle_claim
 
 session_config:
   session_expiration_time: 60

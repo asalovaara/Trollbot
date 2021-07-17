@@ -140,3 +140,26 @@ class ActionDeflectOpinionQuestion(Action):
                 response="utter_idk"
             )
             return []
+
+class ActionHandleClaim(Action):
+    def name(self) -> Text:
+
+        return "action_handle_claim"
+    
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        artist = tracker.get_slot('artist')
+
+        if artist is None:
+            dispatcher.utter_message(
+                response="utter_ask_clarification_of_artist"
+            )
+            return [SlotSet("opinion", None)]
+        else:
+            dispatcher.utter_message(
+                response="utter_reject_claim"
+            )
+            return []
