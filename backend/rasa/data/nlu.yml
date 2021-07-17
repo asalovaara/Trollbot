@@ -147,10 +147,15 @@ nlu:
     - [Ariana Grande]{"entity": "artist"}'s music is the best
     - fuck everyone else, [Ariana Grande]{"entity": "artist"} is the best one
 
+# At least one of the intents here has to include Abba
+# because apparently almost any message containing "Abba"
+# is recognised as "likes_artist" which is funny but not good for us
+# Keep an eye out for any other artists that are overwhelmingly positive!
 - intent: dislikes_artist
   examples: |
     - my least favourite band is [Ariana Grande]{"entity": "artist"}
     - i don't like [Ariana Grande]{"entity": "artist"}
+    - [Abba]{"entity": "artist"} is bad
     - I do not like [Ariana Grande]{"entity": "artist"} at all
     - I do not prefer [Ariana Grande]{"entity": "artist"} in the least
     - I do not think [Ariana Grande]{"entity": "artist"} is very good
@@ -168,6 +173,7 @@ nlu:
     - [Ariana Grande]{"entity": "artist"} is not good
     - i can't listen to [Ariana Grande]{"entity": "artist"}
     - i dislike [Ariana Grande]{"entity": "artist"}
+    - well I don't like [Ariana Grande]{"entity": "artist"}
     - i hate [Ariana Grande]{"entity": "artist"} with a burning passion
     - [Ariana Grande]{"entity": "artist"} pisses me off
     - [Ariana Grande]{"entity": "artist"} is simply terrible
@@ -193,31 +199,94 @@ nlu:
     - [Ariana Grande]{"entity": "artist"} is godawful
     - [Ariana Grande]{"entity": "artist"} is shitty
 
-# TODO: praise or insult without artist attached
+- intent: praising_claim
+  examples: |
+    - they are very original!
+    - they have a cool style
+    - they have such a unique style
+    - their music is so original and great
+    - her voice is amazing
+    - because she has great range
+    - he has such great range
+    - his voice is really soothing
+    - their mood is great
+    - they are popular for a reason
+    - they have so many good jams
+    - i love dancing to their music
+    - their music saved me
+    - she is so underrated!
+    - i enjoy listening to him
+    - no one can beat her
+    - Nothing can beat their music
+    - He is a great singer
+    - It's an excellent band
+    - her lyrics are well-written
+    - I think her lyrics are very deep
+    - The lyrics in his songs are very good
+    - Their sound is very original
+    - I like his sound
+    - The sound in their songs is very unique, in a good way
+    - Their albums are centered around a theme
+    - She explores some very interesting themes
+    - The songs in their albums have connecting themes
+    - His music gives me hope
+    - Her songs have some very important messages
+    - Their music makes me feel better when I'm sad
+    - Her music makes me feel strong
+    - His music gives me strength to go on
+    - their music means a lot to me
+    - Her music validates my feelings
+    - I like to listen to his songs when I'm feeling down
+    - Their music gives me confidence
+    - many of his songs are perfect for dancing
+    - their newer production is much deeper
 
-# - intent: praising_claim
-#   examples: |
-#     - they have a cool style
-#     - they have such a unique style
-#     - their music is so original and great
-#     - her voice is amazing
-#     - because she has great range
-#     - he has such great range
-#     - his voice is really soothing
-#     - their mood is great
-#     - they are popular for a reason
-#     - they have so many good jams
-#     - i love dancing to their music
-#     - their music saved me
-
-# - intent: dismissing_claim
-#   examples: |
-#     - they are not that good
-#     - they are not very original
-#     - i hate listening to his singing voice
-#     - but they're awful
-#     - they're annoying though
-#     - I'm not interested
+- intent: dismissing_claim
+  examples: |
+    - they are not that good
+    - they are not very original
+    - i hate listening to his singing voice
+    - but they're awful!
+    - they're annoying though
+    - I'm not interested
+    - ehhh she's not that good
+    - I don't think he is so good
+    - I'm not a fan
+    - i think he's annoying
+    - I would prefer someone else
+    - He is overrated
+    - I think there are better options
+    - Because he does not write his own songs
+    - i think their lyrics are superficial
+    - the lyrics in her songs are bad
+    - his lyrics are trash
+    - their lyrics make no sense
+    - her music is weird
+    - he is too mainstream
+    - they are too popular
+    - he is completely unoriginal
+    - she is just the same as everyone else
+    - they just try to be popular
+    - his music has no deeper meaning
+    - her songs have nothing unique
+    - his voice is annoying
+    - they sound annoying
+    - his voice is the same as every other generic male singer's
+    - she is just like every other popular singer
+    - they are an industry plant
+    - he only tries to copy others
+    - she has no original ideas
+    - they've gone to a bad direction
+    - his newer production is shit
+    - she has become mainstream
+    - they used to be unique but became mainstream
+    - she used to be better
+    - he sold out
+    - he uses too much autotune
+    - they are so fake
+    - her older production was better
+    - he has lost his way
+    - they betrayed their fans
 
 - intent: request_for_suggestion_from_bot
   examples: |
@@ -251,6 +320,8 @@ nlu:
     - uh who is better then?
     - if you don't like my pick then who do you like
     - wtf ok who do you like then
+    - do you have any input on this
+    - could you tell us your opinion
 
 # for testing genre fetch
 - intent: get_genre

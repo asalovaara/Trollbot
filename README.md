@@ -29,7 +29,7 @@ To start the Rasa HTTP API server, run the command `rasa run --enable-api --cors
 
 In backend folder:
 
-Run backend with `npm start` (required for wikidata genre search).
+Run backend with `npm start` (required for genre search).
 
 In backend/rasa folder:
 
@@ -37,4 +37,6 @@ Use `rasa run actions` to run Rasa action server (required for custom actions).
 
 Use `rasa shell` to test conversations on the command line.
 
-You can also use `rasa test` to run the automated tests.
+Use `rasa shell nlu` to test the intent recognition on individual messages.
+
+(Currently broken) You can also use `rasa test` to run the automated tests.
