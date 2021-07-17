@@ -11,28 +11,34 @@ stories:
   - action: utter_task_introduction
   - action: utter_question_suggestions
   - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
 
 - story: from no introduction to task
   steps:
-  - slot_was_set:
-    - task_activated: false
   - or:
     - intent: closing
     - intent: suggest_artist
     - intent: likes_artist
     - intent: dislikes_artist
     - intent: request_for_suggestion_from_bot
+  - slot_was_set:
+    - task_activated: false  
   - action: utter_task_introduction
   - action: utter_question_suggestions
   - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
 
 - story: handle user introducing task
   steps:
   - intent: task_introduction
   - slot_was_set:
     - task_activated: false
-  - action: action_set_task_slot
   - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
 
 - story: user suggests artist
   steps:
@@ -41,6 +47,8 @@ stories:
     - task_activated: true
     - artist
   - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
   - action: action_set_opinion_slot_as_good
   - action: utter_artist_dismissal
 
@@ -50,6 +58,8 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
   - action: action_set_opinion_slot_as_good
   - action: utter_artist_dismissal
 
@@ -59,6 +69,8 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
   - action: action_set_opinion_slot_as_bad
   - action: utter_artist_praise
 
@@ -89,4 +101,6 @@ stories:
   steps: 
     - intent: get_genre
     - action: action_set_genre_slot
+    - slot_was_set:
+      - genre
     - action: utter_genre
