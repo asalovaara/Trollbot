@@ -1,5 +1,8 @@
 version: "2.0"
 
+# Known problem: often the artist's name influences intent recognition
+# TODO exploring how to ignore the entity contents when determining intent
+
 nlu:
 - intent: opening
   examples: |
@@ -116,6 +119,7 @@ nlu:
   examples: |
     - my favourite band is [Abba]{"entity": "artist"}
     - i like [Ariana Grande]{"entity": "artist"}
+    - i like [Ariana Grande]{"entity": "artist"} too
     - i really like [Ariana Grande]{"entity": "artist"}
     - i enjoy listening to [Ariana Grande] {"entity": "artist"}
     - i love [Ariana Grande]{"entity": "artist"}
@@ -202,10 +206,13 @@ nlu:
 - intent: praising_claim
   examples: |
     - they are very original!
+    - but they're so original
     - they have a cool style
+    - they are cool
+    - she is very talented
     - they have such a unique style
     - their music is so original and great
-    - her voice is amazing
+    - but her voice is amazing
     - because she has great range
     - he has such great range
     - his voice is really soothing
@@ -322,6 +329,161 @@ nlu:
     - wtf ok who do you like then
     - do you have any input on this
     - could you tell us your opinion
+
+- intent: suggestion_to_make_decision
+  examples: |
+    - Should we make a decision now?
+    - Could we decide now
+    - Could we choose our favorite band
+    - Can we pick someone now
+    - Can we make our decision already
+    - can we wrap this up and choose
+    - can we make a decision now
+    - OK so can we choose now
+    - okay can we conclude this
+    - Let's make our final decision
+    - Let's choose our favorite now
+    - lets wrap this up and make a decision
+    - let's decide now
+    - Let's move on to choosing now
+    - Let's move on to the decision
+    - Let's conclude this
+    - lets choose
+    - Are we ready now?
+    - r we ready
+    - Are we ready to choose someone now?
+    - Are we ready to make our decision now?
+    - Are we ready to pick a band
+    - Are we ready to choose our favorite?
+    - Are we ready to give our final answer soon
+    - ready now?
+    - Have we arrived at a conclusion yet?
+    - Have we arrived at a decision now?
+    - Have we had enough time to discuss now?
+    - Have we talked about this enough yet?
+    - decision now?
+    - decide now?
+    - decision time?
+    - Time to decide?
+    - I suggest we make a decision
+    - I suggest we make our choice
+    - I suggest we're ready to choose
+    - I suggest we can move on to choosing our favorite
+    - i think we can choose now
+    - i think we're ready now
+    - I feel that we're ready to make a decision
+    - i feel that we should decide by now
+
+- intent: suggestion_for_decision
+  examples: |
+    - So are we choosing [Ariana Grande]{"entity": "artist"} then?
+    - Let's choose [Ariana Grande]{"entity": "artist"}
+    - We're choosing [Ariana Grande]{"entity": "artist"}, right?
+    - [Ariana Grande]{"entity": "artist"} is our pick right
+    - We're going with [Ariana Grande]{"entity": "artist"}, am I correct?
+    - Choosing [Ariana Grande]{"entity": "artist"} right
+    - Our choice is [Ariana Grande]{"entity": "artist"} right
+    - So is [Ariana Grande]{"entity": "artist"} our choice?
+    - Is [Ariana Grande]{"entity": "artist"} the one we are choosing?
+    - Are we picking [Ariana Grande]{"entity": "artist"}
+    - Are we going to choose [Ariana Grande]{"entity": "artist"}
+    - choosing [Ariana Grande]{"entity": "artist"} ok?
+    - everyone ok with [Ariana Grande]{"entity": "artist"}?
+    - Is everyone okay with selecting [Ariana Grande]{"entity": "artist"}?
+    - you all are fine with [Ariana Grande]{"entity": "artist"} right
+    - [Ariana Grande]{"entity": "artist"} is fine by us?
+    - are we going with [Ariana Grande]{"entity": "artist"}
+    - is [Ariana Grande]{"entity": "artist"} our final decision
+    - is [Ariana Grande]{"entity": "artist"} our final choice
+    - Can we choose [Ariana Grande]{"entity": "artist"}?
+
+- intent: agreement
+  examples: |
+    - OK
+    - okay
+    - yes
+    - y
+    - Sure!
+    - Fine by me
+    - okey dokey
+    - yeah
+    - Yes, let's
+    - Go ahead
+    - yeaaa
+    - ye
+    - yeas
+    - yeaahh
+    - okok
+    - k
+    - fine
+    - yeahyeah
+    - yeah good
+    - good yes
+    - yep
+    - good
+    - positive
+    - I agree
+    - Agreed
+    - I think so too
+    - It's a deal
+    - I am
+    - Yes we can
+    - You're right
+    - Likewise
+    - me too
+    - lets
+    - right!
+    - correct
+    - yep ready
+    - I'm ready
+    - Yes, we'll do that
+    - Let's do so
+    - I'm okay with that
+    - im cool with that
+    - I'm happy with that
+    - ok cool!
+    - Good idea
+    - yes please
+    - yes thank you
+    - yeah thanks
+    - please do
+
+- intent: disagreement
+  examples: |
+    - no
+    - nope
+    - nono
+    - n
+    - not yet
+    - not ok
+    - not okay yet
+    - not cool
+    - negative
+    - incorrect
+    - I don't think so
+    - No thank you
+    - No, not yet
+    - We're not ready yet
+    - I'm not really sure about that
+    - I don't feel like that's good
+    - That's not correct
+    - Let's not
+    - No, we can not
+    - cannot
+    - can't yet
+    - not ready
+    - I don't think we can
+    - I'm not so sure about that
+    - I'm not okay with that
+    - I'm not ready
+    - im not fine with that
+    - That's not a good idea
+    - how about we don't
+    - don't
+    - please do not
+    - please let's not
+    - That's not smart
+    - let us not do that
 
 # for testing genre fetch
 - intent: get_genre

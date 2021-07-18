@@ -98,6 +98,11 @@ responses:
   - text: "Who are you talking about?"
   - text: "Huh? Who?"
 
+  utter_agreement:
+  - text: "Okay!"
+  - text: "Sure!"
+  - text: "Yeah, OK."
+
   utter_please_rephrase:
   - text: "I don't understand."
   - text: "Can you repeat that with different words?"

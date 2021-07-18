@@ -22,6 +22,10 @@ stories:
     - intent: likes_artist
     - intent: dislikes_artist
     - intent: request_for_suggestion_from_bot
+    - intent: suggestion_to_make_decision
+    - intent: suggestion_for_decision
+    - intent: agreement
+    - intent: disagreement
   - slot_was_set:
     - task_activated: false  
   - action: utter_task_introduction
@@ -107,13 +111,6 @@ stories:
     - task_activated: true
   - action: action_deflect_opinion_question
 
-- story: user gets tired
-  steps:
-  - intent: closing
-  - slot_was_set:
-    - task_activated: true
-  - action: utter_closing
-
 - story: bs after task introduction
   steps:
   - or: 
@@ -122,6 +119,40 @@ stories:
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
+
+- story: start decision phase auto-success
+  steps:
+  - intent: suggestion_to_make_decision
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+
+- story: user suggests decision auto-fail
+  steps:
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist
+  - action: utter_reject_claim
+
+- story: user suggests decision before decision phase
+  steps: 
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: false
+  - action: utter_back_to_task
+
+- story: user gets tired
+  steps:
+  - intent: closing
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_closing
 
 - story: get genre data
   steps: 

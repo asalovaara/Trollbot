@@ -39,6 +39,19 @@ class ActionSetTaskSlot(Action):
 
         return [SlotSet("task_activated", True)]
 
+class ActionSetDecisionPhase(Action):
+
+    def name(self) -> Text:
+
+        return "action_set_decision_phase"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        return [SlotSet("decision_phase", True)]
+
 class ActionSetGenreSlot(Action):
 
     def name(self) -> Text:

@@ -18,6 +18,12 @@ intents:
   - praising_claim
   - dismissing_claim
   - request_for_suggestion_from_bot
+  - suggestion_to_make_decision
+  - suggestion_for_decision:
+      use_entities:
+        - artist
+  - agreement
+  - disagreement
   - get_genre
 
 entities:
@@ -43,6 +49,10 @@ slots:
   opinion:
     type: text
     influence_conversation: false
+  decision_phase:
+    type: bool
+    initial_value: false
+    influence_conversation: true
 
 actions:
   - action_greet_users
@@ -53,6 +63,7 @@ actions:
   - action_set_opinion_slot_as_bad
   - action_deflect_opinion_question
   - action_handle_claim
+  - action_set_decision_phase
 
 session_config:
   session_expiration_time: 60
