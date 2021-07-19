@@ -11,10 +11,9 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = async (room, message) => {
+const getAnswer = async (message) => {
   console.log('message', message.body)
-  const botMessage = { message: message.body }
-  const response = await botAnswer(botMessage)
+  const response = await botAnswer({ message: message.body })
   let msg = ''
   //answer.then(response => {
   const res = response[response.length - 1]
