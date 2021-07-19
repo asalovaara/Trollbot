@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'build')))
 app.use(`${API_URL}/trollbot`, trollbotRouter)
 app.use(`${API_URL}/rasa`, rasaRouter)
 app.use(`${API_URL}/login`, loginRouter)
-app.use('/rooms', roomRouter)
+app.use(`${API_URL}/rooms`, roomRouter)
 
 // Static Build
 app.get('/*', (request, response) => {

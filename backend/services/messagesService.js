@@ -20,7 +20,7 @@ const getAnswer = async (room, message) => {
   const res = response[response.length - 1]
   msg = {
     id: 'botanswerid' + res.id,
-    room: room,
+    room: 'Test',
     body: res.body,
     senderId: 'bot',
     user: {

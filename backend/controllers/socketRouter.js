@@ -19,7 +19,6 @@ module.exports = {
         const message = addMessage(roomId, data)
         console.log('user message from backend', message)
         io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
-        // io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, answer)
       })
 
       // Bot reply
