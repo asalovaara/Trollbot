@@ -1,23 +1,22 @@
 var uuid = require('uuid')
+const logger = require('../utils/logger')
 const { botAnswer } = require('./trollbot')
 
 const messages = []
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
-  console.log('addMessage', msg)
+  logger.info('addMessage', msg)
   //{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
   messages.push(msg)
   return msg
 }
 
 const getAnswer = async (message) => {
-  console.log('message', message.body)
+  logger.info('message', message.body)
   const response = await botAnswer({ message: message.body })
-  let msg = ''
-  //answer.then(response => {
   const res = response[response.length - 1]
-  msg = {
+  const msg = {
     id: 'botanswerid' + res.id,
     room: 'Test',
     body: res.body,
@@ -25,13 +24,10 @@ const getAnswer = async (message) => {
     user: {
       name: 'Bot'
     }
-  } //response[response.length - 1]
-  console.log('answer', msg)
+  }
+  logger.info('answer', msg)
   messages.push(msg)
   return msg
-  //})
-  // console.log('answer', answer)
-
 }
 
 const removeMessage = (id) => {

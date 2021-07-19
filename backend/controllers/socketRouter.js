@@ -1,11 +1,12 @@
 const { addUser, removeUser } = require('../services/userService')
 const { addMessage, getAnswer } = require('../services/messagesService')
+const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
 
 module.exports = {
   start: (io) => {
     io.on('connection', (socket) => {
-      console.log(`${socket.id} connected`)
+      logger.info(`${socket.id} connected`)
 
       // Join a conversation
       const { roomId, name } = socket.handshake.query
@@ -16,19 +17,26 @@ module.exports = {
 
       // Listen for new messages
       socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
+        logger.info('Data', data)
         const message = addMessage(roomId, data)
-        console.log('user message from backend', message)
+        logger.info('user message from backend', message)
         io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
+
+        setTimeout(() => {
+          logger.info('Bot Answer')
+        }, 3000)
       })
 
       // Bot reply
       socket.on(events.BOT_ANSWER_EVENT, async (data) => {
+        logger.info('Bot answer data:', data)
         const answer = await getAnswer(data)
         io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
       })
 
       // Listen typing events
       socket.on(events.START_TYPING_MESSAGE_EVENT, (data) => {
+        logger.info('Start typing data:', data)
         io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, data)
       })
       socket.on(events.STOP_TYPING_MESSAGE_EVENT, (data) => {

@@ -6,7 +6,6 @@ import Navigation from './components/groupchat/Navigation'
 import Home from './components/groupchat/RoomSelect'
 import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/groupchat/Login'
-import Footer from './components/groupchat/Footer'
 import loginService from './services/login'
 import { Container, Box } from '@material-ui/core'
 
@@ -15,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON && user !== null) {
+    if (loggedUserJSON) {
       console.log('Found user in localstorage')
       const tryLogin = async () => {
         const loggedUser = JSON.parse(loggedUserJSON)
@@ -28,7 +27,6 @@ const App = () => {
     }
   }, [])
 
-  // eslint-disable-next-line no-unused-vars
   const conditionalRender = () => {
     if (!user) {
       return (
@@ -49,12 +47,11 @@ const App = () => {
     <div>
       <Navigation user={user} setUser={setUser} />
       <Container>
-        <Box mt={10}>
+        <Box mt={10} minWidth={3 / 4}>
           <Switch>
             {conditionalRender()}
           </Switch>
         </Box>
-        <Footer />
       </Container>
     </div>
   )

@@ -5,7 +5,7 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 const Footer = () => {
 
   return (
-    <Box bottom={1} left={0} right={0} pt="10em">
+    <Box pt="10em">
       <Grid container justifyContent="center" alignItems="center" spacing={1}>
         <Grid item>
           <Typography paragraph color="textSecondary">

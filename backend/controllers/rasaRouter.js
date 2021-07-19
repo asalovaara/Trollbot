@@ -1,5 +1,5 @@
 const rasaRouter = require('express').Router()
-const {getRasaRESTResponse} = require('../services/rasaService')
+const { getRasaRESTResponse } = require('../services/rasaService')
 const logger = require('../utils/logger')
 
 rasaRouter.post('/', async (req, res) => {

@@ -117,6 +117,7 @@ const useChat = (roomId) => {
   }
 
   const sendMessageToBot = (messageBody) => {
+    console.log('Send message to bot')
     if (!socketRef.current) return
     socketRef.current.emit(BOT_ANSWER_EVENT, {
       body: messageBody,

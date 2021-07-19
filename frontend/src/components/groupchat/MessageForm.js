@@ -16,6 +16,7 @@ const NewMessageForm = ({
     <form >
       <TextField
         type='text'
+        id='message-field'
         value={newMessage}
         onChange={handleNewMessageChange}
         placeholder='Aa'
@@ -25,6 +26,7 @@ const NewMessageForm = ({
       />
       <Button
         type='submit'
+        id='message-submit'
         onClick={handleSendMessage}
       >
         Send
