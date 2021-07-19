@@ -8,7 +8,7 @@ from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import FollowupAction
+from rasa_sdk.events import Restarted
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.events import SlotSet
 import requests
@@ -176,3 +176,29 @@ class ActionHandleClaim(Action):
                 response="utter_reject_claim"
             )
             return []
+
+class ActionPostDecision(Action):
+    def name(self) -> Text:
+
+        return "action_post_decision"
+    
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        artist = tracker.get_slot('artist')
+
+        return [SlotSet("final_decision", artist)]
+
+class ActionPostDecision(Action):
+    def name(self) -> Text:
+
+        return "action_end_conversation"
+    
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    
+        return [Restarted()]

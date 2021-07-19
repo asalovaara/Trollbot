@@ -108,5 +108,12 @@ responses:
   - text: "Can you repeat that with different words?"
   - text: "I'm sorry, I don't follow. Can you be more specific?"
 
+  utter_question_posting:
+  - text: "Shall I post the decision?"
+  - text: "Can I post our decision?"
+
+  utter_post_decision:
+  - text: "Our decision is {final_decision}"
+
   utter_genre:
   - text: "{genre}"

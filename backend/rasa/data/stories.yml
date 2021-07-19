@@ -44,6 +44,8 @@ stories:
   - slot_was_set:
     - task_activated: true
 
+# Conversation patterns for the Trolling Bot
+
 - story: user suggests artist
   steps:
   - intent: suggest_artist
@@ -120,6 +122,9 @@ stories:
     - task_activated: true
   - action: utter_back_to_task
 
+# Decision phase patterns
+
+# Suggestion_to_make_decision_pattern, Nice Bot
 - story: start decision phase auto-success
   steps:
   - intent: suggestion_to_make_decision
@@ -130,14 +135,26 @@ stories:
   - slot_was_set:
     - decision_phase: true
 
-- story: user suggests decision auto-fail
+# Suggestion_for_decision_pattern_1, Trolling Bot
+# - story: user suggests decision auto-fail
+#   steps:
+#   - intent: suggestion_for_decision
+#   - slot_was_set:
+#     - task_activated: true
+#     - decision_phase: true
+#     - artist
+#   - action: utter_reject_claim
+
+# Suggestion_for_decision_pattern_1, Nice Bot
+- story: user suggests decision auto-success
   steps:
   - intent: suggestion_for_decision
   - slot_was_set:
     - task_activated: true
     - decision_phase: true
     - artist
-  - action: utter_reject_claim
+  - action: utter_agreement
+  - checkpoint: decision_reached
 
 - story: user suggests decision before decision phase
   steps: 
@@ -146,6 +163,64 @@ stories:
     - task_activated: true
     - decision_phase: false
   - action: utter_back_to_task
+
+# Closing patterns for the Nice Bot
+
+# Posting_decision_pattern1
+- story: bot posts decision
+  steps:
+  - checkpoint: decision_reached
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist
+  - action: utter_question_posting
+  - intent: agreement
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_post_decision
+  - checkpoint: goodbye
+
+# Posting_decision_pattern2
+- story: user offers to post decision
+  steps:
+  - checkpoint: decision_reached 
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist
+  - action: utter_question_posting
+  - intent: offer_posting
+  - action: utter_agreement
+  - checkpoint: user_should_post
+
+# Posting_decision_pattern3
+- story: user posts decision
+  steps:
+  - checkpoint: user_should_post
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist
+  - intent: post_decision
+  - slot_was_set:
+    - artist
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - checkpoint: goodbye
+
+# Goodbye_pattern
+- story: closing
+  steps:
+  - checkpoint: goodbye
+  - action: utter_closing
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+  - action: action_end_conversation
 
 - story: user gets tired
   steps:

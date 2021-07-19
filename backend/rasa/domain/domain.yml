@@ -24,6 +24,8 @@ intents:
         - artist
   - agreement
   - disagreement
+  - offer_posting
+  - post_decision
   - get_genre
 
 entities:
@@ -53,6 +55,10 @@ slots:
     type: bool
     initial_value: false
     influence_conversation: true
+  final_decision:
+    type: text
+    auto_fill: false
+    influence_conversation: false
 
 actions:
   - action_greet_users
@@ -64,6 +70,8 @@ actions:
   - action_deflect_opinion_question
   - action_handle_claim
   - action_set_decision_phase
+  - action_post_decision
+  - action_end_conversation
 
 session_config:
   session_expiration_time: 60

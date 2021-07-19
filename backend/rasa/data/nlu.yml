@@ -458,8 +458,12 @@ nlu:
     - not ok
     - not okay yet
     - not cool
+    - not good
+    - not fine
+    - nah
     - negative
     - incorrect
+    - I disagree
     - I don't think so
     - No thank you
     - No, not yet
@@ -484,6 +488,31 @@ nlu:
     - please let's not
     - That's not smart
     - let us not do that
+
+- intent: offer_posting
+  examples: |
+    - I can do it
+    - i can post it
+    - let me post it
+    - let me!
+    - I'll post the decision
+    - I can post the decision
+    - I would like to do it
+    - I would like to post the decision
+    - i could do it
+    - i could post
+    - may i do it?
+    - may i post our decision?
+    - may i have the honor?
+
+- intent: post_decision
+  examples: |
+    - Our decision is [Ariana Grande]{"entity": "artist"}
+    - Our final choice is [Ariana Grande]{"entity": "artist"}
+    - We decide [Ariana Grande]{"entity": "artist"}
+    - Our chosen artist is [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} is our final choice
+    - [Ariana Grande]{"entity": "artist"} is our decision
 
 # for testing genre fetch
 - intent: get_genre
