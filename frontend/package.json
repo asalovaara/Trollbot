@@ -13,7 +13,7 @@
   "author": "Helsingin Yliopisto",
   "license": "MIT",
   "dependencies": {
-    "@material-ui/core": "^4.12.1",
+    "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "axios": "^0.21.1",
@@ -46,8 +46,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.1.9",
-    "eslint": "^7.30.0",
+    "@testing-library/user-event": "^13.2.0",
+    "eslint": "^7.31.0",
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-react": "^7.24.0"
   }
