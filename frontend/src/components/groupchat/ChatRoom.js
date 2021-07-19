@@ -8,7 +8,7 @@ import NewMessageForm from './MessageForm'
 import TypingMessage from './TypingMessage'
 import Users from './Users'
 import { TITLE } from '../../config'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, Container } from '@material-ui/core'
 
 const ChatRoom = (props) => {
 
@@ -45,38 +45,34 @@ const ChatRoom = (props) => {
   }, [isTyping])
 
   return (
-    <>
+    <Container>
       <Helmet>
         <title>Room: {roomId} - {TITLE}</title>
       </Helmet>
       <Box mt={10}>
-        <Box>
-          <Typography variant='h2' paragraph>Room: {roomId}</Typography>
-        </Box>
+        <Typography variant='h2' paragraph>Room: {roomId}</Typography>
         <Users users={users}></Users>
-        <Box>
-          <ul style={{ listStyleType: 'none' }} >
-            {messages.map((message, i) => (
-              <li key={i}>
-                <ChatMessage message={message}></ChatMessage>
-              </li>
-            ))}
-            {typingUsers.map((u, i) => (
-              <li key={messages.length + i}>
-                <TypingMessage user={u}></TypingMessage>
-              </li>
-            ))}
-          </ul>
-        </Box>
-        <NewMessageForm
-          newMessage={newMessage}
-          handleNewMessageChange={handleNewMessageChange}
-          handleStartTyping={startTyping}
-          handleStopTyping={stopTyping}
-          handleSendMessage={handleSendMessage}
-        ></NewMessageForm>
+        <ul style={{ listStyleType: 'none' }} >
+          {messages.map((message, i) => (
+            <li key={i}>
+              <ChatMessage message={message}></ChatMessage>
+            </li>
+          ))}
+          {typingUsers.map((u, i) => (
+            <li key={messages.length + i}>
+              <TypingMessage user={u}></TypingMessage>
+            </li>
+          ))}
+        </ul>
       </Box>
-    </>
+      <NewMessageForm
+        newMessage={newMessage}
+        handleNewMessageChange={handleNewMessageChange}
+        handleStartTyping={startTyping}
+        handleStopTyping={stopTyping}
+        handleSendMessage={handleSendMessage}
+      />
+    </Container>
   )
 }
 

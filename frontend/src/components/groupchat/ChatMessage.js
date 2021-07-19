@@ -27,7 +27,7 @@ const ChatMessage = ({ message }) => {
             <UserAvatar user={message.user}></UserAvatar>
           </Grid>
           <Grid item>
-            <Typography><b>You</b>: {message.body}</Typography>
+            <Typography><b>{message.user.name}</b>: {message.body}</Typography>
           </Grid>
         </Grid>
       </Paper>

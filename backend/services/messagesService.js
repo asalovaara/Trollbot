@@ -11,7 +11,7 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = async (message) => {
+const getAnswer = async (room, message) => {
   console.log('message', message.body)
   const botMessage = { message: message.body }
   const response = await botAnswer(botMessage)
@@ -20,12 +20,11 @@ const getAnswer = async (message) => {
   const res = response[response.length - 1]
   msg = {
     id: 'botanswerid' + res.id,
-    room: 'Test',
+    room: room,
     body: res.body,
     senderId: 'bot',
     user: {
-      name: 'Bot',
-      picture: 'https://media.wired.com/photos/5cdefb92b86e041493d389df/1:1/w_988,h_988,c_limit/Culture-Grumpy-Cat-487386121.jpg'
+      name: 'Bot'
     }
   } //response[response.length - 1]
   console.log('answer', msg)
