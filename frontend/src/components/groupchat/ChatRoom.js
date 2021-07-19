@@ -8,7 +8,13 @@ import NewMessageForm from './MessageForm'
 import TypingMessage from './TypingMessage'
 import Users from './Users'
 import { TITLE } from '../../config'
-import { Box, Typography, Container } from '@material-ui/core'
+import AvatarGroup from '@material-ui/lab/AvatarGroup'
+
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import Container from '@material-ui/core/Container'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
 
 const ChatRoom = (props) => {
 
@@ -51,20 +57,30 @@ const ChatRoom = (props) => {
       </Helmet>
       <Box mt={10}>
         <Typography variant='h2' paragraph>Room: {roomId}</Typography>
-        <Users users={users}></Users>
-        <ul style={{ listStyleType: 'none' }} >
-          {messages.map((message, i) => (
-            <li key={i}>
-              <ChatMessage message={message}></ChatMessage>
-            </li>
-          ))}
-          {typingUsers.map((u, i) => (
-            <li key={messages.length + i}>
-              <TypingMessage user={u}></TypingMessage>
-            </li>
-          ))}
-        </ul>
+        <Users title='People:' users={users} />
+        <List>
+          <ul style={{ listStyleType: 'none' }} >
+            {messages.map((message, i) => (
+              <li key={i}>
+                <ListItem>
+                  <ChatMessage message={message} />
+                </ListItem>
+              </li>
+            ))}
+          </ul>
+        </List>
       </Box>
+      <ul style={{ listStyleType: 'none' }} >
+        <Box mb={10}>
+          <AvatarGroup max={3}>
+            {typingUsers.map((u, i) => (
+              <li key={i}>
+                <TypingMessage user={u} />
+              </li>
+            ))}
+          </AvatarGroup>
+        </Box>
+      </ul>
       <NewMessageForm
         newMessage={newMessage}
         handleNewMessageChange={handleNewMessageChange}
@@ -72,7 +88,7 @@ const ChatRoom = (props) => {
         handleStopTyping={stopTyping}
         handleSendMessage={handleSendMessage}
       />
-    </Container>
+    </Container >
   )
 }
 

@@ -1,10 +1,12 @@
 import React from 'react'
 import UserAvatar from './UserAvatar'
-import { Box, Typography } from '@material-ui/core'
 import AvatarGroup from '@material-ui/lab/AvatarGroup'
 
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
 
-const Users = ({ users }) => {
+
+const Users = ({ title, users }) => {
 
   if (users === undefined) {
     return (
@@ -16,7 +18,7 @@ const Users = ({ users }) => {
 
   return (
     <Box mb={10}>
-      <Typography type="h2">People:</Typography>
+      {title && <Typography type="h2">{title}</Typography>}
       <AvatarGroup max={3}>
         {users.map(u => (<UserAvatar key={u.id} user={u}></UserAvatar>))}
       </AvatarGroup>

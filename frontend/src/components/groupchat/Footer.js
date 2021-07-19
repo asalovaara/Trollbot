@@ -1,6 +1,12 @@
-import { Typography, Box, Link, Grid, IconButton } from '@material-ui/core'
 import React from 'react'
 import GitHubIcon from '@material-ui/icons/GitHub'
+
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+
 
 const Footer = () => {
 

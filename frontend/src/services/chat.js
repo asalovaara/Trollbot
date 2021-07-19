@@ -85,7 +85,9 @@ const useChat = (roomId) => {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
       }
-      setMessages((m) => [...m, incomingMessage])
+      setTimeout(() => {
+        setMessages((m) => [...m, incomingMessage])
+      }, 10)
     })
 
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {

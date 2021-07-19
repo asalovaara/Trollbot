@@ -85,7 +85,7 @@ const getArtistInfo = (artist_id) => {
 
 const getGenreByName = async (artist_name) => {
   return getArtistID(artist_name)
-    .then (id => {
+    .then(id => {
       return filterGenericGenre(id)
     })
     .catch((error) => {
@@ -135,7 +135,7 @@ const getAllGenresById = (artist_id) => {
 //returned. If not, the first genre from the list is returned
 const filterGenericGenre = (artist_id) => {
   return getAllGenresById(artist_id)
-    .then (all => {
+    .then(all => {
 
       const list = fs.readFileSync('./data/genres.txt').toString('utf-8')
       const splitted = list.split(';')

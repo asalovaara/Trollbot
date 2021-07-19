@@ -1,6 +1,12 @@
 import React from 'react'
 import UserAvatar from './UserAvatar'
-import { Paper, Container, Typography, Grid } from '@material-ui/core'
+
+import Paper from '@material-ui/core/Paper'
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
+
+
 
 const ChatMessage = ({ message }) => {
 

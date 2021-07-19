@@ -9,7 +9,7 @@ const useTextInputStyles = makeStyles(theme =>
       margin: `${theme.spacing(0)} auto`
     },
     wrapText: {
-      width: '100%'
+      width: '80%'
     },
     button: {
       //margin: theme.spacing(1),

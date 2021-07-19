@@ -13,7 +13,6 @@ const addMessage = (room, message) => {
 }
 
 const getAnswer = async (message) => {
-  logger.info('message', message.body)
   const response = await botAnswer({ message: message.body })
   const res = response[response.length - 1]
   const msg = {
@@ -25,7 +24,6 @@ const getAnswer = async (message) => {
       name: 'Bot'
     }
   }
-  logger.info('answer', msg)
   messages.push(msg)
   return msg
 }

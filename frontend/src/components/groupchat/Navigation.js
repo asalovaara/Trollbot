@@ -1,7 +1,11 @@
 import React from 'react'
 import { Link as ReactLink } from 'react-router-dom'
 import loginService from '../../services/login'
-import { AppBar, Toolbar, Button } from '@material-ui/core'
+
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Button from '@material-ui/core/Button'
+
 
 const Navigation = ({ user, setUser }) => {
 

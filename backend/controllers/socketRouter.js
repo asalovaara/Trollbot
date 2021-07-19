@@ -21,17 +21,24 @@ module.exports = {
         const message = addMessage(roomId, data)
         logger.info('user message from backend', message)
         io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
-
-        setTimeout(() => {
-          logger.info('Bot Answer')
-        }, 3000)
       })
 
       // Bot reply
       socket.on(events.BOT_ANSWER_EVENT, async (data) => {
-        logger.info('Bot answer data:', data)
         const answer = await getAnswer(data)
-        io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
+        logger.info('Bot answer', answer)
+
+        // Bot reply timeout chain
+        setTimeout(() => {
+          logger.info('Bot start typing', { senderId: answer.senderId, user: answer.user })
+          io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: answer.senderId, user: answer.user })
+          setTimeout(() => {
+            logger.info('End typing', { senderId: answer.senderId, user: answer.user })
+            io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: answer.senderId, user: answer.user })
+            io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
+          }, 4000)
+        }, 1000)
+
       })
 
       // Listen typing events

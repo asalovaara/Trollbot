@@ -1,4 +1,5 @@
 const logger = require('../utils/logger')
+var uuid = require('uuid')
 
 let users = [{
   id: 'bot',
@@ -11,7 +12,7 @@ const login = (username) => {
 
   if (user == undefined) {
     const newUser = {
-      id: users.length + 1,
+      id: uuid.v4(),
       name: username,
     }
     users = users.concat(newUser)
