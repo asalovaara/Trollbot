@@ -18,11 +18,8 @@ import ListItem from '@material-ui/core/ListItem'
 
 const ChatRoom = (props) => {
 
-  // const { roomId } = props.match.params
-  // console.log('roomId', roomId)
-  // const { roomId } = props.roomId
-  // const { myUser } = props.user
-  console.log('myUser', loginUser)
+  const { roomId } = props.match.params
+
   const {
     messages,
     users,
@@ -31,10 +28,12 @@ const ChatRoom = (props) => {
     sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
-  } = useChat(roomId, loginUser)
+  } = useChat(roomId)
   const [newMessage, setNewMessage] = useState('')
 
   const { isTyping, startTyping, stopTyping, cancelTyping } = useTyping()
+
+  let messagesEnd = React.createElement()
 
   const handleNewMessageChange = (event) => {
     setNewMessage(event.target.value)
@@ -49,10 +48,18 @@ const ChatRoom = (props) => {
     setNewMessage('')
   }
 
+  const scrollToBottom = () => {
+    messagesEnd.scrollIntoView({ behavior: 'smooth' })
+  }
+
   useEffect(() => {
     if (isTyping) startTypingMessage()
     else stopTypingMessage()
   }, [isTyping])
+
+  useEffect(() => {
+    scrollToBottom()
+  })
 
   return (
     <Container>
@@ -92,6 +99,9 @@ const ChatRoom = (props) => {
         handleStopTyping={stopTyping}
         handleSendMessage={handleSendMessage}
       />
+      <div style={{ float: 'left', clear: 'both' }}
+        ref={(el) => { { messagesEnd = el } }}>
+      </div>
     </Container >
   )
 }

@@ -1,6 +1,5 @@
 const http = require('http')
 const app = require('./app')
-const cors = require('cors')
 const socketIo = require('socket.io')
 const logger = require('./utils/logger')
 const socketRouter = require('./controllers/socketRouter')
@@ -14,8 +13,6 @@ const io = socketIo(server, {
   }
 })
 socketRouter.start(io)
-
-app.use(cors())
 
 server.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`)
