@@ -1,5 +1,5 @@
-// import React, { useState } from 'react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+// import React, { useEffect, useState } from 'react'
 // import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -7,28 +7,28 @@ import './index.css'
 import Home from './components/groupchat/RoomSelect'
 import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/Login'
-import loginService from './services/login'
+// import loginService from './services/login'
 import { useAppStyles } from './styles/AppStyles.js'
 
 const App = () => {
   const classes = useAppStyles()
   const [user, setUser] = useState(null)
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    console.log('loggedUserJSON', loggedUserJSON)
-    if (loggedUserJSON) {
-      console.log('Found user in localstorage')
-      const tryLogin = async () => {
-        const loggedUser = JSON.parse(loggedUserJSON)
-        const userObject = await loginService.login({
-          name: loggedUser.name
-        })
-        setUser(userObject)
-      }
-      tryLogin()
-    }
-  }, [])
+  // useEffect(() => {
+  //   const loggedUserJSON = window.localStorage.getItem('loggedUser')
+  //   console.log('loggedUserJSON', loggedUserJSON)
+  //   if (loggedUserJSON) {
+  //     console.log('Found user in localstorage')
+  //     const tryLogin = async () => {
+  //       const loggedUser = JSON.parse(loggedUserJSON)
+  //       const userObject = await loginService.login({
+  //         name: loggedUser.name
+  //       })
+  //       setUser(userObject)
+  //     }
+  //     tryLogin()
+  //   }
+  // }, [])
 
   // eslint-disable-next-line no-unused-vars
   const conditionalRender = () => {

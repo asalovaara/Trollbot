@@ -1,4 +1,5 @@
 const logger = require('../utils/logger')
+const socketUser = require('../users')
 
 let users = [{ username: 'testuser', id: 1 }]
 
@@ -12,6 +13,9 @@ const login = (username) => {
     }
     console.log('newUser', newUser)
     users = users.concat(newUser)
+
+    socketUser.addUser(newUser.id, 'Test', newUser.username, '')
+
     return newUser
   }
   return user
