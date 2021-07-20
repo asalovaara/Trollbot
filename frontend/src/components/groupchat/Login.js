@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
+import loginService from '../../services/login'
+import { useTextInputStyles } from '../../styles/TextInputStyles.js'
+import { TITLE } from '../../config'
+
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import loginService from '../services/login'
-import { useTextInputStyles } from '../styles/TextInputStyles.js'
-import { TITLE } from '../config'
-
 
 const Login = ({ user, setUser }) => {
   const [username, setUsername] = useState('')

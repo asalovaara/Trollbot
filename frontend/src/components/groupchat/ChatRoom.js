@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 
-import useChat from './useChat'
+import useChat from '../../services/chat'
 import ChatMessage from './ChatMessage'
 import useTyping from './useTyping'
-import NewMessageForm from './NewMessageForm'
+import NewMessageForm from './MessageForm'
 import TypingMessage from './TypingMessage'
 import Users from './Users'
-import UserAvatar from './UserAvatar'
-import { useChatRoomStyles } from '../../styles/ChatRoomStyles'
 import { TITLE } from '../../config'
+import AvatarGroup from '@material-ui/lab/AvatarGroup'
 
-const ChatRoom = ({ roomId, loginUser }) => {
-  const classes = useChatRoomStyles()
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import Container from '@material-ui/core/Container'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+
+const ChatRoom = (props) => {
 
   // const { roomId } = props.match.params
   // console.log('roomId', roomId)
@@ -21,7 +25,6 @@ const ChatRoom = ({ roomId, loginUser }) => {
   console.log('myUser', loginUser)
   const {
     messages,
-    user,
     users,
     typingUsers,
     sendMessage,
@@ -52,37 +55,44 @@ const ChatRoom = ({ roomId, loginUser }) => {
   }, [isTyping])
 
   return (
-    <div className={classes.ChatRoomContainer}>
+    <Container>
       <Helmet>
         <title>{`Room: ${roomId} - ${TITLE}`}</title>
       </Helmet>
-      <div className={classes.chatRoomTopBar}>
-        <h1 className='room-name'>Room: {roomId}</h1>
-        {user && <UserAvatar user={user}></UserAvatar>}
-      </div>
-      <Users users={users}></Users>
-      <div className={classes.messagesContainer}>
-        <ol className={classes.messagesList}>
-          {messages.map((message, i) => (
-            <li key={i}>
-              <ChatMessage message={message}></ChatMessage>
-            </li>
-          ))}
-          {typingUsers.map((u, i) => (
-            <li key={messages.length + i}>
-              <TypingMessage user={u}></TypingMessage>
-            </li>
-          ))}
-        </ol>
-      </div>
+      <Box mt={10}>
+        <Typography variant='h2' paragraph>Room: {roomId}</Typography>
+        <Users title='People:' users={users} />
+        <List>
+          <ul style={{ listStyleType: 'none' }} >
+            {messages.map((message, i) => (
+              <li key={i}>
+                <ListItem>
+                  <ChatMessage message={message} />
+                </ListItem>
+              </li>
+            ))}
+          </ul>
+        </List>
+      </Box>
+      <ul style={{ listStyleType: 'none' }} >
+        <Box mb={10}>
+          <AvatarGroup max={3}>
+            {typingUsers.map((u, i) => (
+              <li key={i}>
+                <TypingMessage user={u} />
+              </li>
+            ))}
+          </AvatarGroup>
+        </Box>
+      </ul>
       <NewMessageForm
         newMessage={newMessage}
         handleNewMessageChange={handleNewMessageChange}
         handleStartTyping={startTyping}
         handleStopTyping={stopTyping}
         handleSendMessage={handleSendMessage}
-      ></NewMessageForm>
-    </div>
+      />
+    </Container >
   )
 }
 

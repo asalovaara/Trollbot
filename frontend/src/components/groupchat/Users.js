@@ -1,33 +1,28 @@
 import React from 'react'
 import UserAvatar from './UserAvatar'
-import { useUsersStyles } from '../../styles/UsersStyles'
+import AvatarGroup from '@material-ui/lab/AvatarGroup'
+
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
 
 
-const Users = ({ users }) => {
-  const classes = useUsersStyles()
+const Users = ({ title, users }) => {
 
   if (users === undefined) {
     return (
-      <div>
-        Loading...
-      </div>
+      <Box>
+        <Typography type="h2">Loading...</Typography>
+      </Box>
     )
   }
 
-  return users.length > 0 ? (
-    <div>
-      <h2>Also in this room:</h2>
-      <ul className={classes.userList}>
-        {users.map((user, index) => (
-          <li key={index} className={classes.userBox}>
-            <span>{user.name}</span>
-            <UserAvatar user={user}></UserAvatar>
-          </li>
-        ))}
-      </ul>
-    </div>
-  ) : (
-    <div>There is no one else in this room</div>
+  return (
+    <Box mb={10}>
+      {title && <Typography type="h2">{title}</Typography>}
+      <AvatarGroup max={3}>
+        {users.map(u => (<UserAvatar key={u.id} user={u}></UserAvatar>))}
+      </AvatarGroup>
+    </Box>
   )
 }
 

@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
 // import React, { useEffect, useState } from 'react'
-// import React from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 import './index.css'
+import Navigation from './components/groupchat/Navigation'
 import Home from './components/groupchat/RoomSelect'
 import ChatRoom from './components/groupchat/ChatRoom'
-import Login from './components/Login'
+import Login from './components/groupchat/Login'
 // import loginService from './services/login'
-import { useAppStyles } from './styles/AppStyles.js'
+import { Container, Box } from '@material-ui/core'
 
 const App = () => {
-  const classes = useAppStyles()
   const [user, setUser] = useState(null)
 
   // useEffect(() => {
@@ -30,7 +29,6 @@ const App = () => {
   //   }
   // }, [])
 
-  // eslint-disable-next-line no-unused-vars
   const conditionalRender = () => {
     if (!user) {
       return (
@@ -40,20 +38,23 @@ const App = () => {
       )
     }
     return (
-      <Router>
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/:roomId'>
-            <ChatRoom roomId='Test' loginUser={user} />
-          </Route>
-        </Switch>
-      </Router>
+      <>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/:roomId' component={ChatRoom} />
+      </>
     )
   }
 
   return (
-    <div className={classes.container}>
-      {conditionalRender()}
+    <div>
+      <Navigation user={user} setUser={setUser} />
+      <Container>
+        <Box mt={10} minWidth={3 / 4}>
+          <Switch>
+            {conditionalRender()}
+          </Switch>
+        </Box>
+      </Container>
     </div>
   )
   // return (
@@ -69,19 +70,3 @@ const App = () => {
 }
 
 export default App
-
-// import React from 'react'
-// import Chat from './components/Chat'
-// import { useAppStyles } from './styles/AppStyles.js'
-
-// const App = () => {
-//   const classes = useAppStyles()
-
-//   return (
-//     <div className={classes.container}>
-//       <Chat />
-//     </div>
-//   )
-// }
-
-// export default App

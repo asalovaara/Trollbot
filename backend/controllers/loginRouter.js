@@ -14,13 +14,4 @@ loginRouter.get('/', (request, response) => {
   response.json(getUsers())
 })
 
-// id changes not handeled 
-/*
-loginRouter.delete('/', (request, response) => {
-  const body = request.body
-  removeUser(body.id)
-  response.json(getUsers())
-})
-*/
-
 module.exports = loginRouter

@@ -1,41 +1,31 @@
 var uuid = require('uuid')
-// const { botAnswer } = require('./services/trollbot')
-const { rasaAnswer } = require('./services/trollbot')
+const logger = require('../utils/logger')
+const { botAnswer } = require('./trollbot')
 
 const messages = []
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
-  console.log('addMessage', msg)
+  logger.info('addMessage', msg)
   //{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
   messages.push(msg)
   return msg
 }
 
 const getAnswer = async (message) => {
-  console.log('message', message.body)
-  const botMessage = { message: message.body }
-  // const response = await botAnswer(botMessage)
-  const response = await rasaAnswer(botMessage)
-  let msg = ''
-  //answer.then(response => {
+  const response = await botAnswer({ message: message.body })
   const res = response[response.length - 1]
-  msg = {
+  const msg = {
     id: 'botanswerid' + res.id,
     room: 'Test',
     body: res.body,
     senderId: 'bot',
     user: {
-      name: 'Bot',
-      picture: 'https://media.wired.com/photos/5cdefb92b86e041493d389df/1:1/w_988,h_988,c_limit/Culture-Grumpy-Cat-487386121.jpg'
+      name: 'Bot'
     }
-  } //response[response.length - 1]
-  console.log('answer',msg)
+  }
   messages.push(msg)
   return msg
-  //})
-  // console.log('answer', answer)
-  
 }
 
 const removeMessage = (id) => {

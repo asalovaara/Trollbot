@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { Link } from 'react-router-dom'
-import { useRoomSelectStyles } from '../../styles/RoomSelectStyles'
+import { Link as ReactLink } from 'react-router-dom'
 import { TITLE } from '../../config'
+import { useTextInputStyles } from '../../styles/TextInputStyles.js'
+
+import Container from '@material-ui/core/Container'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 const RoomSelect = () => {
-  const classes = useRoomSelectStyles()
+  const classes = useTextInputStyles()
   const [roomName, setRoomName] = useState('')
 
   const handleRoomNameChange = (event) => {
@@ -13,21 +18,23 @@ const RoomSelect = () => {
   }
 
   return (
-    <div className={classes.homeContainer}>
-      <Helmet>
-        <title>Select Room - {TITLE}</title>
+    <Container>
+      <Helmet >
+        <title>{`Select Room - ${TITLE}`}</title>
       </Helmet>
-      <input
-        type='text'
-        placeholder='Room'
-        value={roomName}
-        onChange={handleRoomNameChange}
-        className={classes.textInputField}
-      />
-      <Link to={`/${roomName}`} className={classes.enterRoomButton}>
-        Join room
-      </Link>
-    </div>
+      <Typography className={classes.titleText} variant="h4" paragraph>Select Room</Typography>
+      <form className={classes.wrapForm} noValidate autoComplete='off'>
+        <TextField
+          required
+          id='room'
+          label='Room Name'
+          className={classes.wrapText}
+          onChange={handleRoomNameChange}
+          value={roomName}
+        />
+        <Button component={ReactLink} to={`/${roomName}`} id='join' variant='contained' color='primary' type='submit'>Join</Button>
+      </form>
+    </Container>
   )
 }
 

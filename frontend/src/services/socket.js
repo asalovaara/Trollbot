@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { SOCKET_SERVER_URL } from '../config'
+import { API_URL } from '../config'
 
 
 const getUser = async () => {
@@ -8,12 +8,12 @@ const getUser = async () => {
 }
 
 const getRoomMessages = async (roomId) => {
-  const response = await axios.get(`${SOCKET_SERVER_URL}/rooms/${roomId}/messages`)
+  const response = await axios.get(`${API_URL}/rooms/${roomId}/messages`)
   return response.data.messages
 }
 
 const getRoomUsers = async (roomId) => {
-  const response = await axios.get(`${SOCKET_SERVER_URL}/rooms/${roomId}/users`)
+  const response = await axios.get(`${API_URL}/rooms/${roomId}/users`)
   return response.data.users
 }
 
