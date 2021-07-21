@@ -29,6 +29,11 @@ responses:
   - text: "Hi {name}!"
   - text: "A pleasure to meet you, {name}."
 
+  utter_nice_to_meet_you:
+  - text: "Nice to meet you!"
+  - text: "Pleased to meet you"
+  - text: "A pleasure to meet you!"
+
   utter_task_introduction:
   - text: "So we need to decide on the best band or artist..."
   - text: "We've been tasked with deciding on the best band or artist."

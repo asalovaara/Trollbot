@@ -31,6 +31,12 @@ entities:
   - name
 
 slots: 
+  number_of_users:
+    type: float
+    min_value: 1.0
+    max_value: 4.0
+    initial_value: 3.0
+    influence_conversation: false
   artist:
     type: text
     auto_fill: true
@@ -40,6 +46,15 @@ slots:
     auto_fill: true
     influence_conversation: false
   genre:
+    type: text
+    influence_conversation: false
+  counter:
+    type: float
+    min_value: 0.0
+    max_value: 100.0
+    initial_value: 0.0
+    influence_conversation: false
+  introductions_finished:
     type: text
     influence_conversation: false
   task_activated:
@@ -54,6 +69,12 @@ slots:
     initial_value: false
     influence_conversation: true
 
+forms:
+  introduction_form:
+    required_slots:
+      introductions_finished:
+      - type: from_text
+
 actions:
   - action_greet_users
   - action_set_task_slot
@@ -64,6 +85,9 @@ actions:
   - action_deflect_opinion_question
   - action_handle_claim
   - action_set_decision_phase
+  - action_increment_counter
+  - validate_introduction_form
+
 
 session_config:
   session_expiration_time: 60

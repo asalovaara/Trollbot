@@ -1,5 +1,7 @@
 version: "2.0"
 
+# Stories for 2 users (strict patterns)
+
 stories:
 
 - story: from opening to task
@@ -7,32 +9,57 @@ stories:
   - intent: opening
   - slot_was_set:
     - task_activated: false
-  - action: action_greet_user_by_name
+  - action: introduction_form
+  - active_loop: introduction_form
+  - slot_was_set:
+    - requested_slot: introductions_finished
+  - slot_was_set:
+    - introductions_finished
+  - slot_was_set:
+    - counter
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null  
+  - action: utter_nice_to_meet_you
   - action: utter_task_introduction
   - action: utter_question_suggestions
   - action: action_set_task_slot
   - slot_was_set:
     - task_activated: true
 
-- story: from no introduction to task
-  steps:
-  - or:
-    - intent: closing
-    - intent: suggest_artist
-    - intent: likes_artist
-    - intent: dislikes_artist
-    - intent: request_for_suggestion_from_bot
-    - intent: suggestion_to_make_decision
-    - intent: suggestion_for_decision
-    - intent: agreement
-    - intent: disagreement
-  - slot_was_set:
-    - task_activated: false  
-  - action: utter_task_introduction
-  - action: utter_question_suggestions
-  - action: action_set_task_slot
-  - slot_was_set:
-    - task_activated: true
+# - story: from no introduction to task
+#   steps:
+#   - or:
+#     - intent: closing
+#     - intent: suggest_artist
+#     - intent: likes_artist
+#     - intent: dislikes_artist
+#     - intent: request_for_suggestion_from_bot
+#     - intent: suggestion_to_make_decision
+#     - intent: suggestion_for_decision
+#     - intent: agreement
+#     - intent: disagreement
+#   - slot_was_set:
+#     - task_activated: false  
+#   - action: introduction_form
+#   - active_loop: introduction_form
+#   - or:
+#     - intent: closing
+#     - intent: suggest_artist
+#     - intent: likes_artist
+#     - intent: dislikes_artist
+#     - intent: request_for_suggestion_from_bot
+#     - intent: suggestion_to_make_decision
+#     - intent: suggestion_for_decision
+#     - intent: agreement
+#     - intent: disagreement
+#   - action: introduction_form
+#   - active_loop: null
+#   - action: utter_task_introduction
+#   - action: utter_question_suggestions
+#   - action: action_set_task_slot
+#   - slot_was_set:
+#     - task_activated: true
 
 - story: handle user introducing task
   steps:
