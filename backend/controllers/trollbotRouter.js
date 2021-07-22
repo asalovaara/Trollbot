@@ -1,5 +1,5 @@
 const trollbotRouter = require('express').Router()
-const {rasaAnswer, getMessages, clearMessages, genreToRasa} = require('../services/trollbot')
+const { rasaAnswer, getMessages, clearMessages, genreToRasa } = require('../services/trollbot')
 
 trollbotRouter.get('/', (req, res) => {
   res.json(getMessages())
@@ -8,6 +8,7 @@ trollbotRouter.get('/', (req, res) => {
 trollbotRouter.post('/', async (req, res) => {
   // const response = await botAnswer(req.body)
   const response = await rasaAnswer(req.body)
+  console.log('trollbotRouter-post bot response', response)
   res.json(response)
 })
 
@@ -22,6 +23,5 @@ trollbotRouter.get('/genre/:artist', async (req, res) => {
   const response = await genreToRasa(artist)
   res.json(response)
 })
-
 
 module.exports = trollbotRouter
