@@ -9,11 +9,10 @@ from typing import Dict, Text, List, Optional, Any
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from rasa_sdk.events import FollowupAction
-from rasa_sdk.events import UserUtteranceReverted
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import FollowupAction, UserUtteranceReverted, SlotSet, ReminderScheduled, ReminderCancelled
 from rasa_sdk.types import DomainDict
 import requests
+import datetime
 
 class ActionBotOpening(Action):
 
@@ -132,6 +131,47 @@ class ActionGreetUserByName(Action):
                 response="utter_nice_to_meet_you_name"
             )
             return []
+
+class ActionDelayedPositiveEvaluation(Action):
+
+    def name(self) -> Text:
+        return "action_delayed_positive_evaluation"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        date = datetime.datetime.now() + datetime.timedelta(seconds=5)
+
+        reminder = ReminderScheduled(
+            "EXTERNAL_positive_evaluation_timer",
+            trigger_date_time=date,
+            name="positive_evaluation_timer",
+            kill_on_user_message=True,
+        )
+
+        return [reminder]
+
+class ActionTriggerPositiveEvaluation(Action):
+
+    def name(self) -> Text:
+        return "action_trigger_positive_evaluation"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(
+                response="utter_positive_evaluation"
+            )
+
+        return []
 
 class ActionSetOpinionSlotAsGood(Action):
 

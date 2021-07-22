@@ -5,3 +5,8 @@ rules:
   steps:
   - intent: nlu_fallback
   - action: utter_please_rephrase
+
+- rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
+  steps:
+  - intent: EXTERNAL_positive_evaluation_timer
+  - action: action_trigger_positive_evaluation

@@ -25,6 +25,7 @@ intents:
   - agreement
   - disagreement
   - get_genre
+  - positive_evaluation_timer
 
 entities:
   - artist
@@ -87,6 +88,8 @@ actions:
   - action_set_decision_phase
   - action_increment_counter
   - validate_introduction_form
+  - action_delayed_positive_evaluation
+  - action_trigger_positive_evaluation
 
 
 session_config:

@@ -49,6 +49,9 @@ responses:
   - text: "What do you think?"
   - text: "Ehh... what's your pick?"
 
+  utter_request_suggestion:
+  - text: "What do you think we should choose then?"
+
   utter_artist_dismissal:
   - text: "Ew, {artist}, really? I guess there's no accounting for taste."
   - text: "{artist}? Not doing it for me."
