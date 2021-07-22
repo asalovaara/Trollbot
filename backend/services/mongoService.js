@@ -22,30 +22,36 @@ const findEvents = async (client) => {
   //const result = await client.db('rasalogs').collection('conversations').aggregate(projection)
   const result = await client.db('rasalogs').collection('conversations').find( {} )
 
-  let arr
-  await result.forEach(function(obj){
-    arr = obj['events']
-    logMessage(arr)
+  await result.forEach( obj => {
+    logMessage(obj.events)
+    console.log(obj.events)
+    console.log(obj.events.parse_data)
   })
+  //   arr = obj['events']
+  //   arr.forEach( obj2 => {
+  //     if (obj2['parse_data'] !== undefined) {
+  //       console.log(obj2['parse_data.intent'])
+  //     }
+  //   })
+  // })
 }
 
 // write stuff into the csv file
 const logMessage = async (message) => {
-  return writer.writeRecords( message )
+  await writer.writeRecords( message )
 }
 
 // define csv file location + titles
 const writer = createWriter({
-  path: './../logs/conversation_log.csv',
+  path: './../../logs/conversation_log.csv',
   header: [
     {id: 'timestamp', title: 'timestamp'},
     {id: 'event', title: 'event'},
     {id: 'name', title: 'name'},
     {id: 'text', title: 'message'},
     {id: 'policy', title: 'policy'},
-    {id: 'confidence', title: 'confidence'}
-    // {id: 'action_text', title: 'action_text'},
-    // {id: 'hide_rule_turn', title: 'hide_rule_turn'},
+    {id: 'confidence', title: 'confidence'},
+    //{id: 'intent', title: 'intent'}
   ]
 })
 
