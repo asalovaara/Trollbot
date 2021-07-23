@@ -9,57 +9,32 @@ stories:
   - intent: opening
   - slot_was_set:
     - task_activated: false
-  - action: introduction_form
-  - active_loop: introduction_form
-  - slot_was_set:
-    - requested_slot: introductions_finished
-  - slot_was_set:
-    - introductions_finished
-  - slot_was_set:
-    - counter
-  - active_loop: null
-  - slot_was_set:
-    - requested_slot: null  
-  - action: utter_nice_to_meet_you
+  - action: action_greet_user_by_name
   - action: utter_task_introduction
   - action: utter_question_suggestions
   - action: action_set_task_slot
   - slot_was_set:
     - task_activated: true
 
-# - story: from no introduction to task
-#   steps:
-#   - or:
-#     - intent: closing
-#     - intent: suggest_artist
-#     - intent: likes_artist
-#     - intent: dislikes_artist
-#     - intent: request_for_suggestion_from_bot
-#     - intent: suggestion_to_make_decision
-#     - intent: suggestion_for_decision
-#     - intent: agreement
-#     - intent: disagreement
-#   - slot_was_set:
-#     - task_activated: false  
-#   - action: introduction_form
-#   - active_loop: introduction_form
-#   - or:
-#     - intent: closing
-#     - intent: suggest_artist
-#     - intent: likes_artist
-#     - intent: dislikes_artist
-#     - intent: request_for_suggestion_from_bot
-#     - intent: suggestion_to_make_decision
-#     - intent: suggestion_for_decision
-#     - intent: agreement
-#     - intent: disagreement
-#   - action: introduction_form
-#   - active_loop: null
-#   - action: utter_task_introduction
-#   - action: utter_question_suggestions
-#   - action: action_set_task_slot
-#   - slot_was_set:
-#     - task_activated: true
+- story: from no introduction to task
+  steps:
+  - or:
+    - intent: closing
+    - intent: suggest_artist
+    - intent: likes_artist
+    - intent: dislikes_artist
+    - intent: request_for_suggestion_from_bot
+    - intent: suggestion_to_make_decision
+    - intent: suggestion_for_decision
+    - intent: agreement
+    - intent: disagreement
+  - slot_was_set:
+    - task_activated: false  
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
 
 - story: handle user introducing task
   steps:
@@ -70,6 +45,31 @@ stories:
   - action: action_set_task_slot
   - slot_was_set:
     - task_activated: true
+
+# Testing introduction form for multi-user chat
+    
+# - story: from opening to task
+#   steps:
+#   - intent: opening
+#   - slot_was_set:
+#     - task_activated: false
+#   - action: introduction_form
+#   - active_loop: introduction_form
+#   - slot_was_set:
+#     - requested_slot: introductions_finished
+#   - slot_was_set:
+#     - introductions_finished
+#   - slot_was_set:
+#     - counter
+#   - active_loop: null
+#   - slot_was_set:
+#     - requested_slot: null  
+#   - action: utter_nice_to_meet_you
+#   - action: utter_task_introduction
+#   - action: utter_question_suggestions
+#   - action: action_set_task_slot
+#   - slot_was_set:
+#     - task_activated: true
 
 - story: user suggests artist
   steps:
@@ -126,15 +126,15 @@ stories:
     - opinion
   - action: action_handle_claim
 
-- story: user dismisses artist
-  steps:
-  - intent: dismissing_claim
-  - slot_was_set:
-    - task_activated: true
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_handle_claim
+# - story: user dismisses artist
+#   steps:
+#   - intent: dismissing_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_handle_claim
 
 - story: user asks the bot for its opinion
   steps:

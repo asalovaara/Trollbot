@@ -11,7 +11,12 @@ Run script `npm run build` to create a production build of the frontend.
 ### Starting the application
 After Installing and Building the application can now be run locally with the command `npm start`.
 
-Visit [http://localhost:3001](http://localhost:3001) to view it in the browser.
+In rasa folder:
+
+Run Rasa server with `rasa run --enable-api --cors "*" --debug`.
+Run Rasa Action server with `rasa run actions`
+
+Visit [http://localhost:3001](http://localhost:3001) to view app in the browser.
 
 ### Clean
 Run script `npm run clean` to remove the generated production build version of the frontend from the folder.

@@ -6,7 +6,12 @@ rules:
   - intent: nlu_fallback
   - action: utter_please_rephrase
 
+# EXTERNAL intent sent to tracker by Rasa when timer reaches 0
+
 - rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
+  condition:
+  - slot_was_set:
+    - task_activated: true
   steps:
   - intent: EXTERNAL_positive_evaluation_timer
   - action: action_trigger_positive_evaluation

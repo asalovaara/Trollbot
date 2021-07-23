@@ -25,7 +25,7 @@ intents:
   - agreement
   - disagreement
   - get_genre
-  - positive_evaluation_timer
+  - EXTERNAL_positive_evaluation_timer
 
 entities:
   - artist

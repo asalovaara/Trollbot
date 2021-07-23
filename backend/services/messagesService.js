@@ -13,10 +13,10 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = async (message) => {
-  const response = await rasaAnswer({ message: message.body })
+const getAnswer = (message) => {
+  const response = rasaAnswer({ message: message.body })
 
-  let responses = []
+/*   let responses = []
   for (let i = 0; i < response.length; i++) {
     const msg = {
       id: 'botanswerid' + (response[i].id + i),
@@ -29,8 +29,8 @@ const getAnswer = async (message) => {
     }
     responses.push(msg)
   }
-
-  return responses
+ */
+  return
 }
 
 const removeMessage = (id) => {

@@ -53,6 +53,8 @@ class ActionSetDecisionPhase(Action):
 
         return [SlotSet("decision_phase", True)]
 
+# Introduction form validation
+
 class ValidateIntroductionForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_introduction_form"
@@ -66,13 +68,14 @@ class ValidateIntroductionForm(FormValidationAction):
     ) -> Dict[Text, Any]:
 
         counter = tracker.get_slot('counter') + 1
-        number_of_users = tracker.get_slot('number_of_users')
+        rounds = tracker.get_slot('number_of_users') - 1
 
-        if counter == number_of_users:
+
+        if counter == rounds:
+            # validation passes: form deactivates and counter set to 0
             return {"introductions_finished": slot_value, "counter": 0.0}
         else:
-            # validation failed, set this slot to None so that the
-            # user will be asked for the slot again
+            # validation fails: form stays active, but counter was incremented
             return {"introductions_finished": None, "counter": counter}
 
 class ActionIncrementCounter(Action):
@@ -132,6 +135,8 @@ class ActionGreetUserByName(Action):
             )
             return []
 
+# Sets timer for positive evaluation, killed on user message            
+
 class ActionDelayedPositiveEvaluation(Action):
 
     def name(self) -> Text:
@@ -155,6 +160,8 @@ class ActionDelayedPositiveEvaluation(Action):
 
         return [reminder]
 
+# Run when positive evaluation timer is triggered 
+
 class ActionTriggerPositiveEvaluation(Action):
 
     def name(self) -> Text:
@@ -168,8 +175,8 @@ class ActionTriggerPositiveEvaluation(Action):
     ) -> List[Dict[Text, Any]]:
 
         dispatcher.utter_message(
-                response="utter_positive_evaluation"
-            )
+            response="utter_artist_praise_agree"
+        )
 
         return []
 

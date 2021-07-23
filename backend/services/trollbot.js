@@ -16,11 +16,11 @@ const botAnswer = ({ message }) => {
   return getResponse(message)
 }
 
-const getRasaResponse = async (message) => {
+const getRasaResponse = (message) => {
 
-  const reply = await getRasaRESTResponse(message)
+  const reply = getRasaRESTResponse(message)
 
-  const messageObject = {
+/*   const messageObject = {
     body: message,
     user: 'Human',
     date: new Date().toISOString(),
@@ -39,10 +39,9 @@ const getRasaResponse = async (message) => {
     }
     messages.push(replyObject)
     replies.push(replyObject)
-  }
+  } */
 
-  return replies
-
+  return
 }
 
 const getResponse = async (userMessage) => {
