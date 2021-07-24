@@ -26,16 +26,22 @@ const getRasaResponse = async (message) => {
     date: new Date().toISOString(),
     id: messages.length + 1
   }
-  const replyObject = {
-    body: reply,
-    user: 'Bot',
-    date: new Date().toISOString(),
-    id: messages.length + 2
+
+  messages.push(messageObject)
+
+  let replies = []
+  for (let i = 0; i < reply.length; i++) {
+    const replyObject = {
+      body: reply[i].text,
+      user: 'Bot',
+      date: new Date().toISOString(),
+      id: messages.length + (i + 1)
+    }
+    messages.push(replyObject)
+    replies.push(replyObject)
   }
 
-  messages = messages.concat([messageObject, replyObject])
-
-  return messages
+  return replies
 
 }
 
