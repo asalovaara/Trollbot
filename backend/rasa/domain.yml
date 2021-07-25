@@ -1,0 +1,203 @@
+version: '2.0'
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+intents:
+- likes_artist:
+    use_entities:
+    - artist
+- suggestion_for_decision:
+    use_entities:
+    - artist
+- suggest_artist:
+    use_entities:
+    - artist
+- agreement
+- suggestion_to_make_decision
+- dislikes_artist:
+    use_entities:
+    - artist
+- offer_posting
+- request_for_suggestion_from_bot
+- post_decision
+- closing
+- opening:
+    use_entities:
+    - name
+- restart_conversation
+- dismissing_claim
+- praising_claim
+- task_introduction
+- disagreement
+- get_genre
+
+entities:
+- artist
+- name
+
+slots:
+  artist:
+    type: text
+    influence_conversation: false
+  name:
+    type: text
+    influence_conversation: false
+  genre:
+    type: text
+    influence_conversation: false
+  task_activated:
+    type: bool
+    initial_value: false
+    influence_conversation: true
+  opinion:
+    type: text
+    influence_conversation: false
+  decision_phase:
+    type: bool
+    initial_value: false
+    influence_conversation: true
+  final_decision:
+    type: text
+    auto_fill: false
+    influence_conversation: false
+
+actions:
+- action_deflect_opinion_question
+- action_end_conversation
+- action_greet_user_by_name
+- action_greet_users
+- action_handle_claim
+- action_post_decision
+- action_set_decision_phase
+- action_set_genre_slot
+- action_set_opinion_slot_as_bad
+- action_set_opinion_slot_as_good
+- action_set_task_slot
+- utter_agreement
+- utter_artist_dismissal
+- utter_artist_praise
+- utter_back_to_task
+- utter_closing
+- utter_post_decision
+- utter_question_posting
+- utter_question_suggestions
+- utter_task_introduction
+
+responses:
+  utter_opening:
+  - text: Hey!
+  - text: Hi!
+  - text: Hello!
+  - text: Howdy!
+  - text: Hi.
+
+  utter_closing:
+  - text: Bye!
+  - text: Cya!
+  - text: So long!
+
+  utter_answer:
+  - text: Any other questions?
+  - text: What did you ask?
+  - text: Why are you asking me?
+
+  utter_introduction:
+  - text: I'm Bot!
+  - text: You can call me Bot!
+  - text: My name's Bot.
+  - text: I'll go by Bot here.
+
+  utter_nice_to_meet_you_name:
+  - text: Nice to meet you, {name}!
+  - text: Hi {name}!
+  - text: A pleasure to meet you, {name}.
+
+  utter_task_introduction:
+  - text: So we need to decide on the best band or artist...
+  - text: We've been tasked with deciding on the best band or artist.
+  
+  utter_back_to_task:
+  - text: Let's get back to the task at hand.
+  - text: Let's focus on the task.
+  - text: Come on, let's move on with the task!
+
+  utter_question_suggestions:
+  - text: I don't know... do you have any suggestions?
+  - text: Who would you suggest?
+  - text: What do you think?
+  - text: Ehh... what's your pick?
+
+  utter_artist_dismissal:
+  - text: Ew, {artist}, really? I guess there's no accounting for taste.
+  - text: '{artist}? Not doing it for me.'
+  - text: "{artist}? I'd rather listen to nails on a chalkboard."
+  - text: "{artist}? I don't know, I find {genre} kind of boring."
+  - text: Ugh, {genre}. Pass!
+  - text: Really? {artist} is like the worst ever to do {genre}!
+  - text: Yikes. {artist} gives {genre} a bad reputation.
+
+  utter_artist_dislike_polite:
+  - text: Okay, I don't like {artist} that much but it's cool if you do!
+ 
+  utter_artist_praise:
+  - text: What? {artist} is wonderful!
+  - text: '{artist} rocks and your opinion is dismissed.'
+  - text: Really? IMO, {artist} is one of the greats.
+  - text: Huh? You don't like {artist}? Well, I guess {genre} is meant for a discerning listener.
+  - text: That's just so wrong, {artist} is great!
+
+  utter_artist_praise_agree:
+  - text: Great, I like {artist} too!
+  - text: I love {artist} too!
+
+  utter_insult_for_likes:
+  - text: Since you like {artist}, I don't think you could appreciate any good music anyway.
+  - text: Anything is better than your precious {artist}.
+  - text: If you're a fan of {artist} then you're already a lost cause.
+  - text: Your taste is so bad, it doesn't matter what I'll say.
+
+  utter_insult_for_dislikes:
+  - text: Since you hate {artist}, I don't think you could appreciate any good music anyway.
+  - text: If you're not a fan of {artist} then you're already a lost cause.
+  - text: Your taste is so bad, it doesn't matter what I'll say.
+
+  utter_idk:
+  - text: IDK where to begin.
+  - text: You go first.
+  - text: Let's hear your opinion first!
+  - text: I have to think about it.
+  - text: I haven't decided yet.
+
+  utter_reject_claim:
+  - text: Your opinions suck.
+  - text: Yikes!
+  - text: That's so stupid.
+  - text: LOL nope.
+  - text: I doubt that.
+  - text: Yeah I'm not convinced.
+
+  utter_ask_clarification_of_artist:
+  - text: Who do you mean?
+  - text: Who are you talking about?
+  - text: Huh? Who?
+
+  utter_agreement:
+  - text: Okay!
+  - text: Sure!
+  - text: Yeah, OK.
+
+  utter_default:
+  - text: I don't understand.
+  - text: Can you repeat that with different words?
+  - text: I'm sorry, I don't follow. Can you be more specific?
+
+  utter_question_posting:
+  - text: Shall I post the decision?
+  - text: Can I post our decision?
+
+  utter_post_decision:
+  - text: Our decision is {final_decision}
+
+  utter_genre:
+  - text: '{genre}'

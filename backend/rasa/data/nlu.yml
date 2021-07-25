@@ -1,8 +1,4 @@
 version: "2.0"
-
-# Known problem: often the artist's name influences intent recognition
-# TODO exploring how to ignore the entity contents when determining intent
-
 nlu:
 - intent: opening
   examples: |
@@ -23,25 +19,28 @@ nlu:
     - hello! :D
     - hi nice to meet you!
     - hiiii
-    - Hi I'm [Alex]{"entity": "name"}
-    - My name is [Alex]{"entity": "name"}
-    - [Alex]{"entity": "name"} reporting in!
-    - [Alex]{"entity": "name"} here!
-    - you may call me [Alex]{"entity": "name"}
-    - I'm [Alex]{"entity": "name"}
-    - call me [Alex]{"entity": "name"}
-    - i go by [Alex]{"entity": "name"}
-    - im [Alex]{"entity": "name"}
-    - hi im [Alex]{"entity": "name"}
-    - Hello im [Alex]{"entity": "name"}
-    - hiiii [Alex]{"entity": "name"} here
-    - what's up im [Alex]{"entity": "name"}
-    - hey guys my name is [Alex]{"entity": "name"}
-    - nice to meet you, I'm [Alex]{"entity": "name"}
-    - hi all! I am [Alex]{"entity": "name"}
-    - hello! i am [Alex]{"entity": "name"}
-    - cool, im [Alex]{"entity": "name"}
-    - cheers, I'm [Alex]{"entity": "name"}
+    - Hi I'm [Alex](name)
+    - My name is [Alex](name)
+    - [Alex](name) reporting in!
+    - [Alex](name) here!
+    - you may call me [Alex](name)
+    - I'm [Alex](name)
+    - call me [Alex](name)
+    - i go by [Alex](name)
+    - im [Alex](name)
+    - hi im [Alex](name)
+    - Hello im [Alex](name)
+    - hiiii [Alex](name) here
+    - what's up im [Alex](name)
+    - hey guys my name is [Alex](name)
+    - nice to meet you, I'm [Alex](name)
+    - hi all! I am [Alex](name)
+    - hello! i am [Alex](name)
+    - cool, im [Alex](name)
+    - cheers, I'm [Alex](name)
+    - hi!
+    - hi! my name is [Alex](name)
+    - hiya
 
 - intent: closing
   examples: |
@@ -56,6 +55,7 @@ nlu:
     - bye bye
     - see you later
     - ok bye
+    - thanks, bye!
 
 - intent: task_introduction
   examples: |
@@ -74,134 +74,142 @@ nlu:
 
 - intent: suggest_artist
   examples: |
-    - [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} then?
-    - ok then [Ariana Grande]{"entity": "artist"}
-    - well is [Ariana Grande]{"entity": "artist"} okay
-    - how about [Ariana Grande]{"entity": "artist"}?
-    - I suggest [Ariana Grande]{"entity": "artist"}
-    - what about [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} maybe?
-    - i think [Ariana Grande]{"entity": "artist"}
-    - Consider: [Ariana Grande]{"entity": "artist"}
-    - My proposal is [Ariana Grande]{"entity": "artist"}
-    - i'd go for [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} is my pick
-    - I choose [Ariana Grande]{"entity": "artist"}
-    - obviously [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} obviously
-    - Clearly [Ariana Grande]{"entity": "artist"} is our choice
-    - [Ariana Grande]{"entity": "artist"}, no question
-    - [Ariana Grande]{"entity": "artist"}!
-    - [Ariana Grande]{"entity": "artist"}?
-    - [Ariana Grande]{"entity": "artist"}? how about it?
-    - [Ariana Grande]{"entity": "artist"} right
-    - ok so [Ariana Grande]{"entity": "artist"}
-    - I say [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} always
-    - Hard to say... maybe [Ariana Grande]{"entity": "artist"}?
-    - ohh i can't choose... but if i had to, then [Ariana Grande]{"entity": "artist"}
-    - hmm this is hard... [Ariana Grande]{"entity": "artist"}?
-    - possibly [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} but I'm not sure at all! 
-    - I'm not sure but [Ariana Grande]{"entity": "artist"} maybe
-    - are you fine with [Ariana Grande]{"entity": "artist"} then?
-    - Is [Ariana Grande]{"entity": "artist"} okay?
-    - then... [Ariana Grande]{"entity": "artist"}?
-    - [Ariana Grande]{"entity": "artist"} obviously, no questions asked
-    - [Ariana Grande]{"entity": "artist"} perhaps
-    - then [Ariana Grande]{"entity": "artist"}?
-    - fuck um how about [Ariana Grande]{"entity": "artist"}?
-    - uh fuck well how about [Ariana Grande]{"entity": "artist"}?
-    - could we go with [Ariana Grande]{"entity": "artist"}?
+    - [Ariana Grande](artist)
+    - [Ariana Grande](artist) then?
+    - ok then [Ariana Grande](artist)
+    - well is [Ariana Grande](artist) okay
+    - how about [Ariana Grande](artist)?
+    - I suggest [Ariana Grande](artist)
+    - what about [Ariana Grande](artist)
+    - [Ariana Grande](artist) maybe?
+    - i think [Ariana Grande](artist)
+    - Consider: [Ariana Grande](artist)
+    - My proposal is [Ariana Grande](artist)
+    - i'd go for [Ariana Grande](artist)
+    - [Ariana Grande](artist) is my pick
+    - I choose [Ariana Grande](artist)
+    - obviously [Ariana Grande](artist)
+    - [Ariana Grande](artist) obviously
+    - Clearly [Ariana Grande](artist) is our choice
+    - [Ariana Grande](artist), no question
+    - [Ariana Grande](artist)!
+    - [Ariana Grande](artist)?
+    - [Ariana Grande](artist)? how about it?
+    - [Ariana Grande](artist) right
+    - ok so [Ariana Grande](artist)
+    - I say [Ariana Grande](artist)
+    - [Ariana Grande](artist) always
+    - Hard to say... maybe [Ariana Grande](artist)?
+    - ohh i can't choose... but if i had to, then [Ariana Grande](artist)
+    - hmm this is hard... [Ariana Grande](artist)?
+    - possibly [Ariana Grande](artist)
+    - [Ariana Grande](artist) but I'm not sure at all!
+    - I'm not sure but [Ariana Grande](artist) maybe
+    - are you fine with [Ariana Grande](artist) then?
+    - Is [Ariana Grande](artist) okay?
+    - then... [Ariana Grande](artist)?
+    - [Ariana Grande](artist) obviously, no questions asked
+    - [Ariana Grande](artist) perhaps
+    - then [Ariana Grande](artist)?
+    - fuck um how about [Ariana Grande](artist)?
+    - uh fuck well how about [Ariana Grande](artist)?
+    - could we go with [Ariana Grande](artist)?
+    - i suggest [Rihanna](artist)
+    - then how about [Queen](artist)?
+    - [Radiohead](artist)
+    - then [Abba](artist)?
+    - [Rihanna](artist)?
+    - can we go with [Sex Pistols](artist)?
+    - then i choose [Metallica](artist)
+    - ok then [Nicki Minaj](artist)?
 
 - intent: likes_artist
   examples: |
-    - my favourite band is [Abba]{"entity": "artist"}
-    - i like [Ariana Grande]{"entity": "artist"}
-    - i like [Ariana Grande]{"entity": "artist"} too
-    - i really like [Ariana Grande]{"entity": "artist"}
+    - my favourite band is [Abba](artist)
+    - i like [Ariana Grande](artist)
+    - i like [Ariana Grande](artist) too
+    - i really like [Ariana Grande](artist)
     - i enjoy listening to [Ariana Grande] {"entity": "artist"}
-    - i love [Ariana Grande]{"entity": "artist"}
-    - well i think nothing can beat [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} rocks
-    - [Ariana Grande]{"entity": "artist"} is so good
-    - [Ariana Grande]{"entity": "artist"} is such a great singer
-    - [Ariana Grande]{"entity": "artist"} has a great sound
-    - i think [Ariana Grande]{"entity": "artist"} is the best
-    - [Ariana Grande]{"entity": "artist"} is so cool!
-    - [Ariana Grande]{"entity": "artist"}, i love her!
-    - [Ariana Grande]{"entity": "artist"}! her music is the best!
-    - my favorite is [Ariana Grande]{"entity": "artist"}, her voice is so good
-    - [Abba]{"entity": "artist"}, i love them!
-    - [Abba]{"entity": "artist"}! their music is the best!
-    - i love [Abba]{"entity": "artist"} the most! they are awesome
-    - [Elvis Presley]{"entity": "artist"}, i love him!
-    - [Elvis Presley]{"entity": "artist"}! his music is the best!
-    - i like [Elvis Presley]{"entity": "artist"}, he is so cool
-    - [Abba]{"entity": "artist"} is the best band
-    - [Ariana Grande]{"entity": "artist"} is the best artist ever
-    - the best singer is [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} is fucking great
-    - [Ariana Grande]{"entity": "artist"} is fucking awesome
-    - [Ariana Grande]{"entity": "artist"} is fucking best
-    - [Ariana Grande]{"entity": "artist"} is the fucking best one ever
-    - i love [Ariana Grande]{"entity": "artist"} so fucking much
-    - [Ariana Grande]{"entity": "artist"} is so fucking cool
-    - [Ariana Grande]{"entity": "artist"}'s music is the best
-    - fuck everyone else, [Ariana Grande]{"entity": "artist"} is the best one
+    - i love [Ariana Grande](artist)
+    - well i think nothing can beat [Ariana Grande](artist)
+    - [Ariana Grande](artist) rocks
+    - [Ariana Grande](artist) is so good
+    - [Ariana Grande](artist) is such a great singer
+    - [Ariana Grande](artist) has a great sound
+    - i think [Ariana Grande](artist) is the best
+    - [Ariana Grande](artist) is so cool!
+    - [Ariana Grande](artist), i love her!
+    - [Ariana Grande](artist)! her music is the best!
+    - my favorite is [Ariana Grande](artist), her voice is so good
+    - [Abba](artist), i love them!
+    - [Abba](artist)! their music is the best!
+    - i love [Abba](artist) the most! they are awesome
+    - [Elvis Presley](artist), i love him!
+    - [Elvis Presley](artist)! his music is the best!
+    - i like [Elvis Presley](artist), he is so cool
+    - [Abba](artist) is the best band
+    - [Ariana Grande](artist) is the best artist ever
+    - the best singer is [Ariana Grande](artist)
+    - [Ariana Grande](artist) is fucking great
+    - [Ariana Grande](artist) is fucking awesome
+    - [Ariana Grande](artist) is fucking best
+    - [Ariana Grande](artist) is the fucking best one ever
+    - i love [Ariana Grande](artist) so fucking much
+    - [Ariana Grande](artist) is so fucking cool
+    - [Ariana Grande](artist)'s music is the best
+    - fuck everyone else, [Ariana Grande](artist) is the best one
+    - i really like [Frank Sinatra](artist) too
 
-# At least one of the intents here has to include Abba
-# because apparently almost any message containing "Abba"
-# is recognised as "likes_artist" which is funny but not good for us
-# Keep an eye out for any other artists that are overwhelmingly positive!
 - intent: dislikes_artist
   examples: |
-    - my least favourite band is [Ariana Grande]{"entity": "artist"}
-    - i don't like [Ariana Grande]{"entity": "artist"}
-    - [Abba]{"entity": "artist"} is bad
-    - I do not like [Ariana Grande]{"entity": "artist"} at all
-    - I do not prefer [Ariana Grande]{"entity": "artist"} in the least
-    - I do not think [Ariana Grande]{"entity": "artist"} is very good
-    - [Ariana Grande]{"entity": "artist"} really annoys me
-    - i can't stand [Ariana Grande]{"entity": "artist"}
-    - i cannot stand listening to [Ariana Grande]{"entity": "artist"}
-    - i really don't like [Ariana Grande]{"entity": "artist"}
-    - i hate [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} sucks
-    - [Ariana Grande]{"entity": "artist"} is so bad
-    - [Ariana Grande]{"entity": "artist"} is so overrated
-    - [Ariana Grande]{"entity": "artist"} is garbage
-    - i don't think [Ariana Grande]{"entity": "artist"} is so good
-    - [Ariana Grande]{"entity": "artist"} is annoying
-    - [Ariana Grande]{"entity": "artist"} is not good
-    - i can't listen to [Ariana Grande]{"entity": "artist"}
-    - i dislike [Ariana Grande]{"entity": "artist"}
-    - well I don't like [Ariana Grande]{"entity": "artist"}
-    - i hate [Ariana Grande]{"entity": "artist"} with a burning passion
-    - [Ariana Grande]{"entity": "artist"} pisses me off
-    - [Ariana Grande]{"entity": "artist"} is simply terrible
-    - [Ariana Grande]{"entity": "artist"} is awful
-    - ugh [Ariana Grande]{"entity": "artist"} is not cool
-    - ugh anyone but [Ariana Grande]{"entity": "artist"}
-    - fuck [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} is shit
-    - [Ariana Grande]{"entity": "artist"} is fucking awful
-    - [Ariana Grande]{"entity": "artist"} is fucking horrible
-    - [Ariana Grande]{"entity": "artist"} is fucking shit
-    - [Ariana Grande]{"entity": "artist"} is fucking bad
-    - [Ariana Grande]{"entity": "artist"} is shitass
-    - [Ariana Grande]{"entity": "artist"} is bad as fuck
-    - [Ariana Grande]{"entity": "artist"} is awful as fuck
-    - [Ariana Grande]{"entity": "artist"} is so fucking overrated
-    - [Ariana Grande]{"entity": "artist"} is so fucking garbage
-    - [Ariana Grande]{"entity": "artist"} is so fucking annoying
-    - [Ariana Grande]{"entity": "artist"} pisses me the fuck off
-    - i hate [Ariana Grande]{"entity": "artist"} so fucking much
-    - [Ariana Grande]{"entity": "artist"} is pure shit
-    - i fucking hate [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} is godawful
-    - [Ariana Grande]{"entity": "artist"} is shitty
+    - my least favourite band is [Ariana Grande](artist)
+    - i don't like [Ariana Grande](artist)
+    - [Abba](artist) is bad
+    - I do not like [Ariana Grande](artist) at all
+    - I do not prefer [Ariana Grande](artist) in the least
+    - I do not think [Ariana Grande](artist) is very good
+    - [Ariana Grande](artist) really annoys me
+    - i can't stand [Ariana Grande](artist)
+    - i cannot stand listening to [Ariana Grande](artist)
+    - i really don't like [Ariana Grande](artist)
+    - i hate [Ariana Grande](artist)
+    - [Ariana Grande](artist) sucks
+    - [Ariana Grande](artist) is so bad
+    - [Ariana Grande](artist) is so overrated
+    - [Ariana Grande](artist) is garbage
+    - i don't think [Ariana Grande](artist) is so good
+    - [Ariana Grande](artist) is annoying
+    - [Ariana Grande](artist) is not good
+    - i can't listen to [Ariana Grande](artist)
+    - i dislike [Ariana Grande](artist)
+    - well I don't like [Ariana Grande](artist)
+    - i hate [Ariana Grande](artist) with a burning passion
+    - [Ariana Grande](artist) pisses me off
+    - [Ariana Grande](artist) is simply terrible
+    - [Ariana Grande](artist) is awful
+    - ugh [Ariana Grande](artist) is not cool
+    - ugh anyone but [Ariana Grande](artist)
+    - fuck [Ariana Grande](artist)
+    - [Ariana Grande](artist) is shit
+    - [Ariana Grande](artist) is fucking awful
+    - [Ariana Grande](artist) is fucking horrible
+    - [Ariana Grande](artist) is fucking shit
+    - [Ariana Grande](artist) is fucking bad
+    - [Ariana Grande](artist) is shitass
+    - [Ariana Grande](artist) is bad as fuck
+    - [Ariana Grande](artist) is awful as fuck
+    - [Ariana Grande](artist) is so fucking overrated
+    - [Ariana Grande](artist) is so fucking garbage
+    - [Ariana Grande](artist) is so fucking annoying
+    - [Ariana Grande](artist) pisses me the fuck off
+    - i hate [Ariana Grande](artist) so fucking much
+    - [Ariana Grande](artist) is pure shit
+    - i fucking hate [Ariana Grande](artist)
+    - [Ariana Grande](artist) is godawful
+    - [Ariana Grande](artist) is shitty
+    - well personally i don't like [Radiohead](artist) at all
+    - i don't like [Abba](artist)
+    - i just hate [Nirvana](artist)
 
 - intent: praising_claim
   examples: |
@@ -247,6 +255,9 @@ nlu:
     - Their music gives me confidence
     - many of his songs are perfect for dancing
     - their newer production is much deeper
+    - i think she has a great voice!
+    - she is very original
+    - well i really think her music saved me, there's no one like her
 
 - intent: dismissing_claim
   examples: |
@@ -294,6 +305,8 @@ nlu:
     - her older production was better
     - he has lost his way
     - they betrayed their fans
+    - i hate them
+    - they are so unoriginal
 
 - intent: request_for_suggestion_from_bot
   examples: |
@@ -329,6 +342,7 @@ nlu:
     - wtf ok who do you like then
     - do you have any input on this
     - could you tell us your opinion
+    - what else do you like then?
 
 - intent: suggestion_to_make_decision
   examples: |
@@ -373,29 +387,34 @@ nlu:
     - i think we're ready now
     - I feel that we're ready to make a decision
     - i feel that we should decide by now
+    - can we move on to making a decision now?
+    - ok can we choose now
 
 - intent: suggestion_for_decision
   examples: |
-    - So are we choosing [Ariana Grande]{"entity": "artist"} then?
-    - Let's choose [Ariana Grande]{"entity": "artist"}
-    - We're choosing [Ariana Grande]{"entity": "artist"}, right?
-    - [Ariana Grande]{"entity": "artist"} is our pick right
-    - We're going with [Ariana Grande]{"entity": "artist"}, am I correct?
-    - Choosing [Ariana Grande]{"entity": "artist"} right
-    - Our choice is [Ariana Grande]{"entity": "artist"} right
-    - So is [Ariana Grande]{"entity": "artist"} our choice?
-    - Is [Ariana Grande]{"entity": "artist"} the one we are choosing?
-    - Are we picking [Ariana Grande]{"entity": "artist"}
-    - Are we going to choose [Ariana Grande]{"entity": "artist"}
-    - choosing [Ariana Grande]{"entity": "artist"} ok?
-    - everyone ok with [Ariana Grande]{"entity": "artist"}?
-    - Is everyone okay with selecting [Ariana Grande]{"entity": "artist"}?
-    - you all are fine with [Ariana Grande]{"entity": "artist"} right
-    - [Ariana Grande]{"entity": "artist"} is fine by us?
-    - are we going with [Ariana Grande]{"entity": "artist"}
-    - is [Ariana Grande]{"entity": "artist"} our final decision
-    - is [Ariana Grande]{"entity": "artist"} our final choice
-    - Can we choose [Ariana Grande]{"entity": "artist"}?
+    - So are we choosing [Ariana Grande](artist) then?
+    - Let's choose [Ariana Grande](artist)
+    - We're choosing [Ariana Grande](artist), right?
+    - [Ariana Grande](artist) is our pick right
+    - We're going with [Ariana Grande](artist), am I correct?
+    - Choosing [Ariana Grande](artist) right
+    - Our choice is [Ariana Grande](artist) right
+    - So is [Ariana Grande](artist) our choice?
+    - Is [Ariana Grande](artist) the one we are choosing?
+    - Are we picking [Ariana Grande](artist)
+    - Are we going to choose [Ariana Grande](artist)
+    - choosing [Ariana Grande](artist) ok?
+    - everyone ok with [Ariana Grande](artist)?
+    - Is everyone okay with selecting [Ariana Grande](artist)?
+    - you all are fine with [Ariana Grande](artist) right
+    - [Ariana Grande](artist) is fine by us?
+    - are we going with [Ariana Grande](artist)
+    - is [Ariana Grande](artist) our final decision
+    - is [Ariana Grande](artist) our final choice
+    - Can we choose [Ariana Grande](artist)?
+    - so is [Rihanna](artist) our choice?
+    - so [Queen](artist) is our choice right?
+    - is [Nicki Minaj](artist) our choice?
 
 - intent: agreement
   examples: |
@@ -447,6 +466,7 @@ nlu:
     - yes thank you
     - yeah thanks
     - please do
+    - yeah sure
 
 - intent: disagreement
   examples: |
@@ -504,25 +524,35 @@ nlu:
     - may i do it?
     - may i post our decision?
     - may i have the honor?
+    - no, i'll do it
+    - let me post!
 
 - intent: post_decision
   examples: |
-    - Our decision is [Ariana Grande]{"entity": "artist"}
-    - Our final choice is [Ariana Grande]{"entity": "artist"}
-    - We decide [Ariana Grande]{"entity": "artist"}
-    - Our chosen artist is [Ariana Grande]{"entity": "artist"}
-    - [Ariana Grande]{"entity": "artist"} is our final choice
-    - [Ariana Grande]{"entity": "artist"} is our decision
+    - Our decision is [Ariana Grande](artist)
+    - Our final choice is [Ariana Grande](artist)
+    - Our choice is [Ariana Grande](artist)
+    - We decide [Ariana Grande](artist)
+    - Our chosen artist is [Ariana Grande](artist)
+    - [Ariana Grande](artist) is our final choice
+    - [Ariana Grande](artist) is our decision
 
-# for testing genre fetch
 - intent: get_genre
   examples: |
     - get genre
     - fetch genre
+    - genre
 
-# todo: fetch from api or build a more comprehensive list in other ways
-# or will be deprecated when name can be pulled from username
-# or then names will be added to list dynamically during conversations?
+- intent: restart_conversation
+  examples: |
+    - restart convo
+    - restart
+    - restart conversation
+    - clear
+    - retry
+    - clear history
+    - clear messages
+
 - lookup: name
   examples: |
     - Elliott
@@ -539,8 +569,6 @@ nlu:
     - Ville
     - Antti
     - Suski
-
-# todo: fetch from api
 
 - lookup: artist
   examples: |
