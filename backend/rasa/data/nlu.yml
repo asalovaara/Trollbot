@@ -1,5 +1,8 @@
 version: "2.0"
 
+# Known problem: often the artist's name influences intent recognition
+# TODO exploring how to ignore the entity contents when determining intent
+
 nlu:
 - intent: opening
   examples: |
@@ -16,10 +19,32 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
+    - hi :)
+    - hello! :D
+    - hi nice to meet you!
+    - hiiii
+    - Hi I'm [Alex]{"entity": "name"}
+    - My name is [Alex]{"entity": "name"}
+    - [Alex]{"entity": "name"} reporting in!
+    - [Alex]{"entity": "name"} here!
+    - you may call me [Alex]{"entity": "name"}
+    - I'm [Alex]{"entity": "name"}
+    - call me [Alex]{"entity": "name"}
+    - i go by [Alex]{"entity": "name"}
+    - im [Alex]{"entity": "name"}
+    - hi im [Alex]{"entity": "name"}
+    - Hello im [Alex]{"entity": "name"}
+    - hiiii [Alex]{"entity": "name"} here
+    - what's up im [Alex]{"entity": "name"}
+    - hey guys my name is [Alex]{"entity": "name"}
+    - nice to meet you, I'm [Alex]{"entity": "name"}
+    - hi all! I am [Alex]{"entity": "name"}
+    - hello! i am [Alex]{"entity": "name"}
+    - cool, im [Alex]{"entity": "name"}
+    - cheers, I'm [Alex]{"entity": "name"}
 
 - intent: closing
   examples: |
-    - good afternoon
     - cu
     - good by
     - cee you later
@@ -30,43 +55,22 @@ nlu:
     - see you around
     - bye bye
     - see you later
-
-- intent: question
-  examples: |
-    - what
-    - why
-    - who are you
-    - how come
-    - when
-    - which one
-    - are you sure
-    - can you help me
-    - what is going on
-    - hmm?
-
-- intent: self_introduction
-  examples: |
-    - Hi I'm [Alex]{"entity": "name"}
-    - My name is [Alex]{"entity": "name"}
-    - [Alex]{"entity": "name"} reporting in!
-    - [Alex]{"entity": "name"} here!
-    - you may call me [Alex]{"entity": "name"}
-    - I'm [Alex]{"entity": "name"}
-    - call me [Alex]{"entity": "name"}
-    - i go by [Alex]{"entity": "name"}
-    - im [Alex]{"entity": "name"}
+    - ok bye
 
 - intent: task_introduction
   examples: |
-    - "So apparently we need to decide on the best band or something"
-    - "It says here that we need to decide on the best band"
-    - "We need to decide on the best band"
-    - "Let's decide on the best band or artist"
-    - "So deciding on the superior band or artist..."
-    - "Let's get to choosing the artist"
-    - "Let's pick a band now"
-    - "Ok let's make a decision on the best artist"
-    - "Okay so we gotta choose the best band"
+    - So apparently we need to decide on the best band or something
+    - It says here that we need to decide on the best band
+    - We need to decide on the best band
+    - Let's decide on the best band or artist
+    - So deciding on the superior band or artist...
+    - Let's get to choosing the artist
+    - Let's pick a band now
+    - Ok let's make a decision on the best artist
+    - Okay so we gotta choose the best band
+    - Let's choose the artist now
+    - Let's get to the task
+    - Let's begin with the task
 
 - intent: suggest_artist
   examples: |
@@ -89,6 +93,7 @@ nlu:
     - Clearly [Ariana Grande]{"entity": "artist"} is our choice
     - [Ariana Grande]{"entity": "artist"}, no question
     - [Ariana Grande]{"entity": "artist"}!
+    - [Ariana Grande]{"entity": "artist"}?
     - [Ariana Grande]{"entity": "artist"}? how about it?
     - [Ariana Grande]{"entity": "artist"} right
     - ok so [Ariana Grande]{"entity": "artist"}
@@ -103,24 +108,64 @@ nlu:
     - are you fine with [Ariana Grande]{"entity": "artist"} then?
     - Is [Ariana Grande]{"entity": "artist"} okay?
     - then... [Ariana Grande]{"entity": "artist"}?
+    - [Ariana Grande]{"entity": "artist"} obviously, no questions asked
+    - [Ariana Grande]{"entity": "artist"} perhaps
+    - then [Ariana Grande]{"entity": "artist"}?
+    - fuck um how about [Ariana Grande]{"entity": "artist"}?
+    - uh fuck well how about [Ariana Grande]{"entity": "artist"}?
+    - could we go with [Ariana Grande]{"entity": "artist"}?
 
 - intent: likes_artist
   examples: |
-    - my favourite band is [Ariana Grande]{"entity": "artist"}
+    - my favourite band is [Abba]{"entity": "artist"}
     - i like [Ariana Grande]{"entity": "artist"}
+    - i like [Ariana Grande]{"entity": "artist"} too
     - i really like [Ariana Grande]{"entity": "artist"}
     - i enjoy listening to [Ariana Grande] {"entity": "artist"}
     - i love [Ariana Grande]{"entity": "artist"}
+    - well i think nothing can beat [Ariana Grande]{"entity": "artist"}
     - [Ariana Grande]{"entity": "artist"} rocks
     - [Ariana Grande]{"entity": "artist"} is so good
     - [Ariana Grande]{"entity": "artist"} is such a great singer
     - [Ariana Grande]{"entity": "artist"} has a great sound
     - i think [Ariana Grande]{"entity": "artist"} is the best
+    - [Ariana Grande]{"entity": "artist"} is so cool!
+    - [Ariana Grande]{"entity": "artist"}, i love her!
+    - [Ariana Grande]{"entity": "artist"}! her music is the best!
+    - my favorite is [Ariana Grande]{"entity": "artist"}, her voice is so good
+    - [Abba]{"entity": "artist"}, i love them!
+    - [Abba]{"entity": "artist"}! their music is the best!
+    - i love [Abba]{"entity": "artist"} the most! they are awesome
+    - [Elvis Presley]{"entity": "artist"}, i love him!
+    - [Elvis Presley]{"entity": "artist"}! his music is the best!
+    - i like [Elvis Presley]{"entity": "artist"}, he is so cool
+    - [Abba]{"entity": "artist"} is the best band
+    - [Ariana Grande]{"entity": "artist"} is the best artist ever
+    - the best singer is [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} is fucking great
+    - [Ariana Grande]{"entity": "artist"} is fucking awesome
+    - [Ariana Grande]{"entity": "artist"} is fucking best
+    - [Ariana Grande]{"entity": "artist"} is the fucking best one ever
+    - i love [Ariana Grande]{"entity": "artist"} so fucking much
+    - [Ariana Grande]{"entity": "artist"} is so fucking cool
+    - [Ariana Grande]{"entity": "artist"}'s music is the best
+    - fuck everyone else, [Ariana Grande]{"entity": "artist"} is the best one
 
+# At least one of the intents here has to include Abba
+# because apparently almost any message containing "Abba"
+# is recognised as "likes_artist" which is funny but not good for us
+# Keep an eye out for any other artists that are overwhelmingly positive!
 - intent: dislikes_artist
   examples: |
     - my least favourite band is [Ariana Grande]{"entity": "artist"}
     - i don't like [Ariana Grande]{"entity": "artist"}
+    - [Abba]{"entity": "artist"} is bad
+    - I do not like [Ariana Grande]{"entity": "artist"} at all
+    - I do not prefer [Ariana Grande]{"entity": "artist"} in the least
+    - I do not think [Ariana Grande]{"entity": "artist"} is very good
+    - [Ariana Grande]{"entity": "artist"} really annoys me
+    - i can't stand [Ariana Grande]{"entity": "artist"}
+    - i cannot stand listening to [Ariana Grande]{"entity": "artist"}
     - i really don't like [Ariana Grande]{"entity": "artist"}
     - i hate [Ariana Grande]{"entity": "artist"}
     - [Ariana Grande]{"entity": "artist"} sucks
@@ -128,6 +173,346 @@ nlu:
     - [Ariana Grande]{"entity": "artist"} is so overrated
     - [Ariana Grande]{"entity": "artist"} is garbage
     - i don't think [Ariana Grande]{"entity": "artist"} is so good
+    - [Ariana Grande]{"entity": "artist"} is annoying
+    - [Ariana Grande]{"entity": "artist"} is not good
+    - i can't listen to [Ariana Grande]{"entity": "artist"}
+    - i dislike [Ariana Grande]{"entity": "artist"}
+    - well I don't like [Ariana Grande]{"entity": "artist"}
+    - i hate [Ariana Grande]{"entity": "artist"} with a burning passion
+    - [Ariana Grande]{"entity": "artist"} pisses me off
+    - [Ariana Grande]{"entity": "artist"} is simply terrible
+    - [Ariana Grande]{"entity": "artist"} is awful
+    - ugh [Ariana Grande]{"entity": "artist"} is not cool
+    - ugh anyone but [Ariana Grande]{"entity": "artist"}
+    - fuck [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} is shit
+    - [Ariana Grande]{"entity": "artist"} is fucking awful
+    - [Ariana Grande]{"entity": "artist"} is fucking horrible
+    - [Ariana Grande]{"entity": "artist"} is fucking shit
+    - [Ariana Grande]{"entity": "artist"} is fucking bad
+    - [Ariana Grande]{"entity": "artist"} is shitass
+    - [Ariana Grande]{"entity": "artist"} is bad as fuck
+    - [Ariana Grande]{"entity": "artist"} is awful as fuck
+    - [Ariana Grande]{"entity": "artist"} is so fucking overrated
+    - [Ariana Grande]{"entity": "artist"} is so fucking garbage
+    - [Ariana Grande]{"entity": "artist"} is so fucking annoying
+    - [Ariana Grande]{"entity": "artist"} pisses me the fuck off
+    - i hate [Ariana Grande]{"entity": "artist"} so fucking much
+    - [Ariana Grande]{"entity": "artist"} is pure shit
+    - i fucking hate [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} is godawful
+    - [Ariana Grande]{"entity": "artist"} is shitty
+
+- intent: praising_claim
+  examples: |
+    - they are very original!
+    - but they're so original
+    - they have a cool style
+    - they are cool
+    - she is very talented
+    - they have such a unique style
+    - their music is so original and great
+    - but her voice is amazing
+    - because she has great range
+    - he has such great range
+    - his voice is really soothing
+    - their mood is great
+    - they are popular for a reason
+    - they have so many good jams
+    - i love dancing to their music
+    - their music saved me
+    - she is so underrated!
+    - i enjoy listening to him
+    - no one can beat her
+    - Nothing can beat their music
+    - He is a great singer
+    - It's an excellent band
+    - her lyrics are well-written
+    - I think her lyrics are very deep
+    - The lyrics in his songs are very good
+    - Their sound is very original
+    - I like his sound
+    - The sound in their songs is very unique, in a good way
+    - Their albums are centered around a theme
+    - She explores some very interesting themes
+    - The songs in their albums have connecting themes
+    - His music gives me hope
+    - Her songs have some very important messages
+    - Their music makes me feel better when I'm sad
+    - Her music makes me feel strong
+    - His music gives me strength to go on
+    - their music means a lot to me
+    - Her music validates my feelings
+    - I like to listen to his songs when I'm feeling down
+    - Their music gives me confidence
+    - many of his songs are perfect for dancing
+    - their newer production is much deeper
+
+- intent: dismissing_claim
+  examples: |
+    - they are not that good
+    - they are not very original
+    - i hate listening to his singing voice
+    - but they're awful!
+    - they're annoying though
+    - I'm not interested
+    - ehhh she's not that good
+    - I don't think he is so good
+    - I'm not a fan
+    - i think he's annoying
+    - I would prefer someone else
+    - He is overrated
+    - I think there are better options
+    - Because he does not write his own songs
+    - i think their lyrics are superficial
+    - the lyrics in her songs are bad
+    - his lyrics are trash
+    - their lyrics make no sense
+    - her music is weird
+    - he is too mainstream
+    - they are too popular
+    - he is completely unoriginal
+    - she is just the same as everyone else
+    - they just try to be popular
+    - his music has no deeper meaning
+    - her songs have nothing unique
+    - his voice is annoying
+    - they sound annoying
+    - his voice is the same as every other generic male singer's
+    - she is just like every other popular singer
+    - they are an industry plant
+    - he only tries to copy others
+    - she has no original ideas
+    - they've gone to a bad direction
+    - his newer production is shit
+    - she has become mainstream
+    - they used to be unique but became mainstream
+    - she used to be better
+    - he sold out
+    - he uses too much autotune
+    - they are so fake
+    - her older production was better
+    - he has lost his way
+    - they betrayed their fans
+
+- intent: request_for_suggestion_from_bot
+  examples: |
+    - Who do you think we should choose then?
+    - then who would you suggest?
+    - do you have any suggestions?
+    - what's your opinion then?
+    - well what would you suggest?
+    - if you're not satisfied with my pick, who's yours?
+    - can you say who you'd suggest then?
+    - who do you choose then?
+    - what band do you choose then?
+    - what do you guys suggest?
+    - who's your pick?
+    - then who do you choose
+    - which artist do you like
+    - which band is to your liking then?
+    - could you tell me your favorite then
+    - who's your favorite?
+    - ok, who would you choose then?
+    - Okay, who do you enjoy the most then?
+    - OK. Who's your choice?
+    - I see. Then who would you suggest?
+    - okay, who do you think is better?
+    - ok who do it better then
+    - um okay... then who is to your liking?
+    - uh ok... tell me your opinion then
+    - what's your pick for this task
+    - what's your opinion
+    - ok and you?
+    - uh who is better then?
+    - if you don't like my pick then who do you like
+    - wtf ok who do you like then
+    - do you have any input on this
+    - could you tell us your opinion
+
+- intent: suggestion_to_make_decision
+  examples: |
+    - Should we make a decision now?
+    - Could we decide now
+    - Could we choose our favorite band
+    - Can we pick someone now
+    - Can we make our decision already
+    - can we wrap this up and choose
+    - can we make a decision now
+    - OK so can we choose now
+    - okay can we conclude this
+    - Let's make our final decision
+    - Let's choose our favorite now
+    - lets wrap this up and make a decision
+    - let's decide now
+    - Let's move on to choosing now
+    - Let's move on to the decision
+    - Let's conclude this
+    - lets choose
+    - Are we ready now?
+    - r we ready
+    - Are we ready to choose someone now?
+    - Are we ready to make our decision now?
+    - Are we ready to pick a band
+    - Are we ready to choose our favorite?
+    - Are we ready to give our final answer soon
+    - ready now?
+    - Have we arrived at a conclusion yet?
+    - Have we arrived at a decision now?
+    - Have we had enough time to discuss now?
+    - Have we talked about this enough yet?
+    - decision now?
+    - decide now?
+    - decision time?
+    - Time to decide?
+    - I suggest we make a decision
+    - I suggest we make our choice
+    - I suggest we're ready to choose
+    - I suggest we can move on to choosing our favorite
+    - i think we can choose now
+    - i think we're ready now
+    - I feel that we're ready to make a decision
+    - i feel that we should decide by now
+
+- intent: suggestion_for_decision
+  examples: |
+    - So are we choosing [Ariana Grande]{"entity": "artist"} then?
+    - Let's choose [Ariana Grande]{"entity": "artist"}
+    - We're choosing [Ariana Grande]{"entity": "artist"}, right?
+    - [Ariana Grande]{"entity": "artist"} is our pick right
+    - We're going with [Ariana Grande]{"entity": "artist"}, am I correct?
+    - Choosing [Ariana Grande]{"entity": "artist"} right
+    - Our choice is [Ariana Grande]{"entity": "artist"} right
+    - So is [Ariana Grande]{"entity": "artist"} our choice?
+    - Is [Ariana Grande]{"entity": "artist"} the one we are choosing?
+    - Are we picking [Ariana Grande]{"entity": "artist"}
+    - Are we going to choose [Ariana Grande]{"entity": "artist"}
+    - choosing [Ariana Grande]{"entity": "artist"} ok?
+    - everyone ok with [Ariana Grande]{"entity": "artist"}?
+    - Is everyone okay with selecting [Ariana Grande]{"entity": "artist"}?
+    - you all are fine with [Ariana Grande]{"entity": "artist"} right
+    - [Ariana Grande]{"entity": "artist"} is fine by us?
+    - are we going with [Ariana Grande]{"entity": "artist"}
+    - is [Ariana Grande]{"entity": "artist"} our final decision
+    - is [Ariana Grande]{"entity": "artist"} our final choice
+    - Can we choose [Ariana Grande]{"entity": "artist"}?
+
+- intent: agreement
+  examples: |
+    - OK
+    - okay
+    - yes
+    - y
+    - Sure!
+    - Fine by me
+    - okey dokey
+    - yeah
+    - Yes, let's
+    - Go ahead
+    - yeaaa
+    - ye
+    - yeas
+    - yeaahh
+    - okok
+    - k
+    - fine
+    - yeahyeah
+    - yeah good
+    - good yes
+    - yep
+    - good
+    - positive
+    - I agree
+    - Agreed
+    - I think so too
+    - It's a deal
+    - I am
+    - Yes we can
+    - You're right
+    - Likewise
+    - me too
+    - lets
+    - right!
+    - correct
+    - yep ready
+    - I'm ready
+    - Yes, we'll do that
+    - Let's do so
+    - I'm okay with that
+    - im cool with that
+    - I'm happy with that
+    - ok cool!
+    - Good idea
+    - yes please
+    - yes thank you
+    - yeah thanks
+    - please do
+
+- intent: disagreement
+  examples: |
+    - no
+    - nope
+    - nono
+    - n
+    - not yet
+    - not ok
+    - not okay yet
+    - not cool
+    - not good
+    - not fine
+    - nah
+    - negative
+    - incorrect
+    - I disagree
+    - I don't think so
+    - No thank you
+    - No, not yet
+    - We're not ready yet
+    - I'm not really sure about that
+    - I don't feel like that's good
+    - That's not correct
+    - Let's not
+    - No, we can not
+    - cannot
+    - can't yet
+    - not ready
+    - I don't think we can
+    - I'm not so sure about that
+    - I'm not okay with that
+    - I'm not ready
+    - im not fine with that
+    - That's not a good idea
+    - how about we don't
+    - don't
+    - please do not
+    - please let's not
+    - That's not smart
+    - let us not do that
+
+- intent: offer_posting
+  examples: |
+    - I can do it
+    - i can post it
+    - let me post it
+    - let me!
+    - I'll post the decision
+    - I can post the decision
+    - I would like to do it
+    - I would like to post the decision
+    - i could do it
+    - i could post
+    - may i do it?
+    - may i post our decision?
+    - may i have the honor?
+
+- intent: post_decision
+  examples: |
+    - Our decision is [Ariana Grande]{"entity": "artist"}
+    - Our final choice is [Ariana Grande]{"entity": "artist"}
+    - We decide [Ariana Grande]{"entity": "artist"}
+    - Our chosen artist is [Ariana Grande]{"entity": "artist"}
+    - [Ariana Grande]{"entity": "artist"} is our final choice
+    - [Ariana Grande]{"entity": "artist"} is our decision
 
 # for testing genre fetch
 - intent: get_genre
@@ -136,7 +521,8 @@ nlu:
     - fetch genre
 
 # todo: fetch from api or build a more comprehensive list in other ways
-
+# or will be deprecated when name can be pulled from username
+# or then names will be added to list dynamically during conversations?
 - lookup: name
   examples: |
     - Elliott
