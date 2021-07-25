@@ -1,0 +1,15 @@
+services: 
+  trollbot-server:
+    ports:
+      - 3001:3001
+    build: ./
+    image: vornsami/trollbot
+    depends_on:
+      - trollbot-rasa
+    
+  trollbot-rasa:
+    ports:
+      - 5055:5055
+      - 5005:5005
+    build: ./backend/rasa
+    image: vornsami/trollbot-rasa
