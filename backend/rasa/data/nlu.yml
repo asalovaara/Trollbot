@@ -41,6 +41,7 @@ nlu:
     - hi!
     - hi! my name is [Alex](name)
     - hiya
+    - heya
 
 - intent: closing
   examples: |
@@ -122,11 +123,14 @@ nlu:
     - can we go with [Sex Pistols](artist)?
     - then i choose [Metallica](artist)
     - ok then [Nicki Minaj](artist)?
+    - how about [Abba](artist)
+    - [Adele](artist)?
+    - then [Queen](artist)?
 
 - intent: likes_artist
   examples: |
     - my favourite band is [Abba](artist)
-    - i like [Ariana Grande](artist)
+    - i like [Rihanna](artist)
     - i like [Ariana Grande](artist) too
     - i really like [Ariana Grande](artist)
     - i enjoy listening to [Ariana Grande] {"entity": "artist"}
@@ -159,6 +163,7 @@ nlu:
     - [Ariana Grande](artist)'s music is the best
     - fuck everyone else, [Ariana Grande](artist) is the best one
     - i really like [Frank Sinatra](artist) too
+    - i like [Muse](artist) too
 
 - intent: dislikes_artist
   examples: |
@@ -178,6 +183,7 @@ nlu:
     - [Ariana Grande](artist) is so overrated
     - [Ariana Grande](artist) is garbage
     - i don't think [Ariana Grande](artist) is so good
+    - i don't much like [Ariana Grande](artist)
     - [Ariana Grande](artist) is annoying
     - [Ariana Grande](artist) is not good
     - i can't listen to [Ariana Grande](artist)
@@ -190,6 +196,7 @@ nlu:
     - ugh [Ariana Grande](artist) is not cool
     - ugh anyone but [Ariana Grande](artist)
     - fuck [Ariana Grande](artist)
+    - i think [Ariana Grande](artist) is shit
     - [Ariana Grande](artist) is shit
     - [Ariana Grande](artist) is fucking awful
     - [Ariana Grande](artist) is fucking horrible
@@ -210,6 +217,7 @@ nlu:
     - well personally i don't like [Radiohead](artist) at all
     - i don't like [Abba](artist)
     - i just hate [Nirvana](artist)
+    - i don't much like [Rihanna](artist)
 
 - intent: praising_claim
   examples: |
@@ -307,6 +315,7 @@ nlu:
     - they betrayed their fans
     - i hate them
     - they are so unoriginal
+    - i can't stand listening to his music
 
 - intent: request_for_suggestion_from_bot
   examples: |
@@ -343,6 +352,7 @@ nlu:
     - do you have any input on this
     - could you tell us your opinion
     - what else do you like then?
+    - well what do you think then?
 
 - intent: suggestion_to_make_decision
   examples: |
@@ -389,6 +399,7 @@ nlu:
     - i feel that we should decide by now
     - can we move on to making a decision now?
     - ok can we choose now
+    - can we make a decision already
 
 - intent: suggestion_for_decision
   examples: |
@@ -415,6 +426,8 @@ nlu:
     - so is [Rihanna](artist) our choice?
     - so [Queen](artist) is our choice right?
     - is [Nicki Minaj](artist) our choice?
+    - is [Elton John](artist) our pick?
+    - can we choose [Muse](artist)
 
 - intent: agreement
   examples: |
@@ -536,6 +549,7 @@ nlu:
     - Our chosen artist is [Ariana Grande](artist)
     - [Ariana Grande](artist) is our final choice
     - [Ariana Grande](artist) is our decision
+    - our choice is [Muse](artist)
 
 - intent: get_genre
   examples: |
