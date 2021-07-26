@@ -176,7 +176,7 @@ responses:
   - text: "Sure!"
   - text: "Yeah, OK."
 
-  utter_please_rephrase:
+  utter_default:
   - text: "I don't understand."
   - text: "Can you repeat that with different words?"
   - text: "I'm sorry, I don't follow. Can you be more specific?"
