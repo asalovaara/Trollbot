@@ -1,13 +1,12 @@
-FROM ubuntu:latest
+FROM python:3.7-slim-buster 
 
 WORKDIR /usr/src/app/rasa
 COPY . ./
 
-RUN apt-get update \
-  && apt-get -y install sudo \
-  && sudo apt install -y python3-dev python3-pip \
-  && pip install rasa \
-  && rasa train
+RUN pip install -U pip \
+  && pip install -r requirements.txt
+
+RUN rasa train nlu -c config.yml -u data/
 
 # Start app 
 
