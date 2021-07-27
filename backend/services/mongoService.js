@@ -18,14 +18,14 @@ const main = async () => {
 
 // query the db
 const findEvents = async (client) => {
-  //const projection = [ { $project: { 'events.event': 1} } ]
-  //const result = await client.db('rasalogs').collection('conversations').aggregate(projection)
   const result = await client.db('rasalogs').collection('conversations').find( {} )
 
   await result.forEach( obj => {
+    let arr = obj.events
+    arr.forEach(obj => {
+      obj.timestamp = formatTimestamp(obj.timestamp)
+    })
     logMessage(obj.events)
-    console.log(obj.events)
-    console.log(obj.events.parse_data)
   })
   //   arr = obj['events']
   //   arr.forEach( obj2 => {
@@ -43,6 +43,7 @@ const logMessage = async (message) => {
 
 // define csv file location + titles
 const writer = createWriter({
+  //relative address, works when run from services dir
   path: './../../logs/conversation_log.csv',
   header: [
     {id: 'timestamp', title: 'timestamp'},
@@ -54,5 +55,12 @@ const writer = createWriter({
     //{id: 'intent', title: 'intent'}
   ]
 })
+
+const formatTimestamp = (epoch) => {
+  var utcSeconds = epoch
+  var d = new Date(0)
+  d.setUTCSeconds(utcSeconds)
+  return d.toLocaleString()
+}
 
 main().catch(console.error)
