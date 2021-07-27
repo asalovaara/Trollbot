@@ -1,9 +1,10 @@
 const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
+const axios = require('axios')
 
 const main = async () => {
-  const uri = 'mongodb://localhost:27017'
-  const client = new MongoClient(uri)
+  const mongoUrl = 'mongodb://localhost:27017'
+  const client = new MongoClient(mongoUrl)
 
   try {
     await client.connect()
@@ -24,16 +25,24 @@ const findEvents = async (client) => {
     let arr = obj.events
     arr.forEach(obj => {
       obj.timestamp = formatTimestamp(obj.timestamp)
+      if (obj.parse_data !== undefined) {
+        const intentName = obj.parse_data.intent.name
+        obj.intent = intentName
+      }
     })
-    logMessage(obj.events)
+    logMessage(arr)
   })
-  //   arr = obj['events']
-  //   arr.forEach( obj2 => {
-  //     if (obj2['parse_data'] !== undefined) {
-  //       console.log(obj2['parse_data.intent'])
-  //     }
-  //   })
-  // })
+}
+
+// finds the conversation id.
+const getConversationId = async (client) => {
+  const result = await client.db('rasalogs').collection('conversations').find( {} )
+  let id
+  await result.forEach( obj => {
+    id = obj._id + ''
+  })
+  let idArr = id.split('\"')
+  return idArr[0]
 }
 
 // write stuff into the csv file
@@ -52,7 +61,7 @@ const writer = createWriter({
     {id: 'text', title: 'message'},
     {id: 'policy', title: 'policy'},
     {id: 'confidence', title: 'confidence'},
-    //{id: 'intent', title: 'intent'}
+    {id: 'intent', title: 'interpreted intent'}
   ]
 })
 
