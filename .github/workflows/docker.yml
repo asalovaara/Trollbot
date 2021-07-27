@@ -33,6 +33,15 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/trollbot:latest
-
+          
+      - name: Build and push rasa
+        id: docker_build_rasa
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend/rasa
+          file: ./backend/rasa/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/trollbot-rasa:latest
+          
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
