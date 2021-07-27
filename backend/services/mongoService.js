@@ -1,6 +1,5 @@
 const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
-const axios = require('axios')
 
 const main = async () => {
   const mongoUrl = 'mongodb://localhost:27017'
@@ -35,15 +34,15 @@ const findEvents = async (client) => {
 }
 
 // finds the conversation id.
-const getConversationId = async (client) => {
-  const result = await client.db('rasalogs').collection('conversations').find( {} )
-  let id
-  await result.forEach( obj => {
-    id = obj._id + ''
-  })
-  let idArr = id.split('\"')
-  return idArr[0]
-}
+// const getConversationId = async (client) => {
+//   const result = await client.db('rasalogs').collection('conversations').find( {} )
+//   let id
+//   await result.forEach( obj => {
+//     id = obj._id + ''
+//   })
+//   let idArr = id.split('\"')
+//   return idArr[0]
+// }
 
 // write stuff into the csv file
 const logMessage = async (message) => {
