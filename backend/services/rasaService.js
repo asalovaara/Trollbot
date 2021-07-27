@@ -10,7 +10,9 @@ const getRasaRESTResponse = async (message) => {
       'message': message
     })
     logger.info(`response: ${inspect(response.data[0].text)}`)
-    return response.data[0].text
+
+    return response.data
+    
   } catch (error) {
     logger.error(`An error occurred during rasaController:getRasaRESTResponse: ${error}`)
   }
