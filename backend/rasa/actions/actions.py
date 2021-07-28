@@ -68,10 +68,17 @@ class ActionSetGenreSlot(Action):
 
         artist = tracker.get_slot('artist')
 
-        genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
-        genre = genre.json()
+        new_artist = tracker.get_latest_entity_values('artist')
 
-        return [SlotSet("genre", genre)]
+        if new_artist is None:
+            # dispatcher.utter_message(
+            #     response="utter_unknown_artist"
+            # )
+            return []
+        else:
+            genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
+            genre = genre.json()
+            return [SlotSet("genre", genre)]
 
 class ActionGreetUserByName(Action):
 

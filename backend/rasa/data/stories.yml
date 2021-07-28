@@ -56,11 +56,30 @@ stories:
     - task_activated: true
   - action: action_set_genre_slot
   - slot_was_set:
-    - genre
+    - genre: filled
   - action: action_set_opinion_slot_as_good
   - slot_was_set:
     - opinion
   - action: utter_artist_dismissal
+
+# Unknown artist, user tells genre
+- story: user likes artist path, unknown artist
+  steps:
+  - or:
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+    - intent: suggest_artist
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: None
+  - action: utter_unknown_artist
+  - action: utter_ask_genre
+  - intent: tell_genre
+  - slot_was_set:
+    - told_genre: filled
+  - action: utter_thanks
 
 - story: user dislikes artist path
   steps:
@@ -69,11 +88,27 @@ stories:
     - task_activated: true
   - action: action_set_genre_slot
   - slot_was_set:
-    - genre
+    - genre: filled
   - action: action_set_opinion_slot_as_bad
   - slot_was_set:
     - opinion
   - action: utter_artist_praise
+
+# Unknown artist, user tells genre
+- story: user dislikes artist path, unknown artist
+  steps:
+  - intent: dislikes_artist
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: None
+  - action: utter_unknown_artist
+  - action: utter_ask_genre
+  - intent: tell_genre
+  - slot_was_set:
+    - told_genre: filled
+  - action: utter_thanks
 
 - story: user praises artist
   steps:
@@ -102,10 +137,27 @@ stories:
     - task_activated: true
   - action: action_deflect_opinion_question
 
+# Personal attacks / praise in conversation
+
+# Insulting the bot; placeholder response
+- story: user insults bot
+  steps:
+  - intent: insult_person
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+
+# Praising the bot; placeholder response
+- story: user praises bot
+  steps:
+  - intent: praise_person
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_thanks
+
 - story: bs after task introduction
   steps:
-  - or: 
-    - intent: opening
+  - intent: opening
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
@@ -164,7 +216,9 @@ stories:
     - decision_phase: true
     - artist
   - action: utter_question_posting
-  - intent: agreement
+  - or:
+    - intent: agreement
+    - intent: thanks
   - action: action_post_decision
   - slot_was_set:
     - final_decision
@@ -180,7 +234,9 @@ stories:
     - decision_phase: true
     - artist
   - action: utter_question_posting
-  - intent: offer_posting
+  - or:
+    - intent: offer_posting
+    - intent: disagreement
   - action: utter_agreement
   - checkpoint: user_should_post
 
@@ -209,6 +265,7 @@ stories:
     - intent: closing
     - intent: agreement
     - intent: opening
+    - intent: thanks
   - action: action_end_conversation
 
 # Interactive stories from rasa interactive

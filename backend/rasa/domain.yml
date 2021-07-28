@@ -30,12 +30,20 @@ intents:
 - dismissing_claim
 - agreement
 - disagreement
+- thanks
+- keysmash
+- insult_person
+- praise_person
+- tell_genre:
+    use_entities:
+      - told_genre
 - get_genre
 - restart_conversation
 
 entities:
 - artist
 - name
+- told_genre
 
 slots:
   artist:
@@ -44,12 +52,16 @@ slots:
   name:
     type: text
     influence_conversation: false
+  told_genre:
+    type: text
+    influence_conversation: false
   genre:
     type: text
     influence_conversation: false
   task_activated:
     type: bool
     initial_value: false
+    auto_fill: false
     influence_conversation: true
   opinion:
     type: text
@@ -174,6 +186,14 @@ responses:
   - text: Who are you talking about?
   - text: Huh? Who?
 
+  utter_unknown_artist:
+  - text: I don't know that one.
+  - text: I haven't heard of them.
+
+  utter_ask_genre:
+  - text: What's their genre?
+  - text: What kind of music do they make?
+
   utter_agreement:
   - text: Okay!
   - text: Sure!
@@ -183,6 +203,9 @@ responses:
   - text: I don't understand.
   - text: Can you repeat that with different words?
   - text: I'm sorry, I don't follow. Can you be more specific?
+
+  utter_thanks:
+  - text: Thanks!
 
   utter_question_posting:
   - text: Shall I post the decision?

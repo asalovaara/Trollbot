@@ -14,9 +14,8 @@ pipeline:
     max_ngram: 4
   - name: LanguageModelFeaturizer
     model_name: "bert"
-# DIETClassifier no longer extracts entities
   - name: DIETClassifier
-    entity_recognition: False
+    entity_recognition: True
     use_masked_language_model: True
     number_of_transformer_layers: 4
     embedding_dimension: 25
@@ -29,14 +28,14 @@ pipeline:
     use_word_boundaries: True
   # - name: EntitySynonymMapper
   - name: FallbackClassifier
-    threshold: 0.5
+    threshold: 0.4
     ambiguity_threshold: 0.04
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
 policies:
   - name: RulePolicy
-    core_fallback_threshold: 0.5
+    core_fallback_threshold: 0.4
     core_fallback_action_name: action_default_fallback
     enable_fallback_prediction: True
     restrict_rules: False
