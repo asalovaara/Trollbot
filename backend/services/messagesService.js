@@ -24,6 +24,7 @@ const getAnswer = async (message) => {
       body: response[i].body,
       senderId: 'bot',
       user: {
+        id: 'bot',
         name: 'Bot'
       }
     }

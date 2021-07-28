@@ -39,7 +39,7 @@ module.exports = {
               io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
             })
           }, 2000)
-        }, 500)  
+        }, 500)
 
       })
 
