@@ -14,37 +14,35 @@ pipeline:
     max_ngram: 4
   - name: LanguageModelFeaturizer
     model_name: "bert"
-# Added some tweaks here. Feel free to change
-# Increasing epochs makes training time much longer,
-# but is useful when trying to make a specific distinction clear in nlu
+# DIETClassifier no longer extracts entities
   - name: DIETClassifier
+    entity_recognition: False
     use_masked_language_model: True
     number_of_transformer_layers: 4
     embedding_dimension: 25
-    epochs: 100
+    epochs: 200
     constrain_similarities: True
   - name: RegexEntityExtractor
     case_sensitive: False
     use_lookup_tables: True
     use_regexes: True
     use_word_boundaries: True
-  - name: EntitySynonymMapper
-  # - name: ResponseSelector
-  #   epochs: 100
-  #   constrain_similarities: true
+  # - name: EntitySynonymMapper
   - name: FallbackClassifier
-    threshold: 0.4
+    threshold: 0.5
     ambiguity_threshold: 0.04
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
 policies:
-# # No configuration for policies was provided. The following default policies were used to train your model.
-# # If you'd like to customize them, uncomment and adjust the policies.
-# # See https://rasa.com/docs/rasa/policies for more information.
-#   - name: MemoizationPolicy
-#   - name: RulePolicy
-#   - name: TEDPolicy
-#     max_history: 5
-#     epochs: 100
-#     constrain_similarities: true
+  - name: RulePolicy
+    core_fallback_threshold: 0.5
+    core_fallback_action_name: action_default_fallback
+    enable_fallback_prediction: True
+    restrict_rules: False
+    check_for_contradictions: True
+  - name: MemoizationPolicy
+  - name: TEDPolicy
+    max_history: 10
+    epochs: 50
+    constrain_similarities: True

@@ -4,6 +4,8 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 
+import datetime
+
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
@@ -11,6 +13,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import Restarted
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.events import SlotSet
+from rasa_sdk.events import ReminderScheduled
 import requests
 
 class ActionBotOpening(Action):
@@ -191,7 +194,7 @@ class ActionPostDecision(Action):
 
         return [SlotSet("final_decision", artist)]
 
-class ActionPostDecision(Action):
+class ActionEndConversation(Action):
     def name(self) -> Text:
 
         return "action_end_conversation"
@@ -201,4 +204,6 @@ class ActionPostDecision(Action):
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
     
+        dispatcher.utter_message("Conversation restarting.")
+
         return [Restarted()]
