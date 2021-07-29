@@ -13,8 +13,8 @@ const main = async () => {
 
     //await deleteAll(client)
     //await addAllArtistsBasedOnGenre(client, filepath)
-    //await findArtistsByGenre(client, 'hip hop music')
-    await findAll(client)
+    await findArtistsByGenre(client, 'rock')
+    //await findAll(client)
 
   } catch (e) {
     console.error(e)
@@ -38,10 +38,12 @@ const addAllArtistsBasedOnGenre = async (client, filepath) => {
   for await (const line of rl) {
     try {
       const artistName = line
-      const genre = await getGenre(artistName)
+      let genre = await getGenre(artistName)
+      genre = genreFilter(genre)
+
       await addGenre(client, genre)
       await addArtist(client, genre, artistName)
-      console.log('Added ' + artistName + ' with genre ' + genre + '. Taking a break...')
+      console.log('Added ' + artistName + ' with genre ' + genre)
       // Added this sleep because I think the queries were executing too fast and they stopped after a few queries. This fixed it
       await sleep(500)
     } catch (e) {
@@ -102,6 +104,28 @@ const deleteArtist = async (client, artistName) => {
 // Delete everything from the collection
 const deleteAll = async (client) => {
   await client.db('rasalogs').collection('artists').deleteMany({})
+}
+
+const genreFilter = (genre) => {
+  const path = '../data/genres.txt'
+  const list = fs.readFileSync(path).toString('utf-8')
+  const splitted = list.split(';')
+
+  let splittedGenre = genre.split(' ')
+  if (splittedGenre[1] == undefined) {
+    return genre
+  }
+
+  // If original genre is e.g. 'alt rock', we check if 'rock' matches a valid genre from the genres text file
+  // (obviously it does, so 'rock' is returned)
+  for (let i = 0; i < splitted.length; i++) {
+    if (splitted[i] === splittedGenre[1]) {
+      return splitted[i]
+    } else if (splitted[i] === splittedGenre[0]) {
+      return splitted[i]
+    }
+  }
+  return genre
 }
 
 main().catch(console.error)
