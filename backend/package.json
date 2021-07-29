@@ -41,6 +41,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^27.0.6",
     "json2csv": "^5.0.6",
+    "csv-writer": "^1.6.0",
     "nodemon": "^2.0.12",
     "supertest": "^6.1.3"
   },
