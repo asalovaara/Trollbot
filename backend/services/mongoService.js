@@ -106,8 +106,7 @@ const formatEvent = (obj) => {
   } else if (obj.event === 'slot') {
     obj.event = 'slot value was set'
     obj.name = 'slot: ' + obj.name + ' | value: ' + obj.value
-  }
-    else if (obj.event === 'user') {
+  } else if (obj.event === 'user') {
     obj.event = 'user uttered'
   } else if (obj.event === 'bot') {
     obj.event = 'bot uttered'
