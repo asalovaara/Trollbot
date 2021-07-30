@@ -14,6 +14,7 @@ const addMessage = (room, message) => {
 }
 
 const getAnswer = async (data) => {
+  console.log('getAnswer: ', data)
   const response = await rasaAnswer(data)
 
   let responses = []
@@ -22,6 +23,7 @@ const getAnswer = async (data) => {
     const msg = {
       id: 'botanswerid' + (response[i].id + i),
       room: 'Test',
+      socketId: data.socketId,
       body: response[i].body,
       user: {
         id: 'bot',
