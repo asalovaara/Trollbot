@@ -26,13 +26,13 @@ const login = (username) => {
   return user
 }
 
-const addUser = (socketId, room, name) => {
+const addUser = (senderId, room, name) => {
   const existingUser = users.find((u) => u.room === room && u.name === name)
 
   if (!name || !room) return { error: 'Username and room are required.' }
   if (existingUser) return { error: 'Username is taken.' }
 
-  const user = { id: uuid.v4(), socketId, name, room }
+  const user = { id: uuid.v4(), senderId, name, room }
 
   logger.info('New user', user)
 

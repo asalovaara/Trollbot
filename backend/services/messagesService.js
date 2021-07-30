@@ -23,7 +23,7 @@ const getAnswer = async (data) => {
     const msg = {
       id: 'botanswerid' + (response[i].id + i),
       room: 'Test',
-      socketId: data.socketId,
+      senderId: 'bot',
       body: response[i].body,
       user: {
         id: 'bot',

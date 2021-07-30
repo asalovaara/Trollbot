@@ -31,7 +31,7 @@ const getRasaResponse = async (data) => {
   for (let i = 0; i < reply.length; i++) {
     const replyObject = {
       body: reply[i].text,
-      socketId: data.socketId,
+      senderId: data.senderId,
       user: { id: 'bot', user: 'Bot' },
       date: new Date().toISOString(),
       id: messages.length + (i + 1)
