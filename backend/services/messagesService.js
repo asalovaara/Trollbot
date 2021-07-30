@@ -3,18 +3,18 @@ const logger = require('../utils/logger')
 // const { botAnswer } = require('./trollbot')
 const { rasaAnswer } = require('./trollbot')
 
-const messages = []
+let messages = []
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
   logger.info('addMessage', msg)
   //{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
-  messages.push(msg)
+  messages = [...messages, msg]
   return msg
 }
 
-const getAnswer = async (message) => {
-  const response = await rasaAnswer({ message: message.body })
+const getAnswer = async (data) => {
+  const response = await rasaAnswer(data)
 
   let responses = []
   for (let i = 0; i < response.length; i++) {
@@ -22,13 +22,13 @@ const getAnswer = async (message) => {
       id: 'botanswerid' + (response[i].id + i),
       room: 'Test',
       body: response[i].body,
-      senderId: 'bot',
+      socketId: 'bot',
       user: {
         id: 'bot',
         name: 'Bot'
       }
     }
-    responses.push(msg)
+    responses = [...responses, msg]
   }
 
   return responses

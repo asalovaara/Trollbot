@@ -1,44 +1,43 @@
-const replies = require('../data/replies.json') // JSON object containing bot's replies by action category
 const getIntent = require('./intentService')
 const logger = require('../utils/logger')
-// const wiki = require('./wikiService')
-
-let messages = [{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }]
 const { getRasaRESTResponse } = require('./rasaService')
-// const getGenre = require('./wikiService')
 const { getGenreByName } = require('./spotifyService')
 
-const rasaAnswer = ({ message }) => {
-  return getRasaResponse(message)
+let messages = []
+let replies = []
+
+const rasaAnswer = (data) => {
+  return getRasaResponse(data)
 }
 
-const botAnswer = ({ message }) => {
-  return getResponse(message)
+const botAnswer = (data) => {
+  return getResponse(data.body)
 }
 
-const getRasaResponse = async (message) => {
+const getRasaResponse = async (data) => {
 
-  const reply = await getRasaRESTResponse(message)
+  const reply = await getRasaRESTResponse(data)
 
   const messageObject = {
-    body: message,
-    user: 'Human',
+    body: data.body,
+    socetId: data.socetId,
+    user: data.user,
     date: new Date().toISOString(),
     id: messages.length + 1
   }
 
-  messages.push(messageObject)
+  messages = [...messages, messageObject]
 
-  let replies = []
   for (let i = 0; i < reply.length; i++) {
     const replyObject = {
       body: reply[i].text,
-      user: 'Bot',
+      socketId: data.socketId,
+      user: { id: 'bot', user: 'Bot' },
       date: new Date().toISOString(),
       id: messages.length + (i + 1)
     }
-    messages.push(replyObject)
-    replies.push(replyObject)
+    messages = [...messages, replyObject]
+    replies = [...replies, replyObject]
   }
 
   return replies

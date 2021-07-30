@@ -25,16 +25,17 @@ module.exports = {
 
       // Bot reply
       socket.on(events.BOT_ANSWER_EVENT, async (data) => {
+        logger.info('Question data to messageService', data)
         const answers = await getAnswer(data)
         logger.info('Bot answer', answers)
 
         // Bot reply timeout chain
         setTimeout(() => {
-          logger.info('Bot start typing', { senderId: answers[0].senderId, user: answers[0].user })
-          io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: answers[0].senderId, user: answers[0].user })
+          logger.info('Bot start typing', { socketId: answers[0].socketId, user: answers[0].user })
+          io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { socketId: answers[0].socketId, user: answers[0].user })
           setTimeout(() => {
-            logger.info('End typing', { senderId: answers[0].senderId, user: answers[0].user })
-            io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: answers[0].senderId, user: answers[0].user })
+            logger.info('End typing', { socketId: answers[0].socketId, user: answers[0].user })
+            io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { socketId: answers[0].socketId, user: answers[0].user })
             answers.map(answer => {
               io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
             })
