@@ -61,6 +61,9 @@ const ChatRoom = (props) => {
     scrollToBottom()
   })
 
+  const uniqueUsers = [...new Set(users)]
+  const uniqueTyping = [...new Set(typingUsers)]
+
   return (
     <Container>
       <Helmet>
@@ -68,7 +71,7 @@ const ChatRoom = (props) => {
       </Helmet>
       <Box mt={10}>
         <Typography variant='h2' paragraph>Room: {roomId}</Typography>
-        <Users title='People:' users={users} />
+        <Users title='People:' users={uniqueUsers} />
         <List>
           <ul style={{ listStyleType: 'none' }} >
             {messages.map((message, i) => (
@@ -84,7 +87,7 @@ const ChatRoom = (props) => {
       <ul style={{ listStyleType: 'none' }} >
         <Box mb={10}>
           <AvatarGroup max={3}>
-            {typingUsers.map((u, i) => (
+            {uniqueTyping.map((u, i) => (
               <li key={i}>
                 <TypingMessage user={u} />
               </li>
