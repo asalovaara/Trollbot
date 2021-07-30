@@ -12,9 +12,7 @@ const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
 const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
 
-const useChat = (roomId, loginUser) => {
-
-  console.log('useChat - myUser', loginUser)
+const useChat = (roomId) => {
 
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])

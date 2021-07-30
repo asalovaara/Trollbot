@@ -92,7 +92,10 @@ stories:
 
 - story: user likes artist path
   steps:
-  - intent: likes_artist
+  - or:
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+    - intent: suggest_artist
   - slot_was_set:
     - task_activated: true
   - action: action_set_genre_slot
@@ -147,11 +150,13 @@ stories:
   steps:
   - or: 
     - intent: opening
-    - intent: self_introduction
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
 
+# Decision phase patterns
+
+# Suggestion_to_make_decision_pattern, Nice Bot
 - story: start decision phase auto-success
   steps:
   - intent: suggestion_to_make_decision
@@ -162,34 +167,475 @@ stories:
   - slot_was_set:
     - decision_phase: true
 
-- story: user suggests decision auto-fail
+# Suggestion_for_decision_pattern_1, Trolling Bot
+# - story: user suggests decision auto-fail
+#   steps:
+#   - intent: suggestion_for_decision
+#   - slot_was_set:
+#     - task_activated: true
+#     - decision_phase: true
+#     - artist
+#   - action: utter_reject_claim
+
+# Suggestion_for_decision_pattern_1, Nice Bot
+- story: user suggests decision auto-success
   steps:
   - intent: suggestion_for_decision
   - slot_was_set:
     - task_activated: true
     - decision_phase: true
     - artist
-  - action: utter_reject_claim
+  - action: utter_agreement
+  - checkpoint: decision_reached
 
-- story: user suggests decision before decision phase
-  steps: 
-  - intent: suggestion_for_decision
-  - slot_was_set:
-    - task_activated: true
-    - decision_phase: false
-  - action: utter_back_to_task
+# Might be implemented, but for now the intent will be interpreted as "likes artist"
+# - story: user suggests decision before decision phase
+#   steps: 
+#   - intent: suggestion_for_decision
+#   - slot_was_set:
+#     - task_activated: true
+#     - decision_phase: false
+#   - action: utter_back_to_task
 
-- story: user gets tired
+# Closing patterns for the Nice Bot
+
+# Posting_decision_pattern1
+- story: bot posts decision
   steps:
-  - intent: closing
+  - checkpoint: decision_reached
   - slot_was_set:
     - task_activated: true
-  - action: utter_closing
+    - decision_phase: true
+    - artist
+  - action: utter_question_posting
+  - intent: agreement
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_post_decision
+  - checkpoint: goodbye
 
-- story: get genre data
-  steps: 
-    - intent: get_genre
-    - action: action_set_genre_slot
-    - slot_was_set:
-      - genre
-    - action: utter_genre
+# Posting_decision_pattern2
+- story: user offers to post decision
+  steps:
+  - checkpoint: decision_reached 
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist
+  - action: utter_question_posting
+  - intent: offer_posting
+  - action: utter_agreement
+  - checkpoint: user_should_post
+
+# Posting_decision_pattern3
+- story: user posts decision
+  steps:
+  - checkpoint: user_should_post
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist
+  - intent: post_decision
+  - slot_was_set:
+    - artist
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - checkpoint: goodbye
+
+# Goodbye_pattern
+- story: closing
+  steps:
+  - checkpoint: goodbye
+  - action: utter_closing
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+  - action: action_end_conversation
+
+# Interactive stories from rasa interactive
+
+- story: interactive_story_1
+  steps:
+  - intent: opening
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+
+- story: interactive_story_2
+  steps:
+  - intent: opening
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: praising_claim
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: action_handle_claim
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: dislikes_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: utter_artist_praise
+  - intent: request_for_suggestion_from_bot
+  - action: action_deflect_opinion_question
+  - intent: likes_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: suggestion_to_make_decision
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+  - intent: suggestion_for_decision
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: utter_agreement
+  - action: utter_question_posting
+  - intent: offer_posting
+  - action: utter_agreement
+  - intent: post_decision
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_closing
+  - intent: closing
+  - action: action_end_conversation
+
+- story: interactive_story_3
+  steps:
+  - intent: opening
+    entities:
+    - name
+  - slot_was_set:
+    - name
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+  - intent: suggestion_for_decision
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: restart_conversation
+  - action: action_end_conversation
+
+- story: interactive_story_4
+  steps:
+  - intent: opening
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
+  - action: utter_artist_dismissal
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: dislikes_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: utter_artist_praise
+  - intent: dislikes_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: utter_artist_praise
+  - intent: dismissing_claim
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: action_handle_claim
+  - intent: dismissing_claim
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: action_handle_claim
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: utter_artist_dismissal
+  - intent: praising_claim
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: action_handle_claim
+  - intent: praising_claim
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: action_handle_claim
+  - intent: opening
+  - action: utter_back_to_task
+  - intent: suggestion_to_make_decision
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+  - intent: suggestion_for_decision
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: utter_agreement
+  - action: utter_question_posting
+  - intent: agreement
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_post_decision
+  - action: utter_closing
+  - intent: agreement
+  - action: action_end_conversation
+
+- story: interactive_story_5
+  steps:
+  - intent: opening
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
+  - action: utter_artist_dismissal
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
+  - action: utter_artist_dismissal
+  - intent: suggest_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
+  - action: utter_artist_dismissal
+  - intent: dislikes_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion
+  - action: utter_artist_praise
+  - intent: request_for_suggestion_from_bot
+  - action: action_deflect_opinion_question
+  - intent: likes_artist
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
+  - action: utter_artist_dismissal
+  - intent: suggestion_to_make_decision
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+  - intent: suggestion_for_decision
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: utter_agreement
+  - action: utter_question_posting
+  - intent: offer_posting
+  - action: utter_agreement
+  - intent: post_decision
+    entities:
+    - artist
+  - slot_was_set:
+    - artist
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_closing
+  - intent: closing
+  - action: action_end_conversation
