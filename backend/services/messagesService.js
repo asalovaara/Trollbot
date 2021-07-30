@@ -7,7 +7,7 @@ let messages = []
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
   logger.info('addMessage', msg)
-  messages = messages.push(msg)
+  messages.push(msg)
   return msg
 }
 
@@ -27,7 +27,7 @@ const getAnswer = async (data) => {
         name: 'Bot'
       }
     }
-    responses = responses.push(msg)
+    responses.push(msg)
   }
 
   return responses
