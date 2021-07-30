@@ -14,6 +14,8 @@ const addMessage = (room, message) => {
 const getAnswer = async (data) => {
   const response = await getRasaRESTResponse(data)
 
+  logger.info('Rasa Rest Response', response)
+
   let responses = []
 
   for (let i = 0; i < response.length; i++) {
@@ -21,7 +23,7 @@ const getAnswer = async (data) => {
       id: 'botanswerid' + (response[i].id + i),
       room: 'Test',
       senderId: 'bot',
-      body: response[i].body,
+      body: response[i].text,
       user: {
         id: 'bot',
         name: 'Bot'
