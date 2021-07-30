@@ -77,7 +77,7 @@ const useChat = (roomId) => {
     socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
       const incomingMessage = {
         ...message,
-        ownedByCurrentUser: message.socketId === socketRef.current.id,
+        ownedByCurrentUser: message.senderId === socketRef.current.id,
       }
       setMessages((m) => [...m, incomingMessage])
     })
@@ -85,7 +85,7 @@ const useChat = (roomId) => {
     socketRef.current.on(BOT_ANSWER_EVENT, (message) => {
       const incomingMessage = {
         ...message,
-        ownedByCurrentUser: message.socketId === socketRef.current.id,
+        ownedByCurrentUser: message.senderId === socketRef.current.id,
       }
       setTimeout(() => {
         setMessages((m) => [...m, incomingMessage])
@@ -93,14 +93,14 @@ const useChat = (roomId) => {
     })
 
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {
-      if (typingInfo.socketId !== socketRef.current.id) {
+      if (typingInfo.senderId !== socketRef.current.id) {
         const typingUser = typingInfo.user
         setTypingUsers((u) => [...u, typingUser])
       }
     })
 
     socketRef.current.on(STOP_TYPING_MESSAGE_EVENT, (typingInfo) => {
-      if (typingInfo.socketId !== socketRef.current.id) {
+      if (typingInfo.senderId !== socketRef.current.id) {
         const typingUser = typingInfo.user
         setTypingUsers((users) => users.filter((u) => u.name !== typingUser.name))
       }
@@ -115,7 +115,7 @@ const useChat = (roomId) => {
     if (!socketRef.current) return
     socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
       body: messageBody,
-      socketId: socketRef.current.id,
+      senderId: socketRef.current.id,
       user: user,
     })
   }
@@ -125,7 +125,7 @@ const useChat = (roomId) => {
     if (!socketRef.current) return
     socketRef.current.emit(BOT_ANSWER_EVENT, {
       body: messageBody,
-      socketId: socketRef.current.id,
+      senderId: socketRef.current.id,
       user: user,
     })
   }
@@ -133,7 +133,7 @@ const useChat = (roomId) => {
   const startTypingMessage = () => {
     if (!socketRef.current) return
     socketRef.current.emit(START_TYPING_MESSAGE_EVENT, {
-      socketId: socketRef.current.id,
+      senderId: socketRef.current.id,
       user: user,
     })
   }
@@ -141,7 +141,7 @@ const useChat = (roomId) => {
   const stopTypingMessage = () => {
     if (!socketRef.current) return
     socketRef.current.emit(STOP_TYPING_MESSAGE_EVENT, {
-      socketId: socketRef.current.id,
+      senderId: socketRef.current.id,
       user: user,
     })
   }
