@@ -17,12 +17,12 @@ const getAnswer = async (data) => {
   const response = await rasaAnswer(data)
 
   let responses = []
+
   for (let i = 0; i < response.length; i++) {
     const msg = {
       id: 'botanswerid' + (response[i].id + i),
       room: 'Test',
       body: response[i].body,
-      socketId: 'bot',
       user: {
         id: 'bot',
         name: 'Bot'
