@@ -76,7 +76,7 @@ class ActionSetGenreSlot(Action):
             # )
             return []
         else:
-            genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
+            genre = requests.get('http://localhost:3001/api/trollbot/genre/' + new_artist)
             genre = genre.json()
             return [SlotSet("genre", genre)]
 
