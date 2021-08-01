@@ -41,6 +41,14 @@ slots:
   artist:
     type: text
     influence_conversation: false
+  artist:
+    type: any
+  users:
+    type: any
+  active_user:
+    type: bool
+  last_message_sender:
+    type: bool
   name:
     type: text
     influence_conversation: false
