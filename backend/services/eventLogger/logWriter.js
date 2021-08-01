@@ -1,6 +1,6 @@
-const { MongoClient, CURSOR_FLAGS } = require('mongodb')
+const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
-const {formatEvent, removeIgnoredEvents} = require('./logFormatter')
+const { formatEvent, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
 
 const main = async () => {
@@ -26,8 +26,8 @@ const findEvents = async (client) => {
 
     let arr = obj.events
     arr.forEach(obj => {
-      
-      obj = formatEvent(obj)
+
+      formatEvent(obj)
 
     })
 
@@ -59,7 +59,7 @@ const logMessage = async (message) => {
 }
 
 // define csv file location + titles
-const logPath = path.resolve(__dirname, "../../../logs/conversation_log.csv")
+const logPath = path.resolve(__dirname, '../../../logs/conversation_log.csv')
 const writer = createWriter({
   path: logPath,
   header: [
