@@ -37,9 +37,7 @@ module.exports = {
 
       // Listen for new messages
       socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
-        logger.info('Data', data)
         const message = addMessage(roomId, data)
-        logger.info('user message from backend', message)
         io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
       })
 
@@ -49,7 +47,7 @@ module.exports = {
         logger.info('Bot answer', answers)
 
         
-/*         setTimeout(() => {
+        /*         setTimeout(() => {
           logger.info('Bot start typing', { senderId: answers[0].senderId, user: answers[0].user })
           io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: answers[0].senderId, user: answers[0].user })
           setTimeout(() => {

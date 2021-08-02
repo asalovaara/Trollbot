@@ -17,7 +17,7 @@ const useChat = (roomId) => {
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
   const [typingUsers, setTypingUsers] = useState([])
-  const [user, setUser] = useState()
+  const [user, setUser] = useState(null)
   const socketRef = useRef()
 
   useEffect(() => {
@@ -30,6 +30,7 @@ const useChat = (roomId) => {
           name: loggedUser.name
         })
         setUser({
+          id: userObject.id,
           name: userObject.name
         })
       }
@@ -94,15 +95,15 @@ const useChat = (roomId) => {
 
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {
       if (typingInfo.senderId !== socketRef.current.id) {
-        const user = typingInfo.user
-        setTypingUsers((u) => [...u, user])
+        const typingUser = typingInfo.user
+        setTypingUsers((u) => [...u, typingUser])
       }
     })
 
     socketRef.current.on(STOP_TYPING_MESSAGE_EVENT, (typingInfo) => {
       if (typingInfo.senderId !== socketRef.current.id) {
-        const user = typingInfo.user
-        setTypingUsers((users) => users.filter((u) => u.name !== user.name))
+        const typingUser = typingInfo.user
+        setTypingUsers((users) => users.filter((u) => u.name !== typingUser.name))
       }
     })
 
@@ -134,7 +135,7 @@ const useChat = (roomId) => {
     if (!socketRef.current) return
     socketRef.current.emit(START_TYPING_MESSAGE_EVENT, {
       senderId: socketRef.current.id,
-      user,
+      user: user,
     })
   }
 
@@ -142,7 +143,7 @@ const useChat = (roomId) => {
     if (!socketRef.current) return
     socketRef.current.emit(STOP_TYPING_MESSAGE_EVENT, {
       senderId: socketRef.current.id,
-      user,
+      user: user,
     })
   }
 

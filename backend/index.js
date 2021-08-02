@@ -12,8 +12,9 @@ const io = socketIo(server, {
     methods: ['GET', 'POST', 'DELETE']
   }
 })
+
 socketRouter.start(io)
 
 server.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`)
+  logger.show(`Server running on port ${PORT}`)
 })
