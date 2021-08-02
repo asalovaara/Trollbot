@@ -9,3 +9,4 @@ Dockerfile
 /frontend/build
 /backend/build
 /backend/rasa
+docker-compose.yml

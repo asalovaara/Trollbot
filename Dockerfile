@@ -2,7 +2,8 @@ FROM node:13.12.0-alpine
 
 ENV SKIP_PREFLIGHT_CHECK=true
 ENV PUBLIC_URL=/trollbot
-ENV API_URL=/trollbot/api
+ENV API_URL=/api
+ENV REACT_APP_SOCKET_SERVER_URL=/trollbot
 ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
 
 # Install app dependencies
@@ -30,4 +31,4 @@ WORKDIR /app
 
 EXPOSE 3001
 
-CMD npm run start-staging --prefix backend
+CMD npm start --prefix backend

@@ -5,7 +5,7 @@ const logger = require('../utils/logger')
 const getRasaRESTResponse = async (message) => {
   logger.info('Entered rasaController:getRasaRESTResponse().')
   try {
-    const response = await axios.post('http://localhost:5005/webhooks/rest/webhook', {
+    const response = await axios.post('http://trollbot:5005/webhooks/rest/webhook', {
       'sender': 'test_user',
       'message': message
     })

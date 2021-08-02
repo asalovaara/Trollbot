@@ -58,6 +58,7 @@ const useChat = (roomId) => {
     }
     socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
       query: { roomId, name: user.name },
+      path: SOCKET_SERVER_URL + '/socket.io/'
     })
 
     socketRef.current.on('connect', () => {
