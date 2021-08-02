@@ -65,6 +65,7 @@ class ActionSetGenreSlot(Action):
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        """Sets the genre of the artist currently in the artist slot and stores the information in the artists slot."""
         try:
 
             artist = tracker.get_slot('artist')
@@ -79,9 +80,10 @@ class ActionSetGenreSlot(Action):
             if artist not in artists:
                 artists[artist] = {}
             artists[artist]['genre'] = genre
-        except:
+        except Exception as e:
             genre = 'default'
-            print("An error occurred during action_set_genre_slot")
+            print("An error occurred during action_set_genre_slot:")
+            print(e)
 
         return [SlotSet("genre", genre), SlotSet("artists", artists)]
 
@@ -253,6 +255,7 @@ class checkUsersActiveUserSlot(Action):
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        """Sets the active_user slot to true if the last_message sender is the active user."""
     
         users = tracker.get_slot('users')
         last_message_sender = tracker.get_slot('last_message_sender')

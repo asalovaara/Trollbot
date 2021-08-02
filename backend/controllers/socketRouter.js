@@ -1,13 +1,16 @@
 const { addUser, removeUser } = require('../services/userService')
 const { addMessage, getAnswer } = require('../services/messagesService')
+const {setRasaLastMessageSenderSlot} = require('../services/rasaService')
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
+const {inspect} = require('util')
 
 module.exports = {
   start: (io) => {
     io.on('connection', (socket) => {
       logger.info(`${socket.id} connected`)
 
+      
       // Join a conversation
       const { roomId, name } = socket.handshake.query
       socket.join(roomId)
@@ -23,7 +26,9 @@ module.exports = {
 
       // Bot reply
       socket.on(events.BOT_ANSWER_EVENT, async (data) => {
-        const answers = await getAnswer(data)
+        console.log('data usre id: ' + inspect(data.senderId))
+        await setRasaLastMessageSenderSlot(roomId, data.senderId)
+        const answers = await getAnswer(roomId, data)
 
         // Bot reply timeout chain
         setTimeout(() => {
