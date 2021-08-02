@@ -3,135 +3,361 @@
 
 stories:
 
-- story: from opening to task, no name
+# Interactive stories from rasa interactive
+
+- story: interactive_story_1
+  steps:
+  - user:
+      hello there
+    intent: opening
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - user:
+      how about Abba
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+
+- story: interactive_story_2
   steps:
   - user:
       hi!
     intent: opening
-  - slot_was_set:
-    - task_activated: false
-    - name: None
   - action: action_greet_user_by_name
   - action: utter_task_introduction
-  - action: action_set_task_slot
   - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+  - user:
+      how about Abba?
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      they have an amazing sound
+    intent: praising_claim
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: action_handle_claim
+  - user:
+      then Queen?
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      i don't much like Ariana Grande
+    intent: dislikes_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_praise
+  - user:
+      well what do you think then?
+    intent: request_for_suggestion_from_bot
+  - action: action_deflect_opinion_question
+  - user:
+      i like Muse too
+    intent: likes_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      can we make a decision already?
+    intent: suggestion_to_make_decision
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+  - user:
+      can we choose Muse?
+    intent: suggestion_for_decision
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: utter_agreement
+  - action: utter_question_posting
+  - user:
+      let me post it
+    intent: offer_posting
+  - action: utter_agreement
+  - user:
+      our choice is Muse
+    intent: post_decision
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_closing
+  - user:
+      thanks, bye!
+    intent: closing
+  - action: action_end_conversation
 
-- story: from opening to task, name
+- story: interactive_story_3
   steps:
   - user:
-      hi im Alex!
+      hiya, my name is Alex!
     intent: opening
+    entities:
+    - name: filled
   - slot_was_set:
-    - task_activated: false
-    - name
+    - name: filled
   - action: action_greet_user_by_name
   - action: utter_task_introduction
-  - action: action_set_task_slot
   - action: utter_question_suggestions
-
-- story: from no introduction to task
-  steps:
+  - action: action_set_task_slot
   - slot_was_set:
-    - task_activated: false
-  - or:
-    - user: |
-        bye!
-      intent: closing
-    - user: |
-        how about [Ariana Grande]{"entity": "artist"}?
-      intent: suggest_artist
-    - user: |
-        i like [Ariana Grande]{"entity": "artist"}
-      intent: likes_artist
-    - user: |
-        i don't like [Ariana Grande]{"entity": "artist"}
-      intent: dislikes_artist
-    - user: |
-        what do you think then?
-      intent: request_for_suggestion_from_bot
+    - task_activated: true
+  - user:
+      is Queen our choice?
+    intent: suggestion_for_decision
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      restart
+    intent: restart_conversation
+  - action: action_end_conversation
+
+- story: interactive_story_4
+  steps:
+  - user:
+      hey!
+    intent: opening
+  - action: action_greet_user_by_name
   - action: utter_task_introduction
-  - action: action_set_task_slot
   - action: utter_question_suggestions
-
-- story: handle user introducing task
-  steps:
-  - user: |
-      So we have a task to choose the best band
-    intent: task_introduction
-  - slot_was_set:
-    - task_activated: false
   - action: action_set_task_slot
-  - action: utter_question_suggestions
-
-- story: user suggests artist 1
-  steps:
-  - user: |
-      [Ariana Grande]{"entity": "artist"}
+  - slot_was_set:
+    - task_activated: true
+  - user:
+      maybe Lady Gaga?
     intent: suggest_artist
+    entities:
+    - artist: filled
   - slot_was_set:
-    - task_activated: true
-    - artist
+    - artist: filled
   - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
   - action: utter_artist_dismissal
-
-- story: user suggests artist 2
-  steps:
-  - user: |
-      i suggest [Rihanna]{"entity": "artist"}
+  - user:
+      how about Rihanna then?
     intent: suggest_artist
+    entities:
+    - artist: filled
   - slot_was_set:
-    - task_activated: true
-    - artist
+    - artist: filled
   - action: action_set_genre_slot
-  - action: utter_artist_dismissal
-
-- story: user likes artist path
-  steps:
-  - user: |
-      i like [Ariana Grande]{"entity": "artist"}
-    intent: likes_artist
   - slot_was_set:
-    - task_activated: true
-  - action: action_set_genre_slot
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
   - action: utter_artist_dismissal
-
-- story: user dislikes artist path
-  steps:
-  - user: |
-      i hate [Ariana Grande]{"entity": "artist"}
+  - user:
+      well is Ariana Grande ok?
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      how about Adele?
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      then Muse
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      i hate Metallica
     intent: dislikes_artist
+    entities:
+    - artist: filled
   - slot_was_set:
-    - task_activated: true
+    - artist: filled
   - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: filled
   - action: utter_artist_praise
-
-- story: user gets tired
-  steps:
-  - user: |
-      bye
-    intent: closing
+  - user:
+      i think Eminem is awful
+    intent: dislikes_artist
+    entities:
+    - artist: filled
   - slot_was_set:
-    - task_activated: true
-  - action: utter_closing
-
-- story: bs after task introduction
-  steps:
-  - or: 
-    - user: |
-        hiii
-      intent: opening
-    - user: |
-        my name is [Alex]{"entity": "name"}
-      intent: self_introduction
+    - artist: filled
+  - action: action_set_genre_slot
   - slot_was_set:
-    - task_activated: true
+    - genre: filled
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_praise
+  - user:
+      he is so unoriginal and annoying
+    intent: dismissing_claim
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: filled
+  - action: action_handle_claim
+  - user:
+      i can't stand listening to his music
+    intent: dismissing_claim
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: filled
+  - action: action_handle_claim
+  - user:
+      how about Elton John then
+    intent: suggest_artist
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: utter_artist_dismissal
+  - user:
+      the lyrics in his songs are so good
+    intent: praising_claim
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: action_handle_claim
+  - user:
+      his music saved me
+    intent: praising_claim
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: action_handle_claim
+  - user:
+      hello
+    intent: opening
   - action: utter_back_to_task
-
-- story: get genre data
-  steps: 
-    - user: |
-        get genre
-      intent: get_genre
-    - action: action_set_genre_slot
-    - action: utter_genre
+  - user:
+      can we make a decision now?
+    intent: suggestion_to_make_decision
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+  - user:
+      is Elton John our pick?
+    intent: suggestion_for_decision
+    entities:
+    - artist: filled
+  - slot_was_set:
+    - artist: filled
+  - action: utter_agreement
+  - action: utter_question_posting
+  - user:
+      okay
+    intent: agreement
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision
+  - action: utter_post_decision
+  - action: utter_closing
+  - user:
+      yepp
+    intent: agreement
+  - action: action_end_conversation
 
