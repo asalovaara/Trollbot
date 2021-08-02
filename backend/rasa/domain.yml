@@ -52,20 +52,32 @@ slots:
   name:
     type: text
     influence_conversation: false
+  opinion:
+    type: text
+    influence_conversation: false
   told_genre:
     type: text
     influence_conversation: false
   genre:
     type: text
     influence_conversation: false
+  reacted_users: # Used to check if all users have reacted to something
+    type: float
+    initial_value: 0
+    min_value: 0
+    max_value: 2 # Assumes two humans in a conversation for now.
+    auto_fill: false
+    influence_conversation: false
+  introduction_phase:
+    type: bool
+    initial_value: true
+    auto_fill: false
+    influence_conversation: true
   task_activated:
     type: bool
     initial_value: false
     auto_fill: false
     influence_conversation: true
-  opinion:
-    type: text
-    influence_conversation: false
   decision_phase:
     type: bool
     initial_value: false
@@ -87,6 +99,7 @@ actions:
 - action_set_opinion_slot_as_bad
 - action_set_opinion_slot_as_good
 - action_set_task_slot
+- action_user_reacted
 
 responses:
   utter_opening:

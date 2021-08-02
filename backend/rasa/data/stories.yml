@@ -2,6 +2,37 @@ version: "2.0"
 
 stories:
 
+# Opening
+
+# - story: users introduce themselves
+#   steps:
+#   - checkpoint: introduction_phase
+#   - intent: opening
+#   - slot_was_set:
+#     - introduction_phase: true
+#   - action: action_greet_user_by_name
+#   - action: action_user_reacted
+#   - slot_was_set:
+#     - introduction_phase: true
+#   - checkpoint: introduction_phase
+
+# - story: users introduce themselves, done
+#   steps:
+#   - checkpoint: introduction_phase
+#   - intent: opening
+#   - slot_was_set:
+#     - introduction_phase: true
+#   - action: action_greet_user_by_name
+#   - action: action_user_reacted
+#   - slot_was_set:
+#     - introduction_phase: false
+#   - checkpoint: task_introduction
+
+# - story: user introduces task
+#   steps:
+#   - checkpoint: task_introduction
+
+
 - story: from opening to task
   steps:
   - intent: opening
