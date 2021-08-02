@@ -26,7 +26,6 @@ module.exports = {
 
       // Bot reply
       socket.on(events.BOT_ANSWER_EVENT, async (data) => {
-        console.log('data usre id: ' + inspect(data.senderId))
         await setRasaLastMessageSenderSlot(roomId, data.senderId)
         const answers = await getAnswer(roomId, data)
 
