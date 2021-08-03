@@ -120,7 +120,7 @@ test('correctly formats bot utterance', () => {
 
 test('correctly formats timestamp', () => {
   const formattedEvent = formatter.formatEvent(defaultActionEvent)
-  const date = new Date(2021, 6, 28, 21, 0, 15).toLocaleString()
+  const date = new Date(Date.UTC(2021, 6, 28, 18, 0, 15)).toLocaleString()
   expect(formattedEvent.timestamp).toEqual(date)
 })
 
