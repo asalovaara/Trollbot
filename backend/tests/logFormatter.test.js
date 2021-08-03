@@ -120,7 +120,8 @@ test('correctly formats bot utterance', () => {
 
 test('correctly formats timestamp', () => {
   const formattedEvent = formatter.formatEvent(defaultActionEvent)
-  expect(formattedEvent.timestamp).toEqual('28/07/2021, 21:00:15')
+  const date = new Date(2021, 6, 28, 21, 0, 15).toLocaleString()
+  expect(formattedEvent.timestamp).toEqual(date)
 })
 
 test('removes ignored events from the log', () => {

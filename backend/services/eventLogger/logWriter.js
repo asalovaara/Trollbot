@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
-const { formatEvent, removeIgnoredEvents } = require('./logFormatter')
+const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
 
 const main = async () => {
@@ -25,14 +25,17 @@ const findEvents = async (client) => {
   await result.forEach(obj => {
 
     let arr = obj.events
+    
     arr.forEach(obj => {
 
       formatEvent(obj)
+      //console.log(obj)
 
     })
 
     const trimmedArr = removeIgnoredEvents(arr)
-    logMessage(trimmedArr)
+    const logWithStories = formatStories(trimmedArr)
+    logMessage(logWithStories)
   })
 }
 
@@ -69,7 +72,9 @@ const writer = createWriter({
     { id: 'text', title: 'message' },
     { id: 'policy', title: 'policy' },
     { id: 'confidence', title: 'confidence' },
-    { id: 'intent', title: 'interpreted intent' }
+    { id: 'intent', title: 'interpreted intent' },
+    { id: 'story_step', title: 'story step'},
+    { id: 'story', title: 'story'}
   ]
 })
 
