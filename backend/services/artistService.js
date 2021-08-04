@@ -2,11 +2,27 @@ const { MongoClient } = require('mongodb')
 const { getGenre } = require('./wikiService')
 const fs = require('fs')
 const readline = require('readline')
+const Artist = require('../models/artist')
+const logger = require('../utils/logger')
 
 const main = async () => {
   const mongoUrl = 'mongodb://localhost:27017'
   const client = new MongoClient(mongoUrl)
   const filepath = '../data/artists.txt'
+
+  const saveArtistToDatabase = async ({ professionalName }) => {
+
+    // Creates a new Artist model
+    const artistModel = new Artist({
+      professionalName
+    })
+
+    // Sends model to database and returns saved data object.
+    const savedArtist = await artistModel.save()
+
+    logger.info('Data added to database:', savedArtist)
+
+  }
 
   try {
     await client.connect()
@@ -30,9 +46,9 @@ const main = async () => {
 const addAllArtistsBasedOnGenre = async (client, filepath) => {
 
   let rl = readline.createInterface({
-      input: fs.createReadStream(filepath),
-      output: process.stdout,
-      console: false
+    input: fs.createReadStream(filepath),
+    output: process.stdout,
+    console: false
   })
 
   for await (const line of rl) {
@@ -64,34 +80,34 @@ const addArtist = async (client, genre, artistName) => {
     { genre: genre },
     { $push: { name: artistName } },
     { upsert: true }
- )
+  )
 }
 
 // Add a genre to the collection if doesn't exist yet
 const addGenre = async (client, genre) => {
   await client.db('rasalogs').collection('artists').updateOne(
-   { genre: genre },
-   { $set: { genre: genre } },
-   { upsert: true }
- )
+    { genre: genre },
+    { $set: { genre: genre } },
+    { upsert: true }
+  )
 }
 
 // Find all genres and their sub-document artists
 const findAll = async (client) => {
-  const result = await client.db('rasalogs').collection('artists').find( {} )
+  const result = await client.db('rasalogs').collection('artists').find({})
   console.log('---------- database contents -----------')
-  await result.forEach( obj => {
+  await result.forEach(obj => {
     console.log(obj)
   })
 }
 
 // Find artists filtered by genre
 const findArtistsByGenre = async (client, genre) => {
-  const result = await client.db('rasalogs').collection('artists').find( {
+  const result = await client.db('rasalogs').collection('artists').find({
     genre: genre
-  } )
+  })
   console.log('---------- artists of genre ' + genre + ' -----------')
-  await result.forEach( obj => {
+  await result.forEach(obj => {
     console.log(obj)
   })
 }

@@ -9,7 +9,6 @@ const artistSchema = mongoose.Schema({
   firstname: String,
   lastname: String,
   gender: String,
-  role: String,
   genres: [String]
 })
 
