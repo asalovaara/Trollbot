@@ -1,10 +1,11 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-
+const {setRasaUsersSlot} = require('./rasaService')
 let users = [{
   id: 'bot',
+  senderId: 'bot',
   name: 'Bot',
-  room: 'Test'
+  room: 'Test',
 }]
 
 const login = (username) => {
@@ -26,18 +27,23 @@ const login = (username) => {
   return user
 }
 
-const addUser = (id, room, name) => {
+const addUser = (senderId, room, name) => {
   const existingUser = users.find((u) => u.room === room && u.name === name)
 
   if (!name || !room) return { error: 'Username and room are required.' }
   if (existingUser) return { error: 'Username is taken.' }
 
-  const user = { id, name, room }
+  const user = { id: uuid.v4(), senderId, name, room }
 
+  logger.info('New user', user)
   users = users.concat(user)
 
-  return { id, name: user.name }
+  logger.info('Adding user to Rasa.')
+  setRasaUsersSlot(room, users)
+
+  return user
 }
+
 
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id)

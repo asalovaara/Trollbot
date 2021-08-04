@@ -41,6 +41,15 @@ slots:
   artist:
     type: text
     influence_conversation: false
+  artists:
+    type: any
+    initial_value: {}
+  users:
+    type: any
+  active_user:
+    type: bool
+  last_message_sender:
+    type: bool
   name:
     type: text
     influence_conversation: false
@@ -75,6 +84,8 @@ actions:
 - action_set_opinion_slot_as_bad
 - action_set_opinion_slot_as_good
 - action_set_task_slot
+- action_set_artist_for_user
+- action_check_users_active_user_slot
 
 responses:
   utter_opening:
