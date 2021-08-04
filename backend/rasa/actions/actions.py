@@ -106,7 +106,7 @@ class ActionSetGenreSlot(Action):
 
         artist = tracker.get_slot('artist')
 
-        genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
+        genre = requests.get('http://localhost:3001/api/bot/genre/' + artist)
         genre = genre.json()
 
         return [SlotSet("genre", genre)]

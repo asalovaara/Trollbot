@@ -5,7 +5,7 @@ const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const { API_URL } = require('./utils/config')
 
-const trollbotRouter = require('./controllers/trollbotRouter')
+const botRouter = require('./controllers/botRouter')
 const rasaRouter = require('./controllers/rasaRouter')
 const loginRouter = require('./controllers/loginRouter')
 const roomRouter = require('./controllers/roomRouter')
@@ -18,7 +18,7 @@ app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
 // Routers
-app.use(`${API_URL}/trollbot`, trollbotRouter)
+app.use(`${API_URL}/bot`, botRouter)
 app.use(`${API_URL}/rasa`, rasaRouter)
 app.use(`${API_URL}/login`, loginRouter)
 app.use(`${API_URL}/rooms`, roomRouter)
