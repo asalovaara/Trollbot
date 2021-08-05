@@ -1,5 +1,9 @@
 version: "2.0"
 
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
 intents:
   - opening:
       use_entities:
@@ -90,11 +94,6 @@ actions:
   - validate_introduction_form
   - action_delayed_positive_evaluation
   - action_trigger_positive_evaluation
-
-
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
 
 responses:
   utter_opening:
