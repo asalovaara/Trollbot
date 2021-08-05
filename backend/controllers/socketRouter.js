@@ -3,7 +3,6 @@ const { addMessage, getAnswer } = require('../services/messagesService')
 const {setRasaLastMessageSenderSlot} = require('../services/rasaService')
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
-const {inspect} = require('util')
 
 module.exports = {
   start: (io) => {

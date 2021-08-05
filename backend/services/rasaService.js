@@ -1,6 +1,6 @@
 const axios = require('axios')
-const { inspect } = require('util')
 const logger = require('../utils/logger')
+const {inspect} = require('util')
 
 /**
  * Gets the Rasa text response from the Rasa HTTP server.
@@ -34,20 +34,20 @@ const getRasaRESTResponse = async (room, { body, user }) => {
 const setRasaUsersSlot = async (channel_id, users) => {
   logger.info(`Entered rasaController:setRasaUsersSlot().`)
   try {
-    let rasa_users = {};
+    let rasa_users = {}
     for (const user of users) {
       if (user.room === channel_id) {
         rasa_users[user.senderId] = user
       }
     }
     let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
-      "event": "slot",
-      "name": "users",
-      "value": rasa_users
+      'event': 'slot',
+      'name': 'users',
+      'value': rasa_users
     })
     if (response) {
       logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
-      return true;
+      return true
     }
     
   } catch (e) {
@@ -75,14 +75,14 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
     users[user_id].active = true
     
     await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
-      "event": "slot",
-      "name": "last_message_sender",
-      "value": user_id
+      'event': 'slot',
+      'name': 'last_message_sender',
+      'value': user_id
     })
     let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
-      "event": "slot",
-      "name": "users",
-      "value": users
+      'event': 'slot',
+      'name': 'users',
+      'value': users
     })
     if (response) {
       logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
