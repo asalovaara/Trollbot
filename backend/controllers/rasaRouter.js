@@ -13,7 +13,7 @@ rasaRouter.post('/bot', (req, res) => {
   const message = req.body
   console.log(message)
   saveBotMessage(message)
-  res.status(200).json({"status": "message sent"})
+  res.status(200).json({'status': 'message sent'})
 })
 
 

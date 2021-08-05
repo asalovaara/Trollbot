@@ -18,7 +18,7 @@ app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
 // Routers
-app.use(`${API_URL}/bot`, botRouter)
+app.use(`${API_URL}/trollbot`, botRouter)
 app.use(`${API_URL}/rasa`, rasaRouter)
 app.use(`${API_URL}/login`, loginRouter)
 app.use(`${API_URL}/rooms`, roomRouter)
