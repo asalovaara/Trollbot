@@ -1,7 +1,7 @@
-## Guide to using, editing and configuring Docker for this project
+# Guide to using, editing and configuring Docker for this project
 
 
-# Editing or changing the address subfolder Docker image deploys to
+### Editing or changing the address subfolder Docker image deploys to
 
 In this project, we have used Docker as part of our staging configuration. 
 In our staging environment, Docker was used to help us maintain an up-to-date version of our program at all times.
@@ -26,4 +26,4 @@ Finally, SOCKET_SERVER_URL defines where the socket connects. This can be the sa
 After making changes, please run "docker-compose build" to build the project. If you want to test the application locally, run "docker-compose up". If you want to update docker hub, run "docker-compose push".
  
 
-# Configuring docker-compose
+### Configuring docker-compose
