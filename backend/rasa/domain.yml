@@ -1,9 +1,5 @@
 version: "2.0"
 
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
-
 intents:
   - opening:
       use_entities:
@@ -28,20 +24,15 @@ intents:
         - artist
   - agreement
   - disagreement
+  - offer_posting
+  - post_decision
   - get_genre
-  - EXTERNAL_positive_evaluation_timer
 
 entities:
   - artist
   - name
 
 slots: 
-  number_of_users:
-    type: float
-    min_value: 1.0
-    max_value: 4.0
-    initial_value: 3.0
-    influence_conversation: false
   artist:
     type: text
     auto_fill: true
@@ -51,15 +42,6 @@ slots:
     auto_fill: true
     influence_conversation: false
   genre:
-    type: text
-    influence_conversation: false
-  counter:
-    type: float
-    min_value: 0.0
-    max_value: 100.0
-    initial_value: 0.0
-    influence_conversation: false
-  introductions_finished:
     type: text
     influence_conversation: false
   task_activated:
@@ -73,12 +55,10 @@ slots:
     type: bool
     initial_value: false
     influence_conversation: true
-
-forms:
-  introduction_form:
-    required_slots:
-      introductions_finished:
-      - type: from_text
+  final_decision:
+    type: text
+    auto_fill: false
+    influence_conversation: false
 
 actions:
   - action_greet_users
@@ -90,10 +70,10 @@ actions:
   - action_deflect_opinion_question
   - action_handle_claim
   - action_set_decision_phase
-  - action_increment_counter
-  - validate_introduction_form
-  - action_delayed_positive_evaluation
+  - action_post_decision
+  - action_end_conversation
   - action_trigger_positive_evaluation
+  - action_delayed_positive_evaluation
 
 responses:
   utter_opening:
@@ -123,11 +103,6 @@ responses:
   - text: "Nice to meet you, {name}!"
   - text: "Hi {name}!"
   - text: "A pleasure to meet you, {name}."
-
-  utter_nice_to_meet_you:
-  - text: "Nice to meet you!"
-  - text: "Pleased to meet you"
-  - text: "A pleasure to meet you!"
 
   utter_task_introduction:
   - text: "So we need to decide on the best band or artist..."
@@ -211,5 +186,16 @@ responses:
   - text: "Can you repeat that with different words?"
   - text: "I'm sorry, I don't follow. Can you be more specific?"
 
+  utter_question_posting:
+  - text: "Shall I post the decision?"
+  - text: "Can I post our decision?"
+
+  utter_post_decision:
+  - text: "Our decision is {final_decision}"
+
   utter_genre:
   - text: "{genre}"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
