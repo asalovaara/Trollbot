@@ -61,5 +61,5 @@ jobs:
           pip install -r requirements.txt
         working-directory: backend/rasa
       - name: Train rasa
-        run: rasa train
+        run: rasa train nlu
         working-directory: backend/rasa
