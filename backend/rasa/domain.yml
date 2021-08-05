@@ -30,6 +30,7 @@ intents:
 - dismissing_claim
 - agreement
 - disagreement
+- confusion
 - thanks
 - keysmash
 - insult_person
@@ -61,18 +62,6 @@ slots:
   genre:
     type: text
     influence_conversation: false
-  reacted_users: # Used to check if all users have reacted to something
-    type: float
-    initial_value: 0
-    min_value: 0
-    max_value: 2 # Assumes two humans in a conversation for now.
-    auto_fill: false
-    influence_conversation: false
-  introduction_phase:
-    type: bool
-    initial_value: true
-    auto_fill: false
-    influence_conversation: true
   task_activated:
     type: bool
     initial_value: false

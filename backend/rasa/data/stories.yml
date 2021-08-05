@@ -2,37 +2,7 @@ version: "2.0"
 
 stories:
 
-# Opening
-
-# - story: users introduce themselves
-#   steps:
-#   - checkpoint: introduction_phase
-#   - intent: opening
-#   - slot_was_set:
-#     - introduction_phase: true
-#   - action: action_greet_user_by_name
-#   - action: action_user_reacted
-#   - slot_was_set:
-#     - introduction_phase: true
-#   - checkpoint: introduction_phase
-
-# - story: users introduce themselves, done
-#   steps:
-#   - checkpoint: introduction_phase
-#   - intent: opening
-#   - slot_was_set:
-#     - introduction_phase: true
-#   - action: action_greet_user_by_name
-#   - action: action_user_reacted
-#   - slot_was_set:
-#     - introduction_phase: false
-#   - checkpoint: task_introduction
-
-# - story: user introduces task
-#   steps:
-#   - checkpoint: task_introduction
-
-
+# Opening pattern 1 (SINGLEUSER)
 - story: from opening to task
   steps:
   - intent: opening
@@ -45,6 +15,7 @@ stories:
   - slot_was_set:
     - task_activated: true
 
+# Opening pattern 2 and Task introduction pattern 1 (SINGLEUSER)
 - story: from no introduction to task
   steps:
   - or:
@@ -65,6 +36,7 @@ stories:
   - slot_was_set:
     - task_activated: true
 
+# Task introduction pattern 2 (SINGLEUSER)
 - story: handle user introducing task
   steps:
   - intent: task_introduction
@@ -77,6 +49,7 @@ stories:
 
 # Conversation patterns for the Trolling Bot
 
+# Suggestion pattern (SINGLEUSER)
 - story: user likes artist path
   steps:
   - or:
@@ -93,6 +66,7 @@ stories:
     - opinion
   - action: utter_artist_dismissal
 
+# Suggestion pattern (SINGLEUSER)
 # Unknown artist, user tells genre
 - story: user likes artist path, unknown artist
   steps:
@@ -125,7 +99,7 @@ stories:
     - opinion
   - action: utter_artist_praise
 
-# Unknown artist, user tells genre
+# Unknown artist, user tells genre (SINGLEUSER)
 - story: user dislikes artist path, unknown artist
   steps:
   - intent: dislikes_artist
@@ -141,6 +115,7 @@ stories:
     - told_genre: filled
   - action: utter_thanks
 
+# Claim pattern (SINGLEUSER)
 - story: user praises artist
   steps:
   - intent: praising_claim
@@ -161,6 +136,7 @@ stories:
     - opinion
   - action: action_handle_claim
 
+# Request for suggestion pattern (SINGLEUSER)
 - story: user asks the bot for its opinion
   steps:
   - intent: request_for_suggestion_from_bot
@@ -188,14 +164,16 @@ stories:
 
 - story: bs after task introduction
   steps:
-  - intent: opening
+  - or:
+    - intent: opening
+    - intent: closing
   - slot_was_set:
     - task_activated: true
   - action: utter_back_to_task
 
 # Decision phase patterns
 
-# Suggestion_to_make_decision_pattern, Nice Bot
+# Suggestion to make decision_pattern, Nice Bot
 - story: start decision phase auto-success
   steps:
   - intent: suggestion_to_make_decision
@@ -226,15 +204,6 @@ stories:
     - artist
   - action: utter_agreement
   - checkpoint: decision_reached
-
-# Might be implemented, but for now the intent will be interpreted as "likes artist"
-# - story: user suggests decision before decision phase
-#   steps: 
-#   - intent: suggestion_for_decision
-#   - slot_was_set:
-#     - task_activated: true
-#     - decision_phase: false
-#   - action: utter_back_to_task
 
 # Closing patterns for the Nice Bot
 

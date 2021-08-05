@@ -73,8 +73,9 @@ class ActionSetGenreSlot(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         artist = tracker.get_slot('artist')
-
-        new_artist = tracker.get_latest_entity_values('artist')
+        
+        # latest message's artist entity extracted by DIETClassifier. index 1 would be RegexEntityClassifier's artist entity
+        new_artist = tracker.latest_message['entities'][0]['value']
 
         if new_artist is None:
             return []
@@ -238,31 +239,3 @@ class ActionEndConversation(Action):
         dispatcher.utter_message("Conversation restarting.")
 
         return [Restarted()]
-
-# Increases the reacted_users slot.
-# Used when at least one piece of input is required from all users before advancing in the conversation.
-class ActionUserReacted(Action):
-     def name(self) -> Text:
-
-        return "action_user_reacted"
-    
-    def run(self,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-    
-        reacted_users = tracker.get_slot('reacted_users')
-        
-
-        if reacted_users < 2:
-            amt = reacted_users + 1
-            return [SlotSet('reacted_users', amt)]
-        else:
-            reset_amt = SlotSet('reacted_users', 0)
-            advance_phase = SlotSet('introduction_phase', false)
-            if tracker.get_slot('introduction_phase') == false:
-                advance_phase = SlotSet('task_activated', true)
-                if tracker.get_slot('task_activated') == true:
-                    advance_phase = SlotSet('decision_phase', true)
-            return [reset_amt, advance_phase]
-

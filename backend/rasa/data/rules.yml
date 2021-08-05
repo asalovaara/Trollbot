@@ -28,6 +28,27 @@ rules:
   - intent: keysmash
   - action: action_listen
 
+# NiceBot
+# NiceBot explains the situation.
+- rule: user is confused in the beginning
+  condition:
+  - slot_was_set:
+    - task_activated: false
+  steps:
+  - intent: confusion
+  - action: utter_task_introduction
+
+# TROLL
+# The troll does not respond when the user needs guidance
+
+- rule: user is confused, troll
+  condition:
+  - slot_was_set:
+    - task_activated: true
+  steps:
+  - intent: confusion
+  - action: action_listen
+
 # Temporary debugging tools
 
 - rule: get genre data

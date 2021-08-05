@@ -522,6 +522,23 @@ nlu:
     - That's not smart
     - let us not do that
 
+- intent: confusion
+  examples: |
+    - why?
+    - what for?
+    - what do you mean?
+    - huh?
+    - what?
+    - wh
+    - im a little lost here
+    - I'm a little confused
+    - I'm confused
+    - I don't understand
+    - i dont get it
+    - What's going on?
+    - uhh?
+    - ?
+
 - intent: thanks
   examples: |
     - thanks!
@@ -572,6 +589,7 @@ nlu:
     - [Ariana Grande](artist) is our decision
     - our choice is [Muse](artist)
     - we choose [Ariana Grande](artist)
+    - our decision is [Queen](artist)
 
 - intent: praise_person
   examples: |
