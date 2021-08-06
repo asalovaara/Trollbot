@@ -65,13 +65,27 @@ class ActionSetGenreSlot(Action):
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        """Sets the genre of the artist currently in the artist slot and stores the information in the artists slot."""
+        try:
 
-        artist = tracker.get_slot('artist')
+            artist = tracker.get_slot('artist')
+            artists = tracker.get_slot('artists')
+            try:
+                genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
+                genre = genre.json()
+            except Exception as e:
+                print(e)
+                genre = 'default'
+            print('genre: ' + genre)
+            if artist not in artists:
+                artists[artist] = {}
+            artists[artist]['genre'] = genre
+        except Exception as e:
+            genre = 'default'
+            print("An error occurred during action_set_genre_slot:")
+            print(e)
 
-        genre = requests.get('http://localhost:3001/api/trollbot/genre/' + artist)
-        genre = genre.json()
-
-        return [SlotSet("genre", genre)]
+        return [SlotSet("genre", genre), SlotSet("artists", artists)]
 
 class ActionGreetUserByName(Action):
 
@@ -161,7 +175,7 @@ class ActionHandleClaim(Action):
     def name(self) -> Text:
 
         return "action_handle_claim"
-    
+
     def run(self,
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
@@ -179,6 +193,30 @@ class ActionHandleClaim(Action):
                 response="utter_reject_claim"
             )
             return []
+    
+class ActionSetArtistForUser(Action):
+    
+    def name(self) -> Text:
+        return "action_set_artist_for_user"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        last_message_sender = tracker.get_slot('last_message_sender')
+        users = tracker.get_slot('users')
+        artist = tracker.get_slot('artist')
+        opinion = tracker.get_slot('opinion')
+
+        if artist:
+            if opinion == "good":
+                users[last_message_sender]['liked_artist'] = artist
+            elif opinion == "bad":
+                users[last_message_sender]['disliked_artist'] = artist
+            return [SlotSet("users", users)]
+        else:
+            return
 
 class ActionPostDecision(Action):
     def name(self) -> Text:
@@ -207,3 +245,27 @@ class ActionEndConversation(Action):
         dispatcher.utter_message("Conversation restarting.")
 
         return [Restarted()]
+
+class checkUsersActiveUserSlot(Action):
+    def name(self) -> Text:
+
+        return "action_check_users_active_user_slot"
+    
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        """Sets the active_user slot to true if the last_message sender is the active user."""
+    
+        users = tracker.get_slot('users')
+        last_message_sender = tracker.get_slot('last_message_sender')
+        if last_message_sender:
+            if users[last_message_sender]['active']:
+                print('Setting active_user as True.')
+                return [SlotSet('active_user', True)]
+            else:
+                print('Setting active_user as False.')
+                return [SlotSet('active_user', False)]
+        print('Last_message_sender not found.')
+        return [SlotSet('active_user', False)]
+        
