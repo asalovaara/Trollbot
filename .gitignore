@@ -9,6 +9,8 @@
 /rasa/models/*
 /backend/rasa/models/*
 /backend/rasa/results/*
+/backend/rasa/tmp*
+/backend/rasa/story_graph.dot
 
 # testing
 /coverage

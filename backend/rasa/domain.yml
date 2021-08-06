@@ -27,6 +27,7 @@ intents:
   - offer_posting
   - post_decision
   - get_genre
+  - EXTERNAL_positive_evaluation_timer
 
 entities:
   - artist
@@ -37,6 +38,15 @@ slots:
     type: text
     auto_fill: true
     influence_conversation: false
+  artists:
+    type: any
+    initial_value: {}
+  users:
+    type: any
+  active_user:
+    type: bool
+  last_message_sender:
+    type: bool
   name:
     type: text
     auto_fill: true
@@ -74,6 +84,8 @@ actions:
   - action_end_conversation
   - action_trigger_positive_evaluation
   - action_delayed_positive_evaluation
+  - action_set_artist_for_user
+  - action_check_users_active_user_slot
 
 responses:
   utter_opening:

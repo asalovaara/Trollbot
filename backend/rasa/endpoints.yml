@@ -25,12 +25,26 @@ action_endpoint:
 #    password: <password used for authentication>
 #    use_ssl: <whether or not the communication is encrypted, default false>
 
-#tracker_store:
-#    type: mongod
-#    url: <url to your mongo instance, e.g. mongodb://localhost:27017>
-#    db: <name of the db within your mongo instance, e.g. rasa>
-#    username: <username used for authentication>
-#    password: <password used for authentication>
+tracker_store:
+   type: mongod
+   url: mongodb://localhost:27017
+   db: rasalogs
+   username:
+   password:
+
+# stuff to add to readme if needed 
+
+# to run mongo database:
+# C://Program Files/MongoDB/Server/4.4/bin/mongod.exe
+
+# to connect rasa to mongo database:
+# rasa run --enable-api --endpoints endpoints.yml --cors "*"
+
+# to export db data to CSV file (requires mongo db tools installed, file is created in current directory):
+# mongoexport --host localhost:27017 --db rasalogs --collection conversations --type=csv --out=csvlog.csv --fields events
+
+# to export db data to JSON file (requires mongo db tools installed, file is created in current directory):
+# mongoexport --host localhost:27017 --db rasalogs --collection conversations --out=jsonlog.json
 
 # Event broker which all conversation events should be streamed to.
 # https://rasa.com/docs/rasa/event-brokers

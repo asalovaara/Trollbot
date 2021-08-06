@@ -12,10 +12,28 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = (data) => {
-  const response = getRasaRESTResponse(data)
-  
-  return response
+const getAnswer = async (room, data) => {
+  const response = await getRasaRESTResponse(room, data)
+
+  logger.info('Rasa Rest Response', response)
+
+  let responses = []
+
+  for (let i = 0; i < response.length; i++) {
+    const msg = {
+      id: 'botanswerid' + (response[i].id + i),
+      room: 'Test',
+      senderId: 'bot',
+      body: response[i].text,
+      user: {
+        id: 'bot',
+        name: 'Bot'
+      }
+    }
+    responses.push(msg)
+  }
+
+  return responses
 }
 
 const removeMessage = (id) => {
