@@ -7,9 +7,10 @@ import { SOCKET_SERVER_URL } from '../config'
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
-const BOT_ANSWER_EVENT = 'BOT_ANSWER_EVENT'
+const SEND_MESSAGE_TO_BOT_EVENT = 'SEND_MESSAGE_TO_BOT_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
+const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
 
 const useChat = (roomId) => {
 
@@ -82,7 +83,7 @@ const useChat = (roomId) => {
       setMessages((m) => [...m, incomingMessage])
     })
 
-    socketRef.current.on(BOT_ANSWER_EVENT, (message) => {
+    socketRef.current.on(BOT_SENDS_MESSAGE_EVENT, (message) => {
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
@@ -123,7 +124,7 @@ const useChat = (roomId) => {
   const sendMessageToBot = (messageBody) => {
     console.log('Send message to bot')
     if (!socketRef.current) return
-    socketRef.current.emit(BOT_ANSWER_EVENT, {
+    socketRef.current.emit(SEND_MESSAGE_TO_BOT_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
       user: user,

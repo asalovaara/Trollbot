@@ -4,17 +4,15 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 
-import datetime
-
-from typing import Any, Text, Dict, List
+from typing import Dict, Text, List, Optional, Any
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import Restarted
-from rasa_sdk.events import UserUtteranceReverted
-from rasa_sdk.events import SlotSet
-from rasa_sdk.events import ReminderScheduled
+from rasa_sdk.forms import FormValidationAction
+from rasa_sdk.events import FollowupAction, UserUtteranceReverted, SlotSet, ReminderScheduled, ReminderCancelled
+from rasa_sdk.types import DomainDict
 import requests
+import datetime
 
 class ActionBotOpening(Action):
 
@@ -54,6 +52,46 @@ class ActionSetDecisionPhase(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         return [SlotSet("decision_phase", True)]
+
+# Introduction form validation
+
+class ValidateIntroductionForm(FormValidationAction):
+    def name(self) -> Text:
+        return "validate_introduction_form"
+    
+    def validate_introductions_finished(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+
+        counter = tracker.get_slot('counter') + 1
+        rounds = tracker.get_slot('number_of_users') - 1
+
+
+        if counter == rounds:
+            # validation passes: form deactivates and counter set to 0
+            return {"introductions_finished": slot_value, "counter": 0.0}
+        else:
+            # validation fails: form stays active, but counter was incremented
+            return {"introductions_finished": None, "counter": counter}
+
+class ActionIncrementCounter(Action):
+
+    def name(self) -> Text:
+
+        return "action_increment_counter"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        counter = tracker.get_slot('counter') + 1
+
+        return [SlotSet("counter", counter)]
 
 class ActionSetGenreSlot(Action):
 
@@ -110,6 +148,51 @@ class ActionGreetUserByName(Action):
                 response="utter_nice_to_meet_you_name"
             )
             return []
+
+# Sets timer for positive evaluation, killed on user message            
+
+class ActionDelayedPositiveEvaluation(Action):
+
+    def name(self) -> Text:
+        return "action_delayed_positive_evaluation"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        date = datetime.datetime.now() + datetime.timedelta(seconds=5)
+
+        reminder = ReminderScheduled(
+            "EXTERNAL_positive_evaluation_timer",
+            trigger_date_time=date,
+            name="positive_evaluation_timer",
+            kill_on_user_message=True,
+        )
+
+        return [reminder]
+
+# Run when positive evaluation timer is triggered 
+
+class ActionTriggerPositiveEvaluation(Action):
+
+    def name(self) -> Text:
+        return "action_trigger_positive_evaluation"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(
+            response="utter_artist_praise_agree"
+        )
+
+        return []
 
 class ActionSetOpinionSlotAsGood(Action):
 

@@ -4,23 +4,14 @@ rules:
 - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
   steps:
   - intent: nlu_fallback
-  - action: utter_default
+  - action: utter_please_rephrase
 
-# Temporary debugging tools
+# EXTERNAL intent sent to tracker by Rasa when timer reaches 0
 
-- rule: get genre data
-  condition:
-  - slot_was_set:
-    - task_activated: true
-    - genre
-  steps: 
-  - intent: get_genre
-  - action: utter_genre
-
-- rule: Restart conversation at will
+- rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
   condition:
   - slot_was_set:
     - task_activated: true
   steps:
-  - intent: restart_conversation
-  - action: action_end_conversation
+  - intent: EXTERNAL_positive_evaluation_timer
+  - action: action_trigger_positive_evaluation

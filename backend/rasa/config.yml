@@ -18,9 +18,9 @@ pipeline:
   - name: DIETClassifier
     entity_recognition: False
     use_masked_language_model: True
-    number_of_transformer_layers: 4
-    embedding_dimension: 25
-    epochs: 200
+    number_of_transformer_layers: 2
+    embedding_dimension: 20
+    epochs: 50
     constrain_similarities: True
   - name: RegexEntityExtractor
     case_sensitive: False
@@ -35,14 +35,9 @@ pipeline:
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
 policies:
-  - name: RulePolicy
-    core_fallback_threshold: 0.5
-    core_fallback_action_name: action_default_fallback
-    enable_fallback_prediction: True
-    restrict_rules: False
-    check_for_contradictions: True
   - name: MemoizationPolicy
+  - name: RulePolicy
   - name: TEDPolicy
-    max_history: 10
-    epochs: 50
-    constrain_similarities: True
+    max_history: 5
+    epochs: 100
+    constrain_similarities: true

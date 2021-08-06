@@ -1,6 +1,49 @@
 const axios = require('axios')
+const { inspect } = require('util')
 const logger = require('../utils/logger')
-const {inspect} = require('util')
+var bot_messages = []
+
+const saveBotMessage = (message) => {
+
+  console.log(message.text)
+  bot_messages.push(message)
+
+}
+
+const getBotMessage = () => {
+
+  if (bot_messages.length != 0) {
+
+    const reply = bot_messages.shift()
+
+    let replies = []
+    const replyObject = {
+      body: reply.text,
+      user: 'Bot',
+      date: new Date().toISOString(),
+      id: 111
+    }
+
+    replies.push(replyObject)
+
+    let responses = []
+    for (let i = 0; i < replies.length; i++) {
+      const msg = {
+        id: 'botanswerid' + (replies[i].id + i),
+        room: 'Test',
+        body: replies[i].body,
+        senderId: 'bot',
+        user: {
+          name: 'Bot'
+        }
+      }
+      responses.push(msg)
+    }
+
+    console.log(responses)
+    return responses
+  } 
+}
 
 /**
  * Gets the Rasa text response from the Rasa HTTP server.
@@ -97,3 +140,5 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
 exports.getRasaRESTResponse = getRasaRESTResponse
 exports.setRasaUsersSlot = setRasaUsersSlot
 exports.setRasaLastMessageSenderSlot = setRasaLastMessageSenderSlot
+exports.saveBotMessage = saveBotMessage
+exports.getBotMessage = getBotMessage
