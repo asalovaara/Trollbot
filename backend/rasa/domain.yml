@@ -97,10 +97,10 @@ actions:
 - action_set_opinion_slot_as_good
 - action_set_task_slot
 - action_user_reacted
-  - action_trigger_positive_evaluation
-  - action_delayed_positive_evaluation
-  - action_set_artist_for_user
-  - action_check_users_active_user_slot
+- action_trigger_positive_evaluation
+- action_delayed_positive_evaluation
+- action_set_artist_for_user
+- action_check_users_active_user_slot
 
 responses:
   utter_opening:
