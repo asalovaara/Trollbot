@@ -25,15 +25,15 @@ const findEvents = async (client) => {
   await result.forEach(obj => {
 
     let arr = obj.events
+    const trimmedArr = removeIgnoredEvents(arr)
     
     arr.forEach(obj => {
 
+      console.log(obj)
       formatEvent(obj)
-      //console.log(obj)
 
     })
 
-    const trimmedArr = removeIgnoredEvents(arr)
     const logWithStories = formatStories(trimmedArr)
     logMessage(logWithStories)
   })
@@ -69,6 +69,7 @@ const writer = createWriter({
     { id: 'timestamp', title: 'timestamp' },
     { id: 'event', title: 'event' },
     { id: 'name', title: 'name' },
+    { id: 'userID', title: 'userID'},
     { id: 'text', title: 'message' },
     { id: 'policy', title: 'policy' },
     { id: 'confidence', title: 'confidence' },

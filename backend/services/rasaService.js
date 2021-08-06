@@ -8,13 +8,13 @@ const logger = require('../utils/logger')
  * @param {*} param1 
  * @returns 
  */
-const getRasaRESTResponse = async (room, { body, user }) => {
+const getRasaRESTResponse = async (room, { body, user}) => {
   logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
   try {
     logger.info(inspect(body))
     const response = await axios.post('http://localhost:5005/webhooks/rest/webhook', {
       'sender': room,
-      'message': body
+      'message': body,
     })
     logger.info(`response: ${inspect(response.data[0].text)}`)
 

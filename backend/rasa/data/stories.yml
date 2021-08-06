@@ -53,6 +53,7 @@ stories:
   - intent: suggest_artist # user suggests artist
   - slot_was_set: # task phase true check
     - task_activated: true  
+  - action: action_check_users_active_user_slot  
   - slot_was_set: # active user true check
     - active_user: true 
   - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
@@ -69,6 +70,7 @@ stories:
   - intent: suggest_artist # user suggests artist
   - slot_was_set: # task phase true check
     - task_activated: true  
+  - action: action_check_users_active_user_slot  
   - slot_was_set: # active user false check
     - active_user: false 
   - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
@@ -85,6 +87,7 @@ stories:
   - intent: likes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_check_users_active_user_slot  
   - slot_was_set: # active user true check
     - active_user: true     
   - action: action_set_genre_slot
@@ -101,6 +104,7 @@ stories:
   - intent: likes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_check_users_active_user_slot  
   - slot_was_set: # active user false check
     - active_user: false   
   - action: action_set_genre_slot
@@ -117,6 +121,7 @@ stories:
   - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_check_users_active_user_slot  
   - slot_was_set: # active user true check
     - active_user: true       
   - action: action_set_genre_slot
@@ -133,6 +138,7 @@ stories:
   - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
+  - action: action_check_users_active_user_slot  
   - slot_was_set: # active user false check
     - active_user: false 
   - action: action_set_genre_slot
