@@ -1,29 +1,31 @@
 var uuid = require('uuid')
 const logger = require('../utils/logger')
-// const { botAnswer } = require('./trollbot')
-const { rasaAnswer } = require('./trollbot')
+const { getRasaRESTResponse } = require('./rasaService')
 
-const messages = []
+let messages = []
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
   logger.info('addMessage', msg)
-  //{ body: 'Hello, I am a bot.', user: 'Bot', date: '1.1.2021', id: 0 }
   messages.push(msg)
   return msg
 }
 
-const getAnswer = async (message) => {
-  const response = await rasaAnswer({ message: message.body })
+const getAnswer = async (room, data) => {
+  const response = await getRasaRESTResponse(room, data)
+
+  logger.info('Rasa Rest Response', response)
 
   let responses = []
+
   for (let i = 0; i < response.length; i++) {
     const msg = {
       id: 'botanswerid' + (response[i].id + i),
       room: 'Test',
-      body: response[i].body,
       senderId: 'bot',
+      body: response[i].text,
       user: {
+        id: 'bot',
         name: 'Bot'
       }
     }
