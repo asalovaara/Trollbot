@@ -40,3 +40,7 @@ Use `rasa shell` to test conversations on the command line.
 Use `rasa shell nlu` to test the intent recognition on individual messages.
 
 (Currently broken) You can also use `rasa test` to run the automated tests.
+
+## Documentation
+
+[Opening sequence](https://github.com/sumuh/Trollbot/tree/main/documentation/trollbot-openingSequnce.png)

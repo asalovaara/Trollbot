@@ -17,9 +17,9 @@ pipeline:
   - name: DIETClassifier
     entity_recognition: True
     use_masked_language_model: True
-    number_of_transformer_layers: 4
-    embedding_dimension: 25
-    epochs: 200
+    number_of_transformer_layers: 2
+    embedding_dimension: 20
+    epochs: 50
     constrain_similarities: True
   - name: RegexEntityExtractor
     case_sensitive: False
@@ -42,6 +42,6 @@ policies:
     check_for_contradictions: True
   - name: MemoizationPolicy
   - name: TEDPolicy
-    max_history: 10
-    epochs: 50
-    constrain_similarities: True
+    max_history: 5
+    epochs: 100
+    constrain_similarities: true

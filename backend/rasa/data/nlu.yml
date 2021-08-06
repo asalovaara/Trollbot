@@ -56,7 +56,29 @@ nlu:
     - bye bye
     - see you later
     - ok bye
-    - thanks, bye!
+    - so long
+    - cya later
+    - till we meet again
+    - bb
+    - adieu
+    - adios
+    - cheerio
+    - ciao
+    - ciao for now
+    - talk to you later
+    - later
+    - laters
+    - i'm out of here
+    - well, i'm off
+    - farewell
+    - see you
+    - bye-bye
+    - i'm off
+    - catch you later
+    - see ya
+    - peace out
+    - smell ya later
+
 
 - intent: task_introduction
   examples: |
@@ -72,6 +94,19 @@ nlu:
     - Let's choose the artist now
     - Let's get to the task
     - Let's begin with the task
+    - So we got this task to pick the best artist
+    - Let's go ahead with this task
+    - It seems we need to choose the best artist of all time
+    - Appears our task is to pick the best band of all time
+    - So about this task we got, shall we get right on it
+    - They want us to choose the best band or artist of all time
+    - How about we go ahead with this band selection stuff
+    - Our objective is to pick the best artist
+    - We need to arrive to a consensus regarding the best artist of all time
+    - So our mission here is to pick the best band
+    - We need to come up with ideas for the best artist ever
+    - I think it's time we start tackling this artist selection problem
+    - So what is the best artist of all time?
 
 - intent: suggest_artist
   examples: |
