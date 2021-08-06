@@ -557,6 +557,40 @@ nlu:
     - That's not smart
     - let us not do that
 
+- intent: confusion
+  examples: |
+    - why?
+    - what for?
+    - what do you mean?
+    - huh?
+    - what?
+    - wh
+    - im a little lost here
+    - I'm a little confused
+    - I'm confused
+    - I don't understand
+    - i dont get it
+    - What's going on?
+    - uhh?
+    - ?
+
+- intent: thanks
+  examples: |
+    - thanks!
+    - ty
+    - thank you
+    - Thank you very much!
+    - thank you so much
+    - tysm
+    - thanks much
+    - many thanks!
+    - ty ty
+    - thanksies
+    - thank you friend
+    - oh thank you
+    - my gratitude
+    - i'm grateful
+
 - intent: offer_posting
   examples: |
     - I can do it
@@ -574,6 +608,10 @@ nlu:
     - may i have the honor?
     - no, i'll do it
     - let me post!
+    - no let me
+    - i want to
+    - can i do it?
+    - i'd like to
 
 - intent: post_decision
   examples: |
@@ -585,6 +623,105 @@ nlu:
     - [Ariana Grande](artist) is our final choice
     - [Ariana Grande](artist) is our decision
     - our choice is [Muse](artist)
+    - we choose [Ariana Grande](artist)
+    - our decision is [Queen](artist)
+
+- intent: praise_person
+  examples: |
+    - ur so right
+    - you have good taste!
+    - good choice!
+    - you, i like you
+    - excellent taste
+    - omg same
+    - you have good opinions
+    - bless your heart
+    - bless you
+    - praise be upon ye
+
+- intent: insult_person
+  examples: |
+    - fuck you
+    - screw you
+    - you're stupid
+    - you're so dumb
+    - ur an idiot
+    - ur stupid
+    - f u
+    - go fuck yourself
+    - go f urself
+    - eat shit
+    - i hate you
+    - ur awful
+    - shut up
+    - stfu
+    - shut the fuck up
+    - shut the hell up
+    - what the fuck
+    - wtf
+    - lmao are you serious
+    - you can't be fucking serious
+    - wtf are you for real?
+    - I can't believe you're that dumb
+    - you have zero taste
+    - are you dumb?
+    - are you daft?
+    - r u stupid
+    - r u fucking stupid
+    - you're wrong
+    - imbecile
+    - idiot
+    - yikes
+    - ok boomer
+    - are you fucking high?
+    - kys
+    - kill yourself
+    - go kill urself
+    - die
+    - die in a hole
+    - go die
+    - please die
+
+- intent: keysmash
+  examples: |
+    - asdf
+    - asdfghj
+    - ahsjksdfdg
+    - fjhldhfjddsf
+    - jdklkhfskdjhfdjfls
+    - sdhgskgdks
+    - jksahjkjhsa
+    - jhdskfhkhjasd
+    - asgfhahjsgdak
+    - adjsgdhs
+    - jksdhsdkhasjhdkjs
+    - skjdshdjhskjdh
+    - kskskskkjs
+    - asjhsgdhsjdgsh
+    - akjlhsakhjsahjkshk
+    - sghdhsgjhdgsjj
+    - dhgsfhdfs
+    - asgjhshfdf
+
+# User is helpful and gives the genre for an unknown artist
+- intent: tell_genre
+  examples: |
+    - the genre is [rock](told_genre)
+    - it's [pop](told_genre)
+    - he makes [metal](told_genre) music
+    - she makes mostly [alternative rock](told_genre) music
+    - their music is mainly [jazz](told_genre)
+    - [europop](told_genre) music
+    - [reggae](told_genre) genre
+    - her music is mostly [rap](told_genre)
+    - his songs are [blues](told_genre) for the most part
+    - they make [r&b](told_genre)
+    - her songs are usually [country](told_genre)
+    - mostly [classical](told_genre) music
+    - [EDM](told_genre) mainly
+    - [dubstep](told_genre)
+
+# Intents for debugging
 
 - intent: get_genre
   examples: |

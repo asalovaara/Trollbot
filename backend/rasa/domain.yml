@@ -14,6 +14,9 @@ intents:
   - dislikes_artist:
       use_entities:
         - artist
+  - tell_genre:
+      use_entities:
+        - told_genre
   - task_introduction
   - praising_claim
   - dismissing_claim
@@ -24,14 +27,21 @@ intents:
         - artist
   - agreement
   - disagreement
+  - confusion
+  - thanks
+  - keysmash
+  - insult_person
+  - praise_person
   - offer_posting
   - post_decision
   - get_genre
+  - restart_conversation
   - EXTERNAL_positive_evaluation_timer
 
 entities:
   - artist
   - name
+  - told_genre
 
 slots: 
   artist:
@@ -51,16 +61,20 @@ slots:
     type: text
     auto_fill: true
     influence_conversation: false
+  opinion:
+    type: text
+    influence_conversation: false
+  told_genre:
+    type: text
+    influence_conversation: false
   genre:
     type: text
     influence_conversation: false
   task_activated:
     type: bool
     initial_value: false
+    auto_fill: false
     influence_conversation: true
-  opinion:
-    type: text
-    influence_conversation: false
   decision_phase:
     type: bool
     initial_value: false
@@ -71,21 +85,22 @@ slots:
     influence_conversation: false
 
 actions:
-  - action_greet_users
-  - action_set_task_slot
-  - action_set_genre_slot
-  - action_greet_user_by_name
-  - action_set_opinion_slot_as_good
-  - action_set_opinion_slot_as_bad
-  - action_deflect_opinion_question
-  - action_handle_claim
-  - action_set_decision_phase
-  - action_post_decision
-  - action_end_conversation
-  - action_trigger_positive_evaluation
-  - action_delayed_positive_evaluation
-  - action_set_artist_for_user
-  - action_check_users_active_user_slot
+- action_deflect_opinion_question
+- action_end_conversation
+- action_greet_user_by_name
+- action_greet_users
+- action_handle_claim
+- action_post_decision
+- action_set_decision_phase
+- action_set_genre_slot
+- action_set_opinion_slot_as_bad
+- action_set_opinion_slot_as_good
+- action_set_task_slot
+- action_user_reacted
+- action_trigger_positive_evaluation
+- action_delayed_positive_evaluation
+- action_set_artist_for_user
+- action_check_users_active_user_slot
 
 responses:
   utter_opening:
@@ -188,6 +203,14 @@ responses:
   - text: "Who are you talking about?"
   - text: "Huh? Who?"
 
+  utter_unknown_artist:
+  - text: I don't know that one.
+  - text: I haven't heard of them.
+
+  utter_ask_genre:
+  - text: What's their genre?
+  - text: What kind of music do they make?
+
   utter_agreement:
   - text: "Okay!"
   - text: "Sure!"
@@ -197,6 +220,9 @@ responses:
   - text: "I don't understand."
   - text: "Can you repeat that with different words?"
   - text: "I'm sorry, I don't follow. Can you be more specific?"
+
+  utter_thanks:
+  - text: Thanks!
 
   utter_question_posting:
   - text: "Shall I post the decision?"
