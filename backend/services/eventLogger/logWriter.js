@@ -70,6 +70,7 @@ const writer = createWriter({
     { id: 'event', title: 'event' },
     { id: 'name', title: 'name' },
     { id: 'userID', title: 'userID'},
+    { id: 'username', title: 'username'},
     { id: 'text', title: 'message' },
     { id: 'policy', title: 'policy' },
     { id: 'confidence', title: 'confidence' },

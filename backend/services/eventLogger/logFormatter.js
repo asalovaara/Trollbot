@@ -4,7 +4,7 @@ const YAML = require('yaml')
 const defaultActions = ['action_listen', 'action_restart', 'action_session_start', 'action_default_fallback', 'action_deactivate_loop', 'action_revert_fall', 'action_two_stage_fallback', 'action_default_ask_affirmation', 'action_default_ask_rephrase', 'action_back', 'action_unlikely_intent']
 const ignoredEvents = ['user_featurization', 'users', 'artists', 'last_message_sender']
 let lastMessageSenderId
-
+let users = {}
 
 // formats log event timestamp to human-readable local time
 const formatTimestamp = (epoch) => {
@@ -52,6 +52,8 @@ const formatSlotSet = (obj) => {
     obj.story_step = 'active_user: ' + obj.value
   } else if (obj.name === 'last_message_sender') {
     lastMessageSenderId = obj.value
+  } else if (obj.name === 'users') {
+    users = obj.value
   }
   obj.event = 'slot value was set'
   obj.name = 'slot: ' + obj.name + ' | value: ' + obj.value
@@ -68,6 +70,7 @@ const formatEvent = (obj) => {
   } else if (obj.event === 'user') {
     obj.event = 'user uttered'
     obj.userID = lastMessageSenderId
+    obj.username = users[lastMessageSenderId].name
   } else if (obj.event === 'bot') {
     obj.event = 'bot uttered'
   } else if (obj.event === 'session_started') {
@@ -133,7 +136,8 @@ const addStoryTags = (i, end, stories, logArray) => {
 
 // removes events specified in the ignoredEvents array (improves log readability)
 const removeIgnoredEvents = (arr) => {
-  const trimmedArr = arr.filter(obj => !(ignoredEvents.includes(obj.event && obj.name)))
+  let trimmedArr = arr.filter(obj => !(ignoredEvents.includes(obj.event)))
+  trimmedArr = trimmedArr.filter(obj => !(ignoredEvents.includes(obj.name)))
 
   return trimmedArr
 }
