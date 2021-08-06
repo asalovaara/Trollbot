@@ -6,15 +6,6 @@ const User = require('../models/user')
 loginRouter.post('/', async (request, response) => {
   const body = request.body
   const logginUser = login(body.name)
-
-  const userModel = new User({
-    username: body.name,
-    passwordHash: '123'
-  })
-
-  const savedUser = await userModel.save()
-
-  logger.info('Saved user to database', savedUser)
   logger.info('Logged in as:', logginUser)
   response.status(200).send(logginUser)
 

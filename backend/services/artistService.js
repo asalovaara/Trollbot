@@ -2,27 +2,11 @@ const { MongoClient } = require('mongodb')
 const { getGenre } = require('./wikiService')
 const fs = require('fs')
 const readline = require('readline')
-const Artist = require('../models/artist')
-const logger = require('../utils/logger')
 
 const main = async () => {
   const mongoUrl = 'mongodb://localhost:27017'
   const client = new MongoClient(mongoUrl)
   const filepath = '../data/artists.txt'
-
-  const saveArtistToDatabase = async ({ professionalName }) => {
-
-    // Creates a new Artist model
-    const artistModel = new Artist({
-      professionalName
-    })
-
-    // Sends model to database and returns saved data object.
-    const savedArtist = await artistModel.save()
-
-    logger.info('Data added to database:', savedArtist)
-
-  }
 
   try {
     await client.connect()
