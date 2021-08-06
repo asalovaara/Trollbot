@@ -1,5 +1,5 @@
 const { addUser, removeUser } = require('../services/userService')
-const { addMessage, getAnswer } = require('../services/messagesService')
+const { addMessage } = require('../services/messagesService')
 const { getBotMessage, setRasaLastMessageSenderSlot } = require('../services/rasaService')
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
