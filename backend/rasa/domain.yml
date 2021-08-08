@@ -1,47 +1,70 @@
-version: '2.0'
-
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
+version: "2.0"
 
 intents:
-- suggest_artist:
-    use_entities:
-    - artist
-- closing
-- post_decision
-- request_for_suggestion_from_bot
-- dislikes_artist:
-    use_entities:
-    - artist
-- suggestion_to_make_decision
-- likes_artist:
-    use_entities:
-    - artist
-- suggestion_for_decision:
-    use_entities:
-    - artist
-- offer_posting
-- opening:
-    use_entities:
-    - name
-- task_introduction
-- praising_claim
-- dismissing_claim
-- agreement
-- disagreement
-- get_genre
-- restart_conversation
+  - opening:
+      use_entities:
+        - name
+  - closing
+  - suggest_artist:
+      use_entities:
+        - artist
+  - likes_artist:
+      use_entities:
+        - artist
+  - dislikes_artist:
+      use_entities:
+        - artist
+  - tell_genre:
+      use_entities:
+        - told_genre
+  - task_introduction
+  - praising_claim
+  - dismissing_claim
+  - request_for_suggestion_from_bot
+  - suggestion_to_make_decision
+  - suggestion_for_decision:
+      use_entities:
+        - artist
+  - agreement
+  - disagreement
+  - confusion
+  - thanks
+  - keysmash
+  - insult_person
+  - praise_person
+  - offer_posting
+  - post_decision
+  - get_genre
+  - restart_conversation
+  - EXTERNAL_positive_evaluation_timer
 
 entities:
-- artist
-- name
+  - artist
+  - name
+  - told_genre
 
-slots:
+slots: 
   artist:
     type: text
+    auto_fill: true
     influence_conversation: false
+  artists:
+    type: any
+    initial_value: {}
+  users:
+    type: any
+  active_user:
+    type: bool
+  last_message_sender:
+    type: bool
   name:
+    type: text
+    auto_fill: true
+    influence_conversation: false
+  opinion:
+    type: text
+    influence_conversation: false
+  told_genre:
     type: text
     influence_conversation: false
   genre:
@@ -50,10 +73,8 @@ slots:
   task_activated:
     type: bool
     initial_value: false
+    auto_fill: false
     influence_conversation: true
-  opinion:
-    type: text
-    influence_conversation: false
   decision_phase:
     type: bool
     initial_value: false
@@ -75,121 +96,144 @@ actions:
 - action_set_opinion_slot_as_bad
 - action_set_opinion_slot_as_good
 - action_set_task_slot
+- action_user_reacted
+- action_trigger_positive_evaluation
+- action_delayed_positive_evaluation
+- action_set_artist_for_user
+- action_check_users_active_user_slot
 
 responses:
   utter_opening:
-  - text: Hey!
-  - text: Hi!
-  - text: Hello!
-  - text: Howdy!
-  - text: Hi.
+  - text: "Hey!"
+  - text: "Hi!"
+  - text: "Hello!"
+  - text: "Howdy!"
+  - text: "Hi."
 
   utter_closing:
-  - text: Bye!
-  - text: Cya!
-  - text: So long!
+  - text: "Bye!"
+  - text: "Cya!"
+  - text: "So long!"
 
   utter_answer:
-  - text: Any other questions?
-  - text: What did you ask?
-  - text: Why are you asking me?
+  - text: "Any other questions?"
+  - text: "What did you ask?"
+  - text: "Why are you asking me?"
 
   utter_introduction:
-  - text: I'm Bot!
-  - text: You can call me Bot!
-  - text: My name's Bot.
-  - text: I'll go by Bot here.
+  - text: "I'm Bot!"
+  - text: "You can call me Bot!"
+  - text: "My name's Bot."
+  - text: "I'll go by Bot here."
 
   utter_nice_to_meet_you_name:
-  - text: Nice to meet you, {name}!
-  - text: Hi {name}!
-  - text: A pleasure to meet you, {name}.
+  - text: "Nice to meet you, {name}!"
+  - text: "Hi {name}!"
+  - text: "A pleasure to meet you, {name}."
 
   utter_task_introduction:
-  - text: So we need to decide on the best band or artist...
-  - text: We've been tasked with deciding on the best band or artist.
+  - text: "So we need to decide on the best band or artist..."
+  - text: "We've been tasked with deciding on the best band or artist."
 
   utter_back_to_task:
-  - text: Let's get back to the task at hand.
-  - text: Let's focus on the task.
-  - text: Come on, let's move on with the task!
+  - text: "Let's get back to the task at hand."
+  - text: "Let's focus on the task."
+  - text: "Come on, let's move on with the task!"
 
   utter_question_suggestions:
-  - text: I don't know... do you have any suggestions?
-  - text: Who would you suggest?
-  - text: What do you think?
-  - text: Ehh... what's your pick?
+  - text: "I don't know... do you have any suggestions?"
+  - text: "Who would you suggest?"
+  - text: "What do you think?"
+  - text: "Ehh... what's your pick?"
+
+  utter_request_suggestion:
+  - text: "What do you think we should choose then?"
 
   utter_artist_dismissal:
-  - text: Ew, {artist}, really? I guess there's no accounting for taste.
-  - text: '{artist}? Not doing it for me.'
+  - text: "Ew, {artist}, really? I guess there's no accounting for taste."
+  - text: "{artist}? Not doing it for me."
   - text: "{artist}? I'd rather listen to nails on a chalkboard."
   - text: "{artist}? I don't know, I find {genre} kind of boring."
-  - text: Ugh, {genre}. Pass!
-  - text: Really? {artist} is like the worst ever to do {genre}!
-  - text: Yikes. {artist} gives {genre} a bad reputation.
+  - text: "Ugh, {genre}. Pass!"
+  - text: "Really? {artist} is like the worst ever to do {genre}!"
+  - text: "Yikes. {artist} gives {genre} a bad reputation."
 
   utter_artist_dislike_polite:
-  - text: Okay, I don't like {artist} that much but it's cool if you do!
+  - text: "Okay, I don't like {artist} that much but it's cool if you do!"
 
   utter_artist_praise:
-  - text: What? {artist} is wonderful!
-  - text: '{artist} rocks and your opinion is dismissed.'
-  - text: Really? IMO, {artist} is one of the greats.
-  - text: Huh? You don't like {artist}? Well, I guess {genre} is meant for a discerning listener.
-  - text: That's just so wrong, {artist} is great!
+  - text: "What? {artist} is wonderful!"
+  - text: "{artist} rocks and your opinion is dismissed."
+  - text: "Really? IMO, {artist} is one of the greats."
+  - text: "Huh? You don't like {artist}? Well, I guess {genre} is meant for a discerning listener."
+  - text: "That's just so wrong, {artist} is great!"
 
   utter_artist_praise_agree:
-  - text: Great, I like {artist} too!
-  - text: I love {artist} too!
+  - text: "Great, I like {artist} too!"
+  - text: "I love {artist} too!"
 
   utter_insult_for_likes:
-  - text: Since you like {artist}, I don't think you could appreciate any good music anyway.
-  - text: Anything is better than your precious {artist}.
-  - text: If you're a fan of {artist} then you're already a lost cause.
-  - text: Your taste is so bad, it doesn't matter what I'll say.
+  - text: "Since you like {artist}, I don't think you could appreciate any good music anyway."
+  - text: "Anything is better than your precious {artist}."
+  - text: "If you're a fan of {artist} then you're already a lost cause."
+  - text: "Your taste is so bad, it doesn't matter what I'll say."
 
   utter_insult_for_dislikes:
-  - text: Since you hate {artist}, I don't think you could appreciate any good music anyway.
-  - text: If you're not a fan of {artist} then you're already a lost cause.
-  - text: Your taste is so bad, it doesn't matter what I'll say.
+  - text: "Since you hate {artist}, I don't think you could appreciate any good music anyway."
+  - text: "If you're not a fan of {artist} then you're already a lost cause."
+  - text: "Your taste is so bad, it doesn't matter what I'll say."
 
   utter_idk:
-  - text: IDK where to begin.
-  - text: You go first.
-  - text: Let's hear your opinion first!
-  - text: I have to think about it.
-  - text: I haven't decided yet.
+  - text: "IDK where to begin."
+  - text: "You go first."
+  - text: "Let's hear your opinion first!"
+  - text: "I have to think about it."
+  - text: "I haven't decided yet."
 
   utter_reject_claim:
-  - text: Your opinions suck.
-  - text: Yikes!
-  - text: That's so stupid.
-  - text: LOL nope.
-  - text: I doubt that.
-  - text: Yeah I'm not convinced.
+  - text: "Your opinions suck."
+  - text: "Yikes!"
+  - text: "That's so stupid."
+  - text: "LOL nope."
+  - text: "I doubt that."
+  - text: "Yeah I'm not convinced."
 
   utter_ask_clarification_of_artist:
-  - text: Who do you mean?
-  - text: Who are you talking about?
-  - text: Huh? Who?
+  - text: "Who do you mean?"
+  - text: "Who are you talking about?"
+  - text: "Huh? Who?"
+
+  utter_unknown_artist:
+  - text: I don't know that one.
+  - text: I haven't heard of them.
+
+  utter_ask_genre:
+  - text: What's their genre?
+  - text: What kind of music do they make?
 
   utter_agreement:
-  - text: Okay!
-  - text: Sure!
-  - text: Yeah, OK.
+  - text: "Okay!"
+  - text: "Sure!"
+  - text: "Yeah, OK."
 
-  utter_default:
-  - text: I don't understand.
-  - text: Can you repeat that with different words?
-  - text: I'm sorry, I don't follow. Can you be more specific?
+  utter_please_rephrase:
+  - text: "I don't understand."
+  - text: "Can you repeat that with different words?"
+  - text: "I'm sorry, I don't follow. Can you be more specific?"
+
+  utter_thanks:
+  - text: Thanks!
 
   utter_question_posting:
-  - text: Shall I post the decision?
-  - text: Can I post our decision?
+  - text: "Shall I post the decision?"
+  - text: "Can I post our decision?"
 
   utter_post_decision:
-  - text: Our decision is {final_decision}
+  - text: "Our decision is {final_decision}"
 
   utter_genre:
-  - text: '{genre}'
+  - text: "{genre}"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

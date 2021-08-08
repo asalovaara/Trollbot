@@ -7,7 +7,7 @@ const logger = require('./utils/logger')
 const { API_URL, MONGODB_URI } = require('./utils/config')
 const mongoose = require('mongoose')
 
-const trollbotRouter = require('./controllers/trollbotRouter')
+const botRouter = require('./controllers/botRouter')
 const rasaRouter = require('./controllers/rasaRouter')
 const loginRouter = require('./controllers/loginRouter')
 const roomRouter = require('./controllers/roomRouter')
@@ -30,7 +30,7 @@ app.use(cors()) // to enable cross-origin resource sharing
 app.use(express.static(path.join(__dirname, 'build')))
 
 // Routers
-app.use(`${API_URL}/trollbot`, trollbotRouter)
+app.use(`${API_URL}/trollbot`, botRouter)
 app.use(`${API_URL}/rasa`, rasaRouter)
 app.use(`${API_URL}/login`, loginRouter)
 app.use(`${API_URL}/rooms`, roomRouter)
