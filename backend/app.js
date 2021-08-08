@@ -1,9 +1,11 @@
 const express = require('express')
+require('express-async-errors')
 const cors = require('cors')
 const path = require('path')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
-const { API_URL } = require('./utils/config')
+const { API_URL, MONGODB_URI } = require('./utils/config')
+const mongoose = require('mongoose')
 
 const botRouter = require('./controllers/botRouter')
 const rasaRouter = require('./controllers/rasaRouter')
@@ -11,6 +13,16 @@ const loginRouter = require('./controllers/loginRouter')
 const roomRouter = require('./controllers/roomRouter')
 
 const app = express()
+
+logger.info('connecting to Mongoose')
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    logger.info('connected to MongoDB')
+  })
+  .catch((error) => {
+    logger.info('error connection to MongoDB:', error.message)
+  })
 
 app.use(express.json()) // for parsing JSON
 app.use(express.urlencoded({ extended: true }))

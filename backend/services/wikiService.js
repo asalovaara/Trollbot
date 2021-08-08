@@ -93,4 +93,4 @@ const getGenre = async (artist) => {
   }
 }
 
-module.exports = getGenre
+module.exports = { getGenre }
