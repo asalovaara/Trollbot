@@ -17,16 +17,13 @@ module.exports = {
 
       // Listen for new messages
       socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
-        logger.info('Data', data)
         const message = addMessage(roomId, data)
-        logger.info('user message from backend', message)
         io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
       })
 
       // Bot reply
       socket.on(events.BOT_ANSWER_EVENT, async (data) => {
         const answers = await getAnswer(data)
-        logger.info('Bot answer', answers)
 
         // Bot reply timeout chain
         setTimeout(() => {
@@ -39,7 +36,7 @@ module.exports = {
               io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
             })
           }, 2000)
-        }, 500)  
+        }, 500)
 
       })
 
