@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { MongoClient } = require('mongodb')
 const { getGenre } = require('./wikiService')
 const fs = require('fs')
