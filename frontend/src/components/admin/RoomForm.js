@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Grid, TextField, Button, Select, MenuItem, InputLabel } from '@material-ui/core'
+import { Box, Grid, TextField, Button, Select, MenuItem, InputLabel, Typography } from '@material-ui/core'
 
 const RoomForm = () => {
   const [roomName, setRoomName] = useState('')
@@ -20,6 +20,7 @@ const RoomForm = () => {
 
   return (
     <Box>
+      <Typography variant="h4" paragraph>Create Room</Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12}>

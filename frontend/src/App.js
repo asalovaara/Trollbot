@@ -31,7 +31,7 @@ const App = () => {
 
   const conditionalRender = () => {
     // Directs to Admin page instead of room selection.
-    if (user) return <AdminPage />
+    if (user && user.name === 'Admin') return <AdminPage />
     if (!user) return <Login user={user} setUser={setUser} />
 
     return (
