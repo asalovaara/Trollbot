@@ -1,4 +1,3 @@
-// import React, { useState } from 'react'
 import React, { useEffect, useState } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
@@ -9,6 +8,7 @@ import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/groupchat/Login'
 import loginService from './services/login'
 import { Container, Box } from '@material-ui/core'
+import AdminPage from './components/admin/AdminPage'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -30,18 +30,15 @@ const App = () => {
   }, [])
 
   const conditionalRender = () => {
-    if (!user) {
-      return (
-        <>
-          <Login user={user} setUser={setUser} />
-        </>
-      )
-    }
+    // Directs to Admin page instead of room selection.
+    if (user) return <AdminPage />
+    if (!user) return <Login user={user} setUser={setUser} />
+
     return (
-      <>
+      <Switch>
         <Route exact path='/' component={Home} />
         <Route exact path='/:roomId' component={ChatRoom} />
-      </>
+      </Switch>
     )
   }
 
@@ -50,9 +47,7 @@ const App = () => {
       <Navigation user={user} setUser={setUser} />
       <Container>
         <Box mt={10} minWidth={3 / 4}>
-          <Switch>
-            {conditionalRender()}
-          </Switch>
+          {conditionalRender()}
         </Box>
       </Container>
     </div>
