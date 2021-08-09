@@ -12,12 +12,10 @@ const { getArtist } = require('./musicbrainzService')
 
 const main = async () => {
   const filepath = '../data/artists.txt'
-  // added this url here because getting it from config/env didnt work for some reason
-  const atlas_uri = "mongodb+srv://trollbot:1234567890@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority"
 
   try {
 
-    mongoose.connect(atlas_uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    mongoose.connect(MONGODB_URI { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => {
         console.log('connected to MongoDB')
       })
