@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Grid, TextField, Button, Select, MenuItem, InputLabel, Typography } from '@material-ui/core'
 
-const RoomForm = () => {
+const RoomForm = ({ rooms }) => {
   const [roomName, setRoomName] = useState('')
   const [botType, setBotType] = useState(10)
 
@@ -16,6 +16,12 @@ const RoomForm = () => {
     event.preventDefault()
     const bot = (botType < 20) ? 'Normal' : 'Troll'
     console.log('Create room: ', roomName, bot)
+    const room = {
+      name: roomName,
+      botType: bot,
+    }
+    rooms.push(room)
+    console.log('Room names', rooms)
   }
 
   return (

@@ -7,8 +7,14 @@ import { Box } from '@material-ui/core'
 
 const AdminPage = () => {
   const rooms = [
-    { name: 'A room', },
-    { name: 'Second Room' }
+    {
+      name: 'A room',
+      botType: 'Normal',
+    },
+    {
+      name: 'Second Room',
+      botType: 'Troll'
+    },
   ]
 
   console.log(rooms)
@@ -17,8 +23,8 @@ const AdminPage = () => {
       <Helmet >
         <title>{`Admin Page - ${TITLE}`}</title>
       </Helmet>
-      <RoomForm />
-      <RoomList />
+      <RoomForm rooms={rooms} />
+      <RoomList rooms={rooms} />
     </Box>
   )
 
