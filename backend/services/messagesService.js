@@ -1,6 +1,7 @@
 var uuid = require('uuid')
 const logger = require('../utils/logger')
 const { getRasaRESTResponse } = require('./rasaService')
+// const { rasaAnswer } = require('./trollbot')
 
 let messages = []
 
