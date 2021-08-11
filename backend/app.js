@@ -11,6 +11,7 @@ const botRouter = require('./controllers/botRouter')
 const rasaRouter = require('./controllers/rasaRouter')
 const loginRouter = require('./controllers/loginRouter')
 const roomRouter = require('./controllers/roomRouter')
+const adminRouter = require('./controllers/adminRouter')
 
 const app = express()
 
@@ -34,6 +35,7 @@ app.use(`${API_URL}/trollbot`, botRouter)
 app.use(`${API_URL}/rasa`, rasaRouter)
 app.use(`${API_URL}/login`, loginRouter)
 app.use(`${API_URL}/rooms`, roomRouter)
+app.use(`${API_URL}/admin`, adminRouter)
 
 // Static Build
 app.get('/*', (request, response) => {
