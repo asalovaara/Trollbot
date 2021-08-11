@@ -29,7 +29,7 @@ const findEvents = async (client) => {
     
     arr.forEach(obj => {
 
-      console.log(obj)
+      // console.log(obj)
       formatEvent(obj)
 
     })
@@ -69,6 +69,7 @@ const writer = createWriter({
     { id: 'timestamp', title: 'timestamp' },
     { id: 'event', title: 'event' },
     { id: 'name', title: 'name' },
+    { id: 'source', title: 'event source'},
     { id: 'userID', title: 'userID'},
     { id: 'username', title: 'username'},
     { id: 'text', title: 'message' },
