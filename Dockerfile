@@ -1,4 +1,4 @@
-FROM node:13.12.0-alpine
+FROM node:14-slim
 
 ENV SKIP_PREFLIGHT_CHECK=true
 ENV PUBLIC_URL=/trollbot
@@ -10,6 +10,8 @@ ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
 
 WORKDIR /app
 COPY . ./
+
+RUN apt-get update || : && apt-get install python -y
 
 # Build frontend
 
