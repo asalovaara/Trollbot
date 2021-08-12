@@ -1,10 +1,13 @@
 const { readFile } = require('./yamlReader')
 const YAML = require('yaml')
+const diff = require('deep-diff').diff
 
 const defaultActions = ['action_listen', 'action_restart', 'action_session_start', 'action_default_fallback', 'action_deactivate_loop', 'action_revert_fall', 'action_two_stage_fallback', 'action_default_ask_affirmation', 'action_default_ask_rephrase', 'action_back', 'action_unlikely_intent']
-const ignoredEvents = ['user_featurization', 'users', 'artists', 'last_message_sender']
+const backendEvents = ['users', 'last_message_sender']
+const ignoredEvents = ['user_featurization']
 let lastMessageSenderId
 let users = {}
+let artists = {}
 
 // formats log event timestamp to human-readable local time
 const formatTimestamp = (epoch) => {
@@ -21,6 +24,16 @@ const formatIntent = (obj) => {
     const intentName = obj.parse_data.intent.name
     obj.intent = intentName
     obj.story_step = 'intent: ' + intentName
+  }
+
+  return obj
+}
+
+const formatEventSource = (obj) => {
+  if (backendEvents.includes(obj.name)) {
+    obj.source = 'Trollbot Backend'
+  } else {
+    obj.source = 'Rasa Server'
   }
 
   return obj
@@ -47,22 +60,55 @@ const formatAction = (obj) => {
   return obj
 }
 
+/**
+ * formats the log appearance of slot events
+ * @param {*} obj tracker event object
+ * @returns 
+ */
+
 const formatSlotSet = (obj) => {
+  obj.event = 'slot value was set'
   if (obj.name === 'active_user') {
     obj.story_step = 'active_user: ' + obj.value
   } else if (obj.name === 'last_message_sender') {
     lastMessageSenderId = obj.value
   } else if (obj.name === 'users') {
-    users = obj.value
+    const temp = obj.value
+    obj.value = formatObjectSlotValue(users, obj.value)
+    users = temp
+  } else if (obj.name === 'artists') {
+    const temp = obj.value
+    obj.value = formatObjectSlotValue(artists, obj.value)
+    artists = temp
   }
-  obj.event = 'slot value was set'
-  obj.name = 'slot: ' + obj.name + ' | value: ' + obj.value
+
+  obj.name = 'slot: ' + obj.name + ' | ' + obj.value
 
   return obj
 }
 
+/**
+ * formats the log appearance of object slot values to display only changes instead of the entire object tree
+ * @param {*} oldValue slot object tree before update
+ * @param {*} newValue slot object tree after update
+ * @returns string indicating what was changed or 'no changes' if nothing was changed
+ */
+
+const formatObjectSlotValue = (oldValue, newValue) => {
+  const changes = diff(oldValue, newValue)
+  if (changes !== undefined) {
+    const path = JSON.stringify(changes[0].path).replaceAll(/["\[\]]/g, '').replaceAll(',', '.')
+    const value = JSON.stringify(changes[0].rhs)
+
+    return path + ': ' + value
+  } else {
+    return 'no changes'
+  }
+}
+
 // formats the log appearance of different event types
 const formatEvent = (obj) => {
+  obj = formatEventSource(obj)
   if (obj.event === 'action') {
     obj = formatAction(obj)
   } else if (obj.event === 'slot') {
@@ -70,7 +116,9 @@ const formatEvent = (obj) => {
   } else if (obj.event === 'user') {
     obj.event = 'user uttered'
     obj.userID = lastMessageSenderId
-    obj.username = users[lastMessageSenderId].name
+    if (lastMessageSenderId !== undefined) {
+      obj.username = users[lastMessageSenderId].name
+    }
   } else if (obj.event === 'bot') {
     obj.event = 'bot uttered'
   } else if (obj.event === 'session_started') {

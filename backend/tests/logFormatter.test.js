@@ -104,7 +104,7 @@ test('correctly formats response event', () => {
 test('correctly formats slot event', () => {
   const formattedEvent = formatter.formatEvent(slotEvent)
   expect(formattedEvent.event).toEqual('slot value was set')
-  expect(formattedEvent.name).toEqual('slot: test_passed | value: true')
+  expect(formattedEvent.name).toEqual('slot: test_passed | true')
 })
 
 test('correctly formats user utterance', () => {
