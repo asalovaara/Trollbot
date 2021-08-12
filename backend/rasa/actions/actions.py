@@ -277,10 +277,10 @@ class ActionDeflectOpinionQuestion(Action):
 # If the artist slot is unfilled (i.e. the user says something like "she is so cool" without clarifying the artist first),
 # then the bot asks the user to clarify who the user is talking about.
 # Otherwise the bot insults the expressed opinion.
-class ActionHandleClaim(Action):
+class ActionHandleClaimTroll(Action):
     def name(self) -> Text:
 
-        return "action_handle_claim"
+        return "action_handle_claim_troll"
 
     def run(self,
         dispatcher: CollectingDispatcher,
@@ -299,7 +299,36 @@ class ActionHandleClaim(Action):
                 response="utter_reject_claim"
             )
             return []
-    
+
+class ActionHandleClaimNice(Action):
+    def name(self) -> Text:
+
+        return "action_handle_claim_nice"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        artist = tracker.get_slot('artist')
+        opinion = tracker.get_slot('opinion')
+
+        if artist is None:
+            dispatcher.utter_message(
+                response="utter_ask_clarification_of_artist"
+            )
+            return [SlotSet("opinion", None)]
+        elif opinion == "good":
+            dispatcher.utter_message(
+                response="utter_artist_praise_agree"
+            )
+            return []
+        else:
+            dispatcher.utter_message(
+                response="utter_neutral_comment"
+            )
+            return []
+
 class ActionSetArtistForUser(Action):
     
     def name(self) -> Text:

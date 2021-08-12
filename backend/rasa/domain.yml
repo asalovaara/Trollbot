@@ -89,7 +89,8 @@ actions:
 - action_end_conversation
 - action_greet_user_by_name
 - action_greet_users
-- action_handle_claim
+- action_handle_claim_nice
+- action_handle_claim_troll
 - action_post_decision
 - action_set_decision_phase
 - action_set_genre_slot

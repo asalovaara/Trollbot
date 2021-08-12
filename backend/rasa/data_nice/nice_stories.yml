@@ -1,0 +1,281 @@
+version: "2.0"
+
+stories:
+
+# Opening pattern 1
+- story: from opening to task
+  steps:
+  - intent: opening
+  - slot_was_set:
+    - task_activated: false
+  - action: action_greet_user_by_name
+  - intent: opening
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+
+- story: from opening to task
+  steps:
+  - intent: opening
+  - slot_was_set:
+    - task_activated: false
+  - action: action_greet_user_by_name
+  - intent: task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+
+# Opening pattern 2 and Task introduction pattern 1
+# TODO: NEEDS TO BE A FALLBACK OF SOME KIND. OR COUNTS USER MESSAGES OTHERWISE
+- story: from no introduction to task
+  steps:
+  - or:
+    - intent: closing
+    - intent: suggest_artist
+    - intent: likes_artist
+    - intent: dislikes_artist
+    - intent: request_for_suggestion_from_bot
+    - intent: suggestion_to_make_decision
+    - intent: suggestion_for_decision
+    - intent: agreement
+    - intent: disagreement
+  - slot_was_set:
+    - task_activated: false  
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+
+# Task introduction pattern
+- story: handle user introducing task
+  steps:
+  - intent: task_introduction
+  - slot_was_set:
+    - task_activated: false
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+
+# Discussion
+
+- story: user suggests artist
+  steps:
+  - or:
+    - intent: suggest_artist
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: action_set_artist_for_user
+  - action: action_delayed_positive_evaluation
+
+- story: user dislikes artist
+  steps:
+  - or:
+    - intent: suggest_artist
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - artist: filled
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: bad
+  - action: action_set_artist_for_user
+  - action: utter_request_suggestion
+
+- story: user praises artist
+  steps:
+  - intent: praising_claim
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: good
+  - action: action_set_artist_for_user
+  - action: action_listen
+
+- story: user hates on artist
+  steps:
+  - intent: dismissing_claim
+  - slot_was_set:
+    - task_activated: true
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: action_set_artist_for_user
+  - action: action_listen
+
+# TODO have the bot answer with an actual opinion or suggestion
+# - story: user asks the bot for its opinion
+#   steps:
+#   - intent: request_for_suggestion_from_bot
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: action_make_suggestion # ACTION DOES NOT EXIST YET
+
+# TODO have the story be after one user has had intent "likes_artist" etc
+# and the dismissing_claim is in response to that
+# - story: request suggestion after dismissal
+#   steps:
+#   - intent: dismissing_claim
+#   - action: utter_request_suggestion
+
+# Unknown artist, user tells genre
+- story: ask for genre of unknown artist
+  steps:
+  - or:
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+    - intent: suggest_artist
+    - intent: dislikes_artist
+  - slot_was_set:
+    - task_activated: true
+  - slot_was_set: # active user true check
+    - active_user: true
+  - action: action_set_genre_slot
+  - action: action_set_artist_for_user
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion: filled
+  - action: action_set_artist_for_user
+  - slot_was_set:
+    - genre: None
+  - action: utter_unknown_artist
+  - action: utter_ask_genre
+  - intent: tell_genre
+  - slot_was_set:
+    - told_genre: filled
+  - action: utter_thanks
+
+# TODO: recognise the target of the insult and react accordingly
+- story: user insults
+  steps:
+  - intent: insult_person
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+
+# TODO: recognise the target of the insult and react accordingly
+- story: user praises bot
+  steps:
+  - intent: praise_person
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+
+# TODO create timer that stops agreement if another user disagrees
+# Decision phase start by bot; always agree
+- story: start decision phase by bot approval
+  steps:
+  - intent: suggestion_to_make_decision
+  - slot_was_set:
+    - task_activated: true
+  - action: utter_agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+
+# TODO create timer that waits for other users' input
+# and prevents reaching decision if someone disagrees
+# Suggestion_for_decision_pattern_1
+- story: user suggests decision auto-success
+  steps:
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: action_listen
+  - intent: agreement
+  - action: utter_agreement
+  - checkpoint: decision_reached
+
+# Suggestion_for_decision_pattern_2
+- story: user suggests decision auto-success
+  steps:
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: action_listen
+  - intent: disagreement
+  - action: utter_request_suggestion
+
+# Posting_decision_pattern1
+- story: bot posts decision
+  steps:
+  - checkpoint: decision_reached
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: utter_question_posting
+  - or:
+    - intent: agreement
+    - intent: thanks
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision: filled
+  - action: utter_post_decision
+  - checkpoint: goodbye
+
+# Posting_decision_pattern2
+- story: user offers to post decision
+  steps:
+  - checkpoint: decision_reached 
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: utter_question_posting
+  - or:
+    - intent: offer_posting
+    - intent: disagreement
+  - action: utter_agreement
+  - checkpoint: user_should_post
+
+# Posting_decision_pattern3
+- story: user posts decision
+  steps:
+  - checkpoint: user_should_post
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - intent: post_decision
+  - slot_was_set:
+    - artist: filled
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision: filled
+  - checkpoint: goodbye
+
+# Goodbye_pattern
+- story: closing
+  steps:
+  - checkpoint: goodbye
+  - action: utter_closing
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+    - intent: thanks
+  - action: action_end_conversation
