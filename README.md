@@ -19,9 +19,13 @@ Single page web application using Node.js and React.
 Read the README at backend folder.
 
 Remember to train the Rasa bots when you first pull the new directory:
+
 Nicebot: `rasa train --data data_nice --out models_nice`
+
 Trollbot: `rasa train --data data_troll --out models_troll`
+
 (The data for Nicebot comes from directory `data_nice` and the model is saved into directory `models_nice`.)
+
 The nlu file is not shared between Nicebot and Trollbot. If you modify nice_nlu.yml, apply the same change to troll_nlu.yml as well.
 
 ## Usage
@@ -35,7 +39,9 @@ In backend/rasa folder:
 Use `rasa run actions` to run Rasa action server (required for custom actions).
 
 Use `rasa run -m models_nice --enable-api --cors "*"` to run Rasa server for Nicebot 
+
 or `rasa run -m models_troll --enable-api --cors "*"` for Trollbot.
+
 (The `-m` argument chooses the latest model in the specified directory.)
 
 In frontend folder: run frontend with `npm start`.
