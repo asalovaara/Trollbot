@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import socketIOClient from 'socket.io-client'
 import socketService from './socket'
 import loginService from './login'
-import { SOCKET_SERVER_URL } from '../config'
+import { SOCKET_SERVER_URL, SOCKET_ENDPOINT } from '../config'
 
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
@@ -58,7 +58,7 @@ const useChat = (roomId) => {
     if (!user) {
       return
     }
-    socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
+    socketRef.current = socketIOClient(SOCKET_ENDPOINT, {
       query: { roomId, name: user.name },
       path: SOCKET_SERVER_URL + '/socket.io/'
     })

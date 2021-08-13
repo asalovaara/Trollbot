@@ -51,12 +51,12 @@ const getBotMessage = () => {
  * @param {*} param1 
  * @returns 
  */
-const getRasaRESTResponse = async (room, { body, user }) => {
+const getRasaRESTResponse = async ({ body, user }) => {
   logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
   try {
     logger.info(inspect(body))
-    const response = await axios.post('http://trollbot:5005/webhooks/rest/webhook', {
-      'sender': room,
+    const response = await axios.post('http://trollbot:5005/webhooks/callback/webhook', {
+      'sender': user.name,
       'message': body
     })
     logger.info('response: ${inspect(response.data[0].text)}')
@@ -105,10 +105,10 @@ const setRasaUsersSlot = async (channel_id, users) => {
  * @returns 
  */
 const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
-  logger.info('Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).')
+  logger.info(`Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).`)
   try {
-    
-    let tracker = await axios.get('http://localhost:5005/conversations/${channel_id}/tracker')
+    console.log('setRasaLastMessageSenderSlot', channel_id)
+    let tracker = await axios.get(`http://localhost:5005/conversations/${channel_id}/tracker`)
     let users = tracker.data.slots.users
 
     for (const user in users) {
@@ -117,18 +117,18 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
     }
     users[user_id].active = true
     
-    await axios.post('http://localhost:5005/conversations/${channel_id}/tracker/events', {
+    await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'last_message_sender',
       'value': user_id
     })
-    let response = await axios.post('http://localhost:5005/conversations/${channel_id}/tracker/events', {
+    let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
       'value': users
     })
     if (response) {
-      logger.info('Set users slot value in Rasa server for channel ${channel_id}')
+      logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
       return true
     }
   } catch (e) {
