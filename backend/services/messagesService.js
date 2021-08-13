@@ -7,7 +7,7 @@ let messages = []
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
-  logger.info('addMessage', msg)
+  logger.info('addMessage', room, message)
   messages.push(msg)
   return msg
 }
