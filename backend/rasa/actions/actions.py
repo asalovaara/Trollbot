@@ -133,7 +133,7 @@ class ActionSetGenreSlot(Action):
         return [SlotSet("genre", genre), SlotSet("artists", artists), SlotSet("artist", new_artist)]
 
 # Bot utters a greeting.
-# Greets the user by name if the name slot contains it
+# Greets the user by name if the user's name is set in the users slot.
 # Otherwise greets without a name
 class ActionGreetUserByName(Action):
 
@@ -146,16 +146,21 @@ class ActionGreetUserByName(Action):
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        name = tracker.get_slot('name')
-
-        if name is None:
+        users = tracker.get_slot('users')
+        last_message_sender = tracker.get_slot('last_message_sender')
+        print(users)
+        print(last_message_sender)
+        if users[last_message_sender]['name'] is None:
             dispatcher.utter_message(
                 response="utter_opening"
             )
             return []
         else:
+            print(users[last_message_sender]['name'])
+            
             dispatcher.utter_message(
-                response="utter_nice_to_meet_you_name"
+                response="utter_nice_to_meet_you_name",
+                name=users[last_message_sender]['name']
             )
             return []
 
@@ -379,3 +384,23 @@ class checkUsersActiveUserSlot(Action):
         print('Last_message_sender not found.')
         return [SlotSet('active_user', False)]
         
+class dismissArtist(Action):
+    def name(self) -> Text:
+
+        return "action_dismiss_artist"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        users = tracker.get_slot('users')
+        last_message_sender = tracker.get_slot('last_message_sender')
+        for user in users:
+            if user != last_message_sender and users[user]['liked_artist'] is not None:
+                dispatcher.utter_message(response="utter_artist_dismissal_multiuser", 
+                name=user)
+                return []
+        
+        dispatcher.utter_message(response="utter_artist_dismissal")
+        return []

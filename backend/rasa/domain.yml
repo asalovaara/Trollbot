@@ -158,6 +158,9 @@ responses:
   - text: "Really? {artist} is like the worst ever to do {genre}!"
   - text: "Yikes. {artist} gives {genre} a bad reputation."
 
+  utter_artist_dismissal_multiuser:
+  - text: "Really? That's even worse than what {name} came up with."
+
   utter_artist_dislike_polite:
   - text: "Okay, I don't like {artist} that much but it's cool if you do!"
 

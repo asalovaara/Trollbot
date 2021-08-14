@@ -109,7 +109,8 @@ stories:
   - slot_was_set: # tell rasa opinion slot was set
     - opinion
   - action: action_set_artist_for_user # append the liked artist list of the user object
-  - action: utter_artist_dismissal # dismiss user's suggested artist
+  - action: action_dismiss_artist # dismiss user's suggested artist
+  #- action: utter_artist_dismissal # dismiss user's suggested artist
 
 - story: inactive user suggests artist 
   steps:
