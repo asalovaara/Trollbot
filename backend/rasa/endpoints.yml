@@ -26,12 +26,12 @@ action_endpoint:
 #    use_ssl: <whether or not the communication is encrypted, default false>
 
 # UNCOMMENT TO ACTIVATE TRACKER STORE (requires locally run mongodb, see backend README)
-# tracker_store:
-#   type: mongod
-#   url: mongodb://localhost:27017
-#   db: rasalogs
-#   username:
-#   password:
+tracker_store:
+  type: mongod
+  url: mongodb://localhost:27017
+  db: rasalogs
+  username:
+  password:
 
 # stuff to add to readme if needed 
 

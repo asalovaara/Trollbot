@@ -7,6 +7,7 @@ let userEvent
 let botEvent
 let slotEvent
 let ignoredEvent
+let usersEvent
 
 beforeEach(() => {
   defaultActionEvent = {
@@ -81,6 +82,21 @@ beforeEach(() => {
     timestamp: 1627495216.0099509,
     use_text_for_featurization: false
   }
+
+  usersEvent = {
+    event: 'slot',
+    timestamp: 1628705618.6094093,
+    name: 'users',
+    value: {
+      '5i-czrVvAjTuJf1mAAAB': {
+        id: '753fd7c8-a973-4333-a6b5-085b9107ddc6',
+        senderId: '5i-czrVvAjTuJf1mAAAB',
+        name: 'Tester',
+        room: 'testroom'
+      }
+    }
+  }
+
 })
 
 test('correctly formats default action event', () => {
@@ -123,6 +139,10 @@ test('correctly formats timestamp', () => {
   const date = new Date(Date.UTC(2021, 6, 28, 18, 0, 15)).toLocaleString()
   expect(formattedEvent.timestamp).toEqual(date)
 })
+
+// test('correctly formats new user in users', () => {
+//   const formattedEvent = formatter.formatEvent(usersEvent)
+// })
 
 test('removes ignored events from the log', () => {
   const arr = [ignoredEvent, defaultActionEvent, ignoredEvent]
