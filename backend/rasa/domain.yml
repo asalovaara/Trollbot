@@ -101,6 +101,7 @@ actions:
 - action_delayed_positive_evaluation
 - action_set_artist_for_user
 - action_check_users_active_user_slot
+- action_dismiss_artist
 
 responses:
   utter_opening:
