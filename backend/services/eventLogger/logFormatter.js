@@ -63,7 +63,7 @@ const formatAction = (obj) => {
 /**
  * formats the log appearance of slot events
  * @param {*} obj tracker event object
- * @returns 
+ * @returns
  */
 
 const formatSlotSet = (obj) => {
@@ -97,7 +97,7 @@ const formatSlotSet = (obj) => {
 const formatObjectSlotValue = (oldValue, newValue) => {
   const changes = diff(oldValue, newValue)
   if (changes !== undefined) {
-    const path = JSON.stringify(changes[0].path).replaceAll(/["\[\]]/g, '').replaceAll(',', '.')
+    const path = JSON.stringify(changes[0].path).replace(/["\[\]]/g, '').replace(/,/g, '.')
     const value = JSON.stringify(changes[0].rhs)
 
     return path + ': ' + value
@@ -139,7 +139,7 @@ const formatStories = (logArray) => {
   return matchLogWithStories(stories, logArray)
 }
 
-// matches event log with stories, adds corresponding story tags to the log 
+// matches event log with stories, adds corresponding story tags to the log
 const matchLogWithStories = (stories, logArray) => {
   let storyStart = 0
 

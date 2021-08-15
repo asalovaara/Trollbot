@@ -44,6 +44,9 @@ const addUser = (senderId, room, name) => {
   return user
 }
 
+const getBotRoom = () => {
+  return users[0].room
+}
 
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id)
@@ -55,4 +58,4 @@ const getUser = (id) => users.find((user) => user.id === id)
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room)
 
-module.exports = { login, addUser, removeUser, getUser, getUsersInRoom }
+module.exports = { login, addUser, removeUser, getUser, getUsersInRoom, getBotRoom }
