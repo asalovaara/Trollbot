@@ -33,7 +33,7 @@ tracker_store:
   username:
   password:
 
-# stuff to add to readme if needed 
+# stuff to add to readme if needed
 
 # to run mongo database:
 # C://Program Files/MongoDB/Server/4.4/bin/mongod.exe

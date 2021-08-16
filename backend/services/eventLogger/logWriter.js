@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
+const { getBotRoom } = require('./../userService')
 
 const main = async () => {
   const mongoUrl = 'mongodb://localhost:27017'
@@ -10,6 +11,13 @@ const main = async () => {
   try {
     await client.connect()
     await findEvents(client)
+    // const result = await client.db('rasalogs').collection('conversations').find({})
+    // await result.forEach(obj => {
+    //   let arr = obj.events
+    //   arr.forEach(obj => {
+    //     console.log(obj)
+    //   })
+    // })
   } catch (e) {
     console.error(e)
   } finally {
@@ -26,7 +34,7 @@ const findEvents = async (client) => {
 
     let arr = obj.events
     const trimmedArr = removeIgnoredEvents(arr)
-    
+
     arr.forEach(obj => {
 
       // console.log(obj)
@@ -62,7 +70,8 @@ const logMessage = async (message) => {
 }
 
 // define csv file location + titles
-const logPath = path.resolve(__dirname, '../../../logs/conversation_log.csv')
+const roomName = '' + getBotRoom()
+const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName)
 const writer = createWriter({
   path: logPath,
   header: [
