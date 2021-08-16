@@ -46,7 +46,7 @@ module.exports = {
       // Bot reply
       socket.on(events.SEND_MESSAGE_TO_BOT_EVENT, async (data) => {
         await setRasaLastMessageSenderSlot(roomId, data.senderId)
-        const answers = getAnswer(data)
+        const answers = getAnswer(roomId, data)
         logger.info('Bot answer', answers)
 
         // socket.on(events.BOT_ANSWER_EVENT, async (data) => {
