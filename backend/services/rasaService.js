@@ -51,20 +51,20 @@ const getBotMessage = () => {
  * @param {*} param1 
  * @returns 
  */
-const getRasaRESTResponse = async ({ body, user }) => {
+const getRasaRESTResponse = async (roomId, { body, user }) => {
   logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
   try {
     logger.info(inspect(body))
-    const response = await axios.post('http://trollbot:5005/webhooks/callback/webhook', {
-      'sender': user.name,
+    const response = await axios.post('http://localhost:5005/webhooks/callback/webhook', {
+      'sender': roomId,
       'message': body
     })
-    logger.info('response: ${inspect(response.data[0].text)}')
+    logger.info(`response: ${inspect(response.data[0].text)}`)
 
     return response.data
 
   } catch (error) {
-    logger.error('An error occurred during rasaController:getRasaRESTResponse: ${error}')
+    logger.error(`An error occurred during rasaController:getRasaRESTResponse: ${error}`)
   }
 }
 
@@ -107,12 +107,12 @@ const setRasaUsersSlot = async (channel_id, users) => {
 const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
   logger.info(`Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).`)
   try {
-    console.log('setRasaLastMessageSenderSlot', channel_id)
+    logger.info('setRasaLastMessageSenderSlot', channel_id)
     let tracker = await axios.get(`http://localhost:5005/conversations/${channel_id}/tracker`)
     let users = tracker.data.slots.users
 
     for (const user in users) {
-      console.log(user)
+      logger.info(user)
       users[user].active = false
     }
     users[user_id].active = true
