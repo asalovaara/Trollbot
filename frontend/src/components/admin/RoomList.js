@@ -3,11 +3,13 @@ import { Box, Typography } from '@material-ui/core'
 
 const RoomList = ({ rooms }) => {
 
-  if (!rooms) {
+  console.log('Rooms state', rooms)
+
+  if (!rooms || rooms.length < 1) {
     return (
       <Box>
         <Typography variant="h4" paragraph>Room List:</Typography>
-        No rooms yet
+        <Typography>No rooms yet</Typography>
       </Box >
     )
   }
@@ -16,13 +18,12 @@ const RoomList = ({ rooms }) => {
     <Box>
       <Typography variant="h4" paragraph>Room List:</Typography>
       <ul>
-        {rooms.map((r) => {
+        {rooms && rooms.map((r) => {
           return <li key={r.name}>{r.name}</li>
         })}
       </ul>
     </Box >
   )
-
 }
 
 export default RoomList

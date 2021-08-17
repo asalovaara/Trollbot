@@ -7,13 +7,13 @@ let messages = []
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message }
-  logger.info('addMessage', msg)
+  logger.info('addMessage', room, message)
   messages.push(msg)
   return msg
 }
 
-const getAnswer = async (room, data) => {
-  const response = await getRasaRESTResponse(room, data)
+const getAnswer = async (data) => {
+  const response = await getRasaRESTResponse(data)
 
   logger.info('Rasa Rest Response', response)
 

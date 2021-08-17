@@ -1,6 +1,6 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-const {setRasaUsersSlot} = require('./rasaService')
+const { setRasaUsersSlot } = require('./rasaService')
 let users = [{
   id: 'bot',
   senderId: 'bot',
