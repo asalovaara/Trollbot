@@ -55,7 +55,7 @@ const getRasaRESTResponse = async ({ body, user }) => {
   logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
   try {
     logger.info(inspect(body))
-    const response = await axios.post('http://trollbot:5005/webhooks/callback/webhook', {
+    const response = await axios.post('http://localhost:5005/webhooks/callback/webhook', {
       'sender': user.name,
       'message': body
     })
