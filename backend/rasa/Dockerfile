@@ -6,7 +6,7 @@ COPY . ./
 RUN pip install -U pip \
   && pip install -r requirements.txt
 
-RUN rasa train nlu -c config.yml -u data/
+RUN rasa train
 
 # Start app 
 

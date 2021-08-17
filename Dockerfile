@@ -6,6 +6,7 @@ ENV API_URL=/api
 ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
 ENV REACT_APP_SOCKET_SERVER_URL=/trollbot
 ENV REACT_APP_SOCKET_ENDPOINT=https://ohtup-staging.cs.helsinki.fi
+ENV RASA_ENDPOINT=http://trollbot-rasa:5005
 
 # Install app dependencies
 
@@ -34,4 +35,4 @@ WORKDIR /app
 
 EXPOSE 3001
 
-CMD npm start --prefix backend
+CMD npm run dev --prefix backend

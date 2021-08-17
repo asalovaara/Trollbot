@@ -116,7 +116,7 @@ class ActionSetGenreSlot(Action):
             new_artist = tracker.latest_message['entities'][0]['value']
             # new_artist used instead of artist so that artists not in the lookup table can be searched
             try:
-                genre = requests.get('http://localhost:3001/api/trollbot/genre/' + new_artist)
+                genre = requests.get('http://trollbot:3001/api/trollbot/genre/' + new_artist)
                 genre = genre.json()
             except Exception as e:
                 print(e)
