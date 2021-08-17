@@ -12,8 +12,8 @@ const addMessage = (room, message) => {
   return msg
 }
 
-const getAnswer = async (data) => {
-  const response = await getRasaRESTResponse(data)
+const getAnswer = async (roomId, data) => {
+  const response = await getRasaRESTResponse(roomId, data)
 
   logger.info('Rasa Rest Response', response)
 
