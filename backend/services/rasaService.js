@@ -117,18 +117,6 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
     }
     users[user_id].active = true
     
-/*     await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
-      'event': 'slot',
-      'name': 'last_message_sender',
-      'value': user_id
-    })
-
-    await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
-      'event': 'slot',
-      'name': 'active_user',
-      'value': user_id
-    }) */
-
     let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, [
       {
         'event': 'slot',
