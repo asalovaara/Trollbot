@@ -18,7 +18,9 @@ Single page web application using Node.js and React.
 
 Read the README at backend folder.
 
-Remember to train the Rasa bots when you first pull the new directory:
+Create folders named `models_nice` and `models_troll` in backend/rasa/, because these folders are currently gitignored. These will be used to store models for the two bots.
+
+Remember to train the Rasa bots when you pull:
 
 Nicebot: `rasa train --data data_nice --out models_nice`
 
