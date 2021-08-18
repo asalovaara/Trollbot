@@ -1,5 +1,5 @@
 const { addUser, removeUser } = require('../services/userService')
-const { addMessage } = require('../services/messagesService')
+const { addMessage, getAnswer } = require('../services/messagesService')
 const { getBotMessage, setRasaLastMessageSenderSlot } = require('../services/rasaService')
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
@@ -15,6 +15,7 @@ module.exports = {
       socket.join(roomId)
 
       const user = addUser(socket.id, roomId, name)
+      console.log('user', user)
       io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
       setInterval(() => {
@@ -43,8 +44,13 @@ module.exports = {
       })
 
       // Bot reply
-      socket.on(events.BOT_ANSWER_EVENT, async (data) => {
+      socket.on(events.SEND_MESSAGE_TO_BOT_EVENT, async (data) => {
         await setRasaLastMessageSenderSlot(roomId, data.senderId)
+        const answers = getAnswer(roomId, data)
+        logger.info('Bot answer', answers)
+
+        // socket.on(events.BOT_ANSWER_EVENT, async (data) => {
+        //   await setRasaLastMessageSenderSlot(roomId, data.senderId)
         // const answers = await getAnswer(roomId, data)
 
         

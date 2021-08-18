@@ -16,7 +16,7 @@ const app = express()
 
 logger.info('connecting to Mongoose')
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {
     logger.info('connected to MongoDB')
   })

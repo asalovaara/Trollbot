@@ -51,20 +51,20 @@ const getBotMessage = () => {
  * @param {*} param1 
  * @returns 
  */
-const getRasaRESTResponse = async (room, { body, user }) => {
+const getRasaRESTResponse = async (roomId, { body, user }) => {
   logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
   try {
     logger.info(inspect(body))
-    const response = await axios.post('http://trollbot:5005/webhooks/rest/webhook', {
-      'sender': room,
+    const response = await axios.post('http://localhost:5005/webhooks/callback/webhook', {
+      'sender': roomId,
       'message': body
     })
-    logger.info('response: ${inspect(response.data[0].text)}')
+    logger.info(`response: ${inspect(response.data[0].text)}`)
 
     return response.data
 
   } catch (error) {
-    logger.error('An error occurred during rasaController:getRasaRESTResponse: ${error}')
+    logger.error(`An error occurred during rasaController:getRasaRESTResponse: ${error}`)
   }
 }
 
@@ -105,30 +105,30 @@ const setRasaUsersSlot = async (channel_id, users) => {
  * @returns 
  */
 const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
-  logger.info('Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).')
+  logger.info(`Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).`)
   try {
-    
-    let tracker = await axios.get('http://localhost:5005/conversations/${channel_id}/tracker')
+    logger.info('setRasaLastMessageSenderSlot', channel_id)
+    let tracker = await axios.get(`http://localhost:5005/conversations/${channel_id}/tracker`)
     let users = tracker.data.slots.users
 
     for (const user in users) {
-      console.log(user)
+      logger.info(user)
       users[user].active = false
     }
     users[user_id].active = true
     
-    await axios.post('http://localhost:5005/conversations/${channel_id}/tracker/events', {
+    await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'last_message_sender',
       'value': user_id
     })
-    let response = await axios.post('http://localhost:5005/conversations/${channel_id}/tracker/events', {
+    let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
       'value': users
     })
     if (response) {
-      logger.info('Set users slot value in Rasa server for channel ${channel_id}')
+      logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
       return true
     }
   } catch (e) {
