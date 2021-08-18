@@ -117,16 +117,35 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
     }
     users[user_id].active = true
     
-    await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
+/*     await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'last_message_sender',
       'value': user_id
     })
-    let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
+
+    await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
-      'name': 'users',
-      'value': users
-    })
+      'name': 'active_user',
+      'value': user_id
+    }) */
+
+    let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, [
+      {
+        'event': 'slot',
+        'name': 'users',
+        'value': users
+      },
+      {
+        'event': 'slot',
+        'name': 'active_user',
+        'value': user_id
+      },
+      {
+        'event': 'slot',
+        'name': 'last_message_sender',
+        'value': user_id
+      }]
+    )
     if (response) {
       logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
       return true

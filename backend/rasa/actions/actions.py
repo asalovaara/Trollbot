@@ -384,6 +384,7 @@ class checkUsersActiveUserSlot(Action):
         print('Last_message_sender not found.')
         return [SlotSet('active_user', False)]
         
+# Utter artist dismissal depending on whether some chatter has already suggested an artist.
 class dismissArtist(Action):
     def name(self) -> Text:
 
@@ -393,13 +394,15 @@ class dismissArtist(Action):
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
+        print("Entered action_dimiss_artist")
         users = tracker.get_slot('users')
         last_message_sender = tracker.get_slot('last_message_sender')
         for user in users:
-            if user != last_message_sender and users[user]['liked_artist'] is not None:
+            print(user)
+            print(users[user])
+            if user != last_message_sender and 'liked_artist' in users[user] and users[user]['liked_artist'] is not None and user != last_message_sender:
                 dispatcher.utter_message(response="utter_artist_dismissal_multiuser", 
-                name=user)
+                name=users[user]['name'])
                 return []
         
         dispatcher.utter_message(response="utter_artist_dismissal")

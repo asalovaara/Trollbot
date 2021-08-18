@@ -161,6 +161,7 @@ responses:
 
   utter_artist_dismissal_multiuser:
   - text: "Really? That's even worse than what {name} came up with."
+  - text: "I didn't like {name}'s suggestion at first but seeing yours it's become more appealing."
 
   utter_artist_dislike_polite:
   - text: "Okay, I don't like {artist} that much but it's cool if you do!"
