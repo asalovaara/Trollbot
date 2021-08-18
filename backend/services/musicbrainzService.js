@@ -19,13 +19,19 @@ const getArtist = async (artistName) => {
     )
     .then((response) => {
       const firstResult = response.data.artists[0]
+      const fullName = getFullLegalName(firstResult.aliases)
+      const firstName = getFirstName(fullName)
+      const lastName = getLastName(fullName)
+
       const artistObj = {
         'professionalName': firstResult.name,
-        //'gender': firstResult.gender,
+        'firstname': firstName,
+        'lastname': lastName,
+        'gender': firstResult.gender,
         'genres': getBestTag(firstResult.tags)
       }
 
-      //console.log(artistObj)
+      console.log(artistObj)
 
       return artistObj
     })
@@ -47,6 +53,25 @@ const getBestTag = (tags) => {
     }
   }
   return best.name
+}
+
+const getFullLegalName = (aliases) => {
+  for (let i = 0; i < aliases.length; i++) {
+    if (aliases[i].type === 'Legal name') {
+      return aliases[i].name
+    }
+  }
+  return 'no legal name found'
+}
+
+const getFirstName = (fullName) => {
+  const arr = fullName.split(' ')
+  return arr[0]
+}
+
+const getLastName = (fullName) => {
+  const arr = fullName.split(' ')
+  return arr[arr.length - 1]
 }
 
 module.exports = { getArtist }
