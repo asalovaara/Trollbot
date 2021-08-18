@@ -8,8 +8,6 @@
 # rasa
 /rasa/models/*
 /backend/rasa/models/*
-/backend/rasa/models_nice/*
-/backend/rasa/models_troll/*
 /backend/rasa/results/*
 /backend/rasa/tmp*
 /backend/rasa/story_graph.dot

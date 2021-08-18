@@ -132,7 +132,7 @@ stories:
   - slot_was_set:
     - opinion
   - action: action_set_artist_for_user
-  - action: action_handle_claim
+  - action: action_handle_claim_troll
 
 - story: inactive user praises artist
   steps:
@@ -158,7 +158,7 @@ stories:
   - slot_was_set:
     - opinion
   - action: action_set_artist_for_user
-  - action: action_handle_claim
+  - action: action_handle_claim_troll
 
 - story: inactive user dismisses artist
   steps:
@@ -247,11 +247,92 @@ stories:
   - action: action_listen
 
 # Suggestion_for_decision_pattern_1
-- story: user suggests decision, bot disapproves
+- story: user suggests decision, other user agrees and bot disagrees
   steps:
   - intent: suggestion_for_decision
   - slot_was_set:
     - task_activated: true
     - decision_phase: true
     - artist: filled
+  - action: action_listen
+  - intent: agreement
   - action: utter_reject_claim
+
+- story: user suggests decision, other user disagrees
+  steps:
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: action_listen
+  - intent: disagreement
+  - action: action_listen
+
+# User offers to post decision, other user agrees
+- story: user offers to post decision, agreed
+  steps: 
+  - intent: offer_to_post_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - action: action_listen
+  - intent: agreement
+  - checkpoint: user_should_post
+
+# User offers to post decision, other user disagrees
+- story: user offers to post decision, disagreed
+  steps:
+  - intent: offer_to_post_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - action: action_listen
+  - intent: disagreement
+  - action: action_listen
+
+# User offers to post decision but the other user wants to and original user lets them
+- story: user offers to post decision, other user wants to, orig user agrees
+  steps:
+  - intent: offer_to_post_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - action: action_listen
+  - intent: offer_posting
+  - action: action_listen
+  - intent: agreement
+  - action: action_listen
+  - checkpoint: user_should_post
+
+# User posts decision, no input from bot
+- story: user posts decision
+  steps: 
+  - checkpoint: user_should_post
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - intent: post_decision
+  - slot_was_set:
+    - artist: filled
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision: filled
+  - checkpoint: goodbye
+
+# Goodbye pattern
+- story: closing
+  steps:
+  - checkpoint: goodbye
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+    - intent: thanks
+  - action: action_listen
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+    - intent: thanks
+  - action: action_end_conversation

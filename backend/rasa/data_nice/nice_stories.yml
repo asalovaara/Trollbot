@@ -85,16 +85,14 @@ stories:
 - story: user dislikes artist
   steps:
   - or:
-    - intent: suggest_artist
-    - intent: likes_artist
-    - intent: suggestion_for_decision
+    - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
     - artist: filled
   - action: action_set_genre_slot
   - slot_was_set:
     - genre: filled
-  - action: action_set_opinion_slot_as_good
+  - action: action_set_opinion_slot_as_bad
   - slot_was_set:
     - opinion: bad
   - action: action_set_artist_for_user
@@ -195,7 +193,7 @@ stories:
 # TODO create timer that waits for other users' input
 # and prevents reaching decision if someone disagrees
 # Suggestion_for_decision_pattern_1
-- story: user suggests decision auto-success
+- story: user suggests decision, other user agrees
   steps:
   - intent: suggestion_for_decision
   - slot_was_set:
@@ -208,7 +206,7 @@ stories:
   - checkpoint: decision_reached
 
 # Suggestion_for_decision_pattern_2
-- story: user suggests decision auto-success
+- story: user suggests decision, other user disagrees
   steps:
   - intent: suggestion_for_decision
   - slot_was_set:

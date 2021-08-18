@@ -464,6 +464,20 @@ nlu:
     - is [Elton John](artist) our pick?
     - can we choose [Muse](artist)
 
+- intent: offer_to_post_decision
+  examples: |
+    - Can I post our decision?
+    - may i post our decision?
+    - seems like we're done, may i post our decision?
+    - looks like we're finished, is it ok if i post our choice?
+    - can i announce our chosen artist
+    - may i post our band?
+    - I could announce our choice now if that's okay?
+    - may i make the announcement
+    - may i post
+    - can i post the thing
+    - i'll post our artist ok?
+
 - intent: agreement
   examples: |
     - OK
