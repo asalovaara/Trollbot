@@ -1,8 +1,5 @@
 const axios = require('axios')
 const logger = require('../utils/logger')
-const Artist = require('../models/artist')
-const { API_URL, MONGODB_URI } = require('../utils/config')
-const mongoose = require('mongoose')
 
 const headers = {
   'User-Agent': 'Trollbot/1.0 (https://github.com/sumuh/Trollbot)'
