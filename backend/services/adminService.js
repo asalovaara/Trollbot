@@ -1,3 +1,4 @@
+const logger = require('../utils/logger')
 
 let rooms = [
   {
@@ -11,11 +12,14 @@ let rooms = [
 ]
 
 const addRoom = (room) => {
+  logger.info('adminService - addRoom - room', room)  
   rooms.push(room)
+  return rooms
 }
 
 const getRooms = () => {
-  rooms
+  logger.info('getRooms - rooms', rooms)
+  return rooms
 }
 
 module.exports = { addRoom, getRooms }
