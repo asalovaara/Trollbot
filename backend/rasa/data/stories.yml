@@ -86,8 +86,12 @@ stories:
 # Artist suggestion pattern 1 (MULTIUSER)
 - story: user suggests artist
   steps:
-  - intent: suggest_artist
+  - or:
+    - intent: suggest_artist
+    - intent: likes_artist
+  - action: action_check_if_same_liked_artist
   - slot_was_set:
+    - same_artist_liked: false
     - task_activated: true
     - artist
   - action: action_set_genre_slot
@@ -98,6 +102,27 @@ stories:
   - slot_was_set:
     - opinion
   - action: action_dismiss_artist
+
+# Artist suggestion pattern 2 (MULTIUSER)
+- story: users like the same artist
+  steps:  
+  - or:
+    - intent: suggest_artist
+    - intent: likes_artist
+  - action: action_check_if_same_liked_artist
+  - slot_was_set:
+    - same_artist_liked: true
+    - task_activated: true
+    - artist
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_good
+  - action: action_set_artist_for_user # append the liked artist list of the user object
+  - slot_was_set:
+    - opinion
+  - action: utter_same_artist_liked
+
 
 - story: request suggestion after dismissal
   steps:

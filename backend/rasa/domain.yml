@@ -38,6 +38,7 @@ intents:
   - restart_conversation
   - EXTERNAL_positive_evaluation_timer
 
+
 entities:
   - artist
   - name
@@ -83,6 +84,8 @@ slots:
     type: text
     auto_fill: false
     influence_conversation: false
+  same_artist_liked:
+    type: bool
 
 actions:
 - action_deflect_opinion_question
@@ -102,6 +105,7 @@ actions:
 - action_set_artist_for_user
 - action_check_users_active_user_slot
 - action_dismiss_artist
+- action_check_if_same_liked_artist
 
 responses:
   utter_opening:
@@ -238,6 +242,9 @@ responses:
 
   utter_genre:
   - text: "{genre}"
+
+  utter_same_artist_liked:
+  - text: "Looks like you both like the same artist. I guess birds of a feather do flock together."
 
 session_config:
   session_expiration_time: 60

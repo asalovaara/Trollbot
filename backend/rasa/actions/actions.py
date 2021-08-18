@@ -407,3 +407,24 @@ class dismissArtist(Action):
         
         dispatcher.utter_message(response="utter_artist_dismissal")
         return []
+
+
+class checkIfSameLikedArtist(Action):
+    def name(self) -> Text:
+
+        return "action_check_if_same_liked_artist"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        liked_artist = ''
+        users = tracker.get_slot('users')
+        for user in users:
+            if 'liked_artist' in users[user]:
+                if liked_artist == '':
+                    liked_artist = users[user]['liked_artist']
+                elif users[user]['liked_artist'] != liked_artist:
+                    return [SlotSet('same_artist_liked', True)]
+        return [SlotSet('same_artist_liked', False)]
