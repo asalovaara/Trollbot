@@ -1,6 +1,7 @@
 FROM node:14-slim
 
 ENV SKIP_PREFLIGHT_CHECK=true
+
 ENV PUBLIC_URL=/trollbot
 ENV API_URL=/api
 ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
@@ -35,4 +36,4 @@ WORKDIR /app
 
 EXPOSE 3001
 
-CMD npm run dev --prefix backend
+CMD npm start --prefix backend

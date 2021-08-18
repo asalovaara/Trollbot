@@ -1,5 +1,8 @@
 FROM python:3.7-slim-buster 
 
+ENV BACKEND_API_URL=trollbot
+ENV ACTION_ENDPOINT_URL=trollbot-rasa
+
 WORKDIR /usr/src/app/rasa
 COPY . ./
 
