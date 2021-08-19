@@ -9,8 +9,6 @@ stories:
   - slot_was_set:
     - task_activated: false
   - action: action_greet_user_by_name
-  - intent: opening
-  - action: action_greet_user_by_name
   - action: utter_task_introduction
   - action: utter_question_suggestions
   - action: action_set_task_slot
