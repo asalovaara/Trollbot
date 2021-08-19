@@ -2,9 +2,15 @@ version: "2.0"
 
 rules:
 
-# Fallback rules
+# FALLBACK RULES
+# NOTE: All rules require a condition (a slot_was_set check)
+# Therefore rules are divided have multiple versions for occurring in different phases of the conversation, if no more specific conditions can be defined.
 
-- rule: Nlu fallback before task activated
+# NLU fallbacks are intents that are not clear enough.
+# Threshold is set in config.yml pipeline by adjusting the FallbackClassifier's threshold value.
+# The bot is set to not respond (= to perform action_listen) to prevent misunderstanding user intent.
+
+- rule: NLU fallback during introductions
   condition:
   - slot_was_set:
     - task_activated: false
@@ -12,15 +18,27 @@ rules:
   - intent: nlu_fallback
   - action: action_listen
 
-- rule: Nlu fallback after task set
+- rule: NLU fallback during task
   condition:
   - slot_was_set:
     - task_activated: true
   steps:
   - intent: nlu_fallback
-  - action: utter_please_rephrase
+  - action: action_listen
 
-- rule: user keysmashes
+# Keysmash is an intent defined in the nlu files.
+# As the keysmash is a way to convey a large variety of emotions or perhaps simply an accident,
+# the bot is set to not respond (= to perform action_listen) to prevent misunderstanding user intent.
+
+- rule: Keysmash fallback during introductions
+  condition:
+  - slot_was_set:
+    - task_activated: false
+  steps:
+  - intent: keysmash
+  - action: action_listen
+
+- rule: Keysmash fallback during task
   condition:
   - slot_was_set:
     - task_activated: true
@@ -28,8 +46,10 @@ rules:
   - intent: keysmash
   - action: action_listen
 
-# other
+# GENERAL CONVERSATION RULES
 
+# Confusion-intent is defined in the nlu files.
+# Currently the Nicebot explains the task if a user expresses confusion.
 - rule: user is confused in the beginning
   condition:
   - slot_was_set:
@@ -46,7 +66,17 @@ rules:
   - intent: confusion
   - action: utter_task_introduction
 
-# Temporary debugging tools
+# EXTERNAL intent sent to tracker by Rasa when timer reaches 0
+# Used in responding to an intent sent by rasa in a custom action
+- rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
+  condition:
+  - slot_was_set:
+    - task_activated: true
+  steps:
+  - intent: EXTERNAL_positive_evaluation_timer
+  - action: action_trigger_positive_evaluation
+
+# TEMPORARY DEVELOPMENT RULES FOR DEBUGGING
 
 - rule: get genre data
   condition:
@@ -64,12 +94,3 @@ rules:
   steps:
   - intent: restart_conversation
   - action: action_end_conversation
-
-# EXTERNAL intent sent to tracker by Rasa when timer reaches 0
-- rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
-  condition:
-  - slot_was_set:
-    - task_activated: true
-  steps:
-  - intent: EXTERNAL_positive_evaluation_timer
-  - action: action_trigger_positive_evaluation
