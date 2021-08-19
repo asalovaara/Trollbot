@@ -138,7 +138,7 @@ class ActionSetGenreSlot(Action):
         return [SlotSet("genre", genre), SlotSet("artists", artists), SlotSet("artist", new_artist)]
 
 # Bot utters a greeting.
-# Greets the user by name if the name slot contains it
+# Greets the user by name if the user's name is set in the users slot.
 # Otherwise greets without a name
 class ActionGreetUserByName(Action):
 
@@ -151,16 +151,21 @@ class ActionGreetUserByName(Action):
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        name = tracker.get_slot('name')
-
-        if name is None:
+        users = tracker.get_slot('users')
+        last_message_sender = tracker.get_slot('last_message_sender')
+        print(users)
+        print(last_message_sender)
+        if users[last_message_sender]['name'] is None:
             dispatcher.utter_message(
                 response="utter_opening"
             )
             return []
         else:
+            print(users[last_message_sender]['name'])
+            
             dispatcher.utter_message(
-                response="utter_nice_to_meet_you_name"
+                response="utter_nice_to_meet_you_name",
+                name=users[last_message_sender]['name']
             )
             return []
 
@@ -384,3 +389,47 @@ class checkUsersActiveUserSlot(Action):
         print('Last_message_sender not found.')
         return [SlotSet('active_user', False)]
         
+# Utter artist dismissal depending on whether some chatter has already suggested an artist.
+class dismissArtist(Action):
+    def name(self) -> Text:
+
+        return "action_dismiss_artist"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        print("Entered action_dimiss_artist")
+        users = tracker.get_slot('users')
+        last_message_sender = tracker.get_slot('last_message_sender')
+        for user in users:
+            print(user)
+            print(users[user])
+            if user != last_message_sender and 'liked_artist' in users[user] and users[user]['liked_artist'] is not None and user != last_message_sender:
+                dispatcher.utter_message(response="utter_artist_dismissal_multiuser", 
+                name=users[user]['name'])
+                return []
+        
+        dispatcher.utter_message(response="utter_artist_dismissal")
+        return []
+
+
+class checkIfSameLikedArtist(Action):
+    def name(self) -> Text:
+
+        return "action_check_if_same_liked_artist"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        liked_artist = ''
+        users = tracker.get_slot('users')
+        for user in users:
+            if 'liked_artist' in users[user]:
+                if liked_artist == '':
+                    liked_artist = users[user]['liked_artist']
+                elif users[user]['liked_artist'] != liked_artist:
+                    return [SlotSet('same_artist_liked', True)]
+        return [SlotSet('same_artist_liked', False)]
