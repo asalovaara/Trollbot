@@ -38,6 +38,7 @@ intents:
   - restart_conversation
   - EXTERNAL_positive_evaluation_timer
 
+
 entities:
   - artist
   - name
@@ -83,6 +84,8 @@ slots:
     type: text
     auto_fill: false
     influence_conversation: false
+  same_artist_liked:
+    type: bool
 
 actions:
 - action_deflect_opinion_question
@@ -102,6 +105,8 @@ actions:
 - action_delayed_positive_evaluation
 - action_set_artist_for_user
 - action_check_users_active_user_slot
+- action_dismiss_artist
+- action_check_if_same_liked_artist
 
 responses:
   utter_opening:
@@ -158,6 +163,10 @@ responses:
   - text: "Ugh, {genre}. Pass!"
   - text: "Really? {artist} is like the worst ever to do {genre}!"
   - text: "Yikes. {artist} gives {genre} a bad reputation."
+
+  utter_artist_dismissal_multiuser:
+  - text: "Really? That's even worse than what {name} came up with."
+  - text: "I didn't like {name}'s suggestion at first but seeing yours it's become more appealing."
 
   utter_artist_dislike_polite:
   - text: "Okay, I don't like {artist} that much but it's cool if you do!"
@@ -234,6 +243,12 @@ responses:
 
   utter_genre:
   - text: "{genre}"
+
+  utter_same_artist_liked_troll:
+  - text: "Looks like you both like the same artist. I guess birds of a feather do flock together."
+
+  utter_same_artist_liked_nice:
+  - text: "Oh nice, you both like {artist}!"
 
 session_config:
   session_expiration_time: 60
