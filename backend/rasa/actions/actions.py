@@ -121,7 +121,7 @@ class ActionSetGenreSlot(Action):
                 if 'BACKEND_API_URL' in os.environ:
                     BACKEND_API_URL = os.environ.get('BACKEND_API_URL')
                 
-                genre = requests.get('http://' + BACKEND_API_URL + ':3001/api/trollbot/genre/' + new_artist)
+                genre = requests.get('http://' + BACKEND_API_LOCATION + '/api/trollbot/genre/' + new_artist)
                 genre = genre.json()
             except Exception as e:
                 print(e)

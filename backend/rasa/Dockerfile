@@ -1,7 +1,7 @@
 FROM python:3.7-slim-buster 
 
-ENV BACKEND_API_URL=trollbot
-ENV ACTION_ENDPOINT_URL=trollbot-rasa
+ENV BACKEND_API_LOCATION=trollbot:3001
+ENV ACTION_ENDPOINT_URL=http://trollbot-rasa:5055/webhook
 
 WORKDIR /usr/src/app/rasa
 COPY . ./
