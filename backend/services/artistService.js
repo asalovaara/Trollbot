@@ -5,7 +5,7 @@ const readline = require('readline')
 const logger = require('../utils/logger')
 const { API_URL, MONGODB_URI } = require('../utils/config')
 const mongoose = require('mongoose')
-const { saveArtistToDatabase } = require('../database/databaseService')
+const { saveArtistToDatabase, deleteAll } = require('../database/databaseService')
 const { getArtist } = require('./musicbrainzService')
 
 // run this file to add artists to the database
@@ -45,9 +45,11 @@ const addAllArtistsFromTextFile = async (filepath) => {
   for await (const line of rl) {
     try {
       const artistObj = await getArtist(line)
-      await saveArtistToDatabase(artistObj)
+      if (artistObj !== undefined) {
+        await saveArtistToDatabase(artistObj)
+      }
       // Added this sleep because I think the queries were executing too fast and they stopped after a few queries. This fixed it
-      await sleep(500)
+      await sleep(2000)
     } catch (e) {
       console.error(e)
     }
