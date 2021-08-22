@@ -1,5 +1,5 @@
 const { readFile } = require('./yamlReader')
-const YAML = require('yaml')
+const { matchLogWithStories } = require('./storyMatcher')
 const diff = require('deep-diff').diff
 
 const defaultActions = ['action_listen', 'action_restart', 'action_session_start', 'action_default_fallback', 'action_deactivate_loop', 'action_revert_fall', 'action_two_stage_fallback', 'action_default_ask_affirmation', 'action_default_ask_rephrase', 'action_back', 'action_unlikely_intent']
@@ -87,6 +87,15 @@ const formatSlotSet = (obj) => {
   return obj
 }
 
+const formatUserEvent = (obj) => {
+  obj.event = 'user uttered'
+  obj.userID = lastMessageSenderId
+  if (lastMessageSenderId !== undefined) {
+    obj.username = users[lastMessageSenderId].name
+  }
+  return obj
+}
+
 /**
  * formats the log appearance of object slot values to display only changes instead of the entire object tree
  * @param {*} oldValue slot object tree before update
@@ -106,6 +115,15 @@ const formatObjectSlotValue = (oldValue, newValue) => {
   }
 }
 
+const formatExternalIntentEvent = (obj) => {
+  obj.event = 'timer triggered external intent'
+  obj.text = '' 
+
+  return obj
+}
+
+
+
 // formats the log appearance of different event types
 const formatEvent = (obj) => {
   obj = formatEventSource(obj)
@@ -114,15 +132,18 @@ const formatEvent = (obj) => {
   } else if (obj.event === 'slot') {
     obj = formatSlotSet(obj)
   } else if (obj.event === 'user') {
-    obj.event = 'user uttered'
-    obj.userID = lastMessageSenderId
-    if (lastMessageSenderId !== undefined) {
-      obj.username = users[lastMessageSenderId].name
+    if (obj.text.includes('EXTERNAL')) {
+      obj = formatExternalIntentEvent(obj)
+    } else {
+      obj = formatUserEvent(obj)
     }
   } else if (obj.event === 'bot') {
     obj.event = 'bot uttered'
   } else if (obj.event === 'session_started') {
     obj.event = 'started new conversation session'
+  } else if (obj.event === 'reminder') {
+    obj.event = 'activated timer'
+    obj.name = 'timer: ' + obj.name
   }
   obj.timestamp = formatTimestamp(obj.timestamp)
   obj = formatIntent(obj)
@@ -133,53 +154,11 @@ const formatEvent = (obj) => {
 // fetches rasa's stories from stories.yml and starts story matching with given event log
 const formatStories = (logArray) => {
   const storyFile = '../../rasa/data/stories.yml'
-  const data = readFile(storyFile)
-  const stories = data.stories
+  const ruleFile = '../../rasa/data/rules.yml'
+  const stories = readFile(storyFile).stories
+  const rules = readFile(ruleFile).rules
 
-  return matchLogWithStories(stories, logArray)
-}
-
-// matches event log with stories, adds corresponding story tags to the log
-const matchLogWithStories = (stories, logArray) => {
-  let storyStart = 0
-
-  for (let i = 0; i < logArray.length; i++) {
-    let matchingStories = stories
-
-    if (logArray[i].story_step === '. . .') {
-
-      for (let j = storyStart; j < i; j++) {
-        let logStep = logArray[j].story_step
-
-        if (logStep !== undefined) {
-          matchingStories = matchStep(logStep, matchingStories)
-        }
-        logArray = addStoryTags(storyStart, j, matchingStories, logArray)
-      }
-      storyStart = i + 1
-    }
-  }
-
-  return logArray
-}
-
-// filter stories not containing a given story step
-const matchStep = (logStep, stories) => {
-  const matchedStories = stories.filter(story => YAML.stringify(story).includes(logStep))
-
-  return matchedStories
-}
-
-// tags matched events with the name of the matching story
-const addStoryTags = (i, end, stories, logArray) => {
-  if (stories.length === 1) {
-    const tag = stories[0].story
-    for (i; i <= end; i++) {
-      logArray[i].story = tag
-    }
-  }
-
-  return logArray
+  return matchLogWithStories(stories, rules, logArray)
 }
 
 // removes events specified in the ignoredEvents array (improves log readability)

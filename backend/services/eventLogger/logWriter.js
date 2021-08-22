@@ -86,7 +86,8 @@ const writer = createWriter({
     { id: 'confidence', title: 'confidence' },
     { id: 'intent', title: 'interpreted intent' },
     { id: 'story_step', title: 'story step'},
-    { id: 'story', title: 'story'}
+    { id: 'story', title: 'story'},
+    { id: 'rule', title: 'rule'}
   ]
 })
 
