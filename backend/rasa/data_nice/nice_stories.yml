@@ -170,8 +170,6 @@ stories:
     - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true
   - action: action_set_genre_slot
   - action: action_set_artist_for_user
   - action: action_set_opinion_slot_as_good
