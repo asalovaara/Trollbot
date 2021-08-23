@@ -3,6 +3,7 @@ const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
 const { getBotRoom } = require('./../userService')
+const logger = require('../../utils/logger')
 
 const main = async () => {
   const mongoUrl = 'mongodb://localhost:27017'
@@ -11,15 +12,9 @@ const main = async () => {
   try {
     await client.connect()
     await findEvents(client)
-    // const result = await client.db('rasalogs').collection('conversations').find({})
-    // await result.forEach(obj => {
-    //   let arr = obj.events
-    //   arr.forEach(obj => {
-    //     console.log(obj)
-    //   })
-    // })
+    logger.show('Successfully created log')
   } catch (e) {
-    console.error(e)
+    logger.error(e)
   } finally {
     await client.close()
   }
@@ -36,10 +31,7 @@ const findEvents = async (client) => {
     const trimmedArr = removeIgnoredEvents(arr)
 
     arr.forEach(obj => {
-
-      // console.log(obj)
       formatEvent(obj)
-
     })
 
     const logWithStories = formatStories(trimmedArr)
@@ -64,7 +56,7 @@ const logMessage = async (message) => {
   try {
     await writer.writeRecords(message)
   } catch (e) {
-    console.error(e)
+    logger.error(e)
   }
 
 }

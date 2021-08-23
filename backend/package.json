@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "start-staging": "set API_URL=/trollbot/api/trollbot&& set PUBLIC_URL=/trollbot&& cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "log": "node services/eventLogger/logWriter",
     "rasa": "cd rasa/ && rasa run",
     "all": "npm-run-all --parallel dev rasa",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --testPathPattern=/tests",
