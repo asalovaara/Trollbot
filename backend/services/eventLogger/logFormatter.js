@@ -2,9 +2,13 @@ const { readFile } = require('./yamlReader')
 const { matchLogWithStories } = require('./storyMatcher')
 const diff = require('deep-diff').diff
 
+// Rasa default actions (see https://rasa.com/docs/rasa/default-actions/)
 const defaultActions = ['action_listen', 'action_restart', 'action_session_start', 'action_default_fallback', 'action_deactivate_loop', 'action_revert_fall', 'action_two_stage_fallback', 'action_default_ask_affirmation', 'action_default_ask_rephrase', 'action_back', 'action_unlikely_intent']
+// Events appended to the conversation tracker by Trollbot backend
 const backendEvents = ['users', 'last_message_sender']
+// Events hidden from the log
 const ignoredEvents = ['user_featurization']
+
 let lastMessageSenderId
 let users = {}
 let artists = {}
@@ -29,6 +33,7 @@ const formatIntent = (obj) => {
   return obj
 }
 
+//sets event source tag based on whether the event was appended to the tracker by Rasa Core or Trollbot Backend
 const formatEventSource = (obj) => {
   if (backendEvents.includes(obj.name)) {
     obj.source = 'Trollbot Backend'
@@ -42,12 +47,9 @@ const formatEventSource = (obj) => {
 // formats the log appearance of different action events
 const formatAction = (obj) => {
   if (defaultActions.includes(obj.name)) {
-    if (obj.name === 'action_listen') {
-      obj.story_step = '. . .'
-    }
     obj.event = 'triggered Rasa default action'
     obj.name = 'action: ' + obj.name
-  } else if (obj.name.includes('utter')) {
+  } else if (obj.name.substring(0, 5) === 'utter') {
     obj.story_step = 'action: ' + obj.name
     obj.event = 'triggered bot response'
     obj.name = 'response: ' + obj.name
@@ -73,6 +75,7 @@ const formatSlotSet = (obj) => {
   } else if (obj.name === 'last_message_sender') {
     lastMessageSenderId = obj.value
   } else if (obj.name === 'users') {
+    formatUserJoiningOrLeaving(obj)
     const temp = obj.value
     obj.value = formatObjectSlotValue(users, obj.value)
     users = temp
@@ -87,6 +90,7 @@ const formatSlotSet = (obj) => {
   return obj
 }
 
+// formats the log appearance of user events
 const formatUserEvent = (obj) => {
   obj.event = 'user uttered'
   obj.userID = lastMessageSenderId
@@ -105,6 +109,7 @@ const formatUserEvent = (obj) => {
 
 const formatObjectSlotValue = (oldValue, newValue) => {
   const changes = diff(oldValue, newValue)
+  console.log(changes)
   if (changes !== undefined) {
     const path = JSON.stringify(changes[0].path).replace(/["\[\]]/g, '').replace(/,/g, '.')
     const value = JSON.stringify(changes[0].rhs)
@@ -115,6 +120,7 @@ const formatObjectSlotValue = (oldValue, newValue) => {
   }
 }
 
+// formats (Rasa generated) intents triggered by timers
 const formatExternalIntentEvent = (obj) => {
   obj.event = 'timer triggered external intent'
   obj.text = '' 
@@ -132,7 +138,7 @@ const formatEvent = (obj) => {
   } else if (obj.event === 'slot') {
     obj = formatSlotSet(obj)
   } else if (obj.event === 'user') {
-    if (obj.text.includes('EXTERNAL')) {
+    if (obj.text.substring(0, 8) === 'EXTERNAL') {
       obj = formatExternalIntentEvent(obj)
     } else {
       obj = formatUserEvent(obj)
@@ -159,6 +165,16 @@ const formatStories = (logArray) => {
   const rules = readFile(ruleFile).rules
 
   return matchLogWithStories(stories, rules, logArray)
+}
+
+const formatUserJoiningOrLeaving = (obj) => {
+  if (Object.keys(obj.value).length > Object.keys(users).length) {
+    obj.event = 'user joined'
+  } else if (Object.keys(obj.value).length < Object.keys(users).length) {
+    obj.event = 'user left'
+  }
+
+  return obj
 }
 
 // removes events specified in the ignoredEvents array (improves log readability)
