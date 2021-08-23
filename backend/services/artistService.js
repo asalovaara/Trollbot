@@ -23,7 +23,7 @@ const main = async () => {
         console.log('error connection to MongoDB:', error.message)
       })
 
-      addAllArtistsFromTextFile(filepath)
+    addAllArtistsFromTextFile(filepath)
 
   } catch (e) {
     console.error(e)
