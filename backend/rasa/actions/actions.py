@@ -117,9 +117,9 @@ class ActionSetGenreSlot(Action):
             new_artist = tracker.latest_message['entities'][0]['value']
             # new_artist used instead of artist so that artists not in the lookup table can be searched
             try:
-                BACKEND_API_URL = 'localhost'
-                if 'BACKEND_API_URL' in os.environ:
-                    BACKEND_API_URL = os.environ.get('BACKEND_API_URL')
+                BACKEND_API_LOCATION = 'localhost:3001'
+                if 'BACKEND_API_LOCATION' in os.environ:
+                    BACKEND_API_LOCATION = os.environ.get('BACKEND_API_LOCATION')
                 
                 genre = requests.get('http://' + BACKEND_API_LOCATION + '/api/trollbot/genre/' + new_artist)
                 genre = genre.json()
