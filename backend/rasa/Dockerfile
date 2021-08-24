@@ -1,12 +1,15 @@
 FROM python:3.7-slim-buster 
 
+ENV BACKEND_API_LOCATION=trollbot:3001
+ENV ACTION_ENDPOINT_URL=http://trollbot-rasa:5055/webhook
+
 WORKDIR /usr/src/app/rasa
 COPY . ./
 
 RUN pip install -U pip \
   && pip install -r requirements.txt
 
-RUN rasa train nlu -c config.yml -u data/
+RUN rasa train
 
 # Start app 
 
