@@ -1,21 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link as ReactLink } from 'react-router-dom'
 import { TITLE } from '../../config'
 import { useTextInputStyles } from '../../styles/TextInputStyles.js'
+import { useField } from '../../hooks/inputFields'
 
 import Container from '@material-ui/core/Container'
 import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 
 const RoomSelect = () => {
   const classes = useTextInputStyles()
-  const [roomName, setRoomName] = useState('')
-
-  const handleRoomNameChange = (event) => {
-    setRoomName(event.target.value)
-  }
+  const roomName = useField('text')
 
   return (
     <Container>
@@ -29,10 +26,10 @@ const RoomSelect = () => {
           id='room'
           label='Room Name'
           className={classes.wrapText}
-          onChange={handleRoomNameChange}
-          value={roomName}
+          {...roomName}
+          clear={null}
         />
-        <Button component={ReactLink} to={`/${roomName}`} id='join' variant='contained' color='primary' type='submit'>Join</Button>
+        <ReactLink to={`/${roomName.value}`}><Button id='join' variant='contained' color='primary' type='submit'>Join</Button></ReactLink>
       </form>
     </Container>
   )
