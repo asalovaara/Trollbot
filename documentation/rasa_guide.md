@@ -2,8 +2,12 @@
 
 ## Installation
 
-Run the commands `pip3 install -U pip
-pip3 install rasa`
+Run the commands 
+
+`pip3 install -U pip`
+
+`pip3 install rasa`
+
 to install Rasa on your computer. For a more detailed guide, check [the official Rasa docs](https://rasa.com/docs/rasa/installation).
 
 ## Training the model
@@ -38,9 +42,16 @@ For more information on training data, see [Rasa docs: Training Data Format](htt
 
 ## Domain
 
-(TODO)
+The domain file is shared between the bots. The domain file contains
+- declarations of user intents (and the entities in them)
+- declarations of entities
+- declarations of slots
+- declarations of actions
+- bot responses
 
-The domain contains responses, which are actions that only consist of the bot saying something defined in the response. (TODO)
+Responses are actions that only consist of the bot saying something defined in the response. Responses may contain slot values. When called, a response is selected randomly from the given text options. Responses for both bots are in the same file, and similar responses that cannot be the same are differentiated with "_nice"- and "_troll"-suffixes.
+
+More on domain in [Rasa docs: Domain](https://rasa.com/docs/rasa/domain)
 
 ## Using rasa actions
 
