@@ -1,28 +1,32 @@
 const YAML = require('yaml')
+const _ = require('lodash')
 
 //story steps from stories.yml not used in matching
-const ignoredSteps = ['slot_was_set', 'checkpoint']
+const ignoredSteps = ['checkpoint']
 
 // matches event log with stories, adds corresponding story tags to the log
 const matchLogWithStories = (stories, rules, logArray) => {
-
-  const filteredStories = filterStories(stories)
-  const filteredRules = filterStories(rules)
-
   let i = 0
 
   while (i < logArray.length) {
-    let matchingStories = filteredStories
-    let matchingRules = filteredRules
+    let matchingStories = _.cloneDeep(stories)
+    let matchingRules = _.cloneDeep(rules)
+    let stepCounter = 0
+
+    console.log(stories)
 
     while (i < logArray.length) {
-
       let logStep = logArray[i].story_step
       if (logStep !== undefined) {
         matchingStories = matchStep(logStep, matchingStories)
         matchingRules = matchStep(logStep, matchingRules)
 
+        // console.log(matchingStories)
+
         if (matchingStories.length === 0 && matchingRules.length === 0) {
+          if (stepCounter === 0) {
+            i++
+          }
           break
         }
         if (matchingStories.length !== 0) {
@@ -32,6 +36,7 @@ const matchLogWithStories = (stories, rules, logArray) => {
           logArray[i].rule = matchingRules.map(rule => rule.rule).join(' || ')
         }
       }
+      stepCounter++
       i++
     }
   }
@@ -42,24 +47,21 @@ const matchLogWithStories = (stories, rules, logArray) => {
 const matchStep = (logStep, stories) => {
   matchedStories = stories.filter(story => YAML.stringify(story.steps).includes(logStep))
 
+  matchedStories = removeMatchedSteps(matchedStories, logStep)
+
   return matchedStories
 }
 
-// filters story steps not used in matching
-const filterStories = (stories) => {
-  let filteredObjects = []
-  let i = 0
-
+const removeMatchedSteps = (stories, logStep) => {
   stories.forEach(story => {
-    const filteredSteps = story.steps.filter(step => !(ignoredSteps.includes(Object.keys(step))))
-    if (story.story !== undefined) {
-      filteredObjects[i] = { story: story.story, steps: filteredSteps }
-    } else {
-      filteredObjects[i] = { rule: story.rule, steps: filteredSteps }
+    for (let i = 0; i < story.steps.length; i++) {
+      if (YAML.stringify(story.steps[i]).includes(logStep)) {
+        story.steps[i] = 'MATCHED'
+        break
+      }
     }
-    i++
   })
-  return filteredObjects
+  return stories
 }
 
 module.exports = { matchLogWithStories }

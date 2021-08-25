@@ -207,27 +207,6 @@ stories:
     - told_genre: filled
   - action: utter_thanks
 
-<<<<<<< HEAD
-- story: inactive user likes artist
-  steps:
-  - or:
-    - intent: likes_artist
-    - intent: suggestion_for_decision
-    - intent: suggest_artist
-  - slot_was_set:
-    - task_activated: true
-  - action: action_check_users_active_user_slot
-  - slot_was_set: # active user false check
-    - active_user: false
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user
-  - action: action_listen # default action, wait for the next user message
-=======
 # - story: inactive user likes artist
 #   steps:
 #   - or:
@@ -246,7 +225,6 @@ stories:
 #     - opinion
 #   - action: action_set_artist_for_user
 #   - action: action_listen # default action, wait for the next user message
->>>>>>> main
 
 - story: active user dislikes artist path
   steps:

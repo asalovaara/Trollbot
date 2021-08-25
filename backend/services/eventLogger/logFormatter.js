@@ -8,6 +8,8 @@ const defaultActions = ['action_listen', 'action_restart', 'action_session_start
 const backendEvents = ['users', 'last_message_sender']
 // Events hidden from the log
 const ignoredEvents = ['user_featurization']
+// Slots whose values affect story paths
+const storyAlteringSlots = ['task_activated', 'same_artist_liked', 'decision_phase']
 
 let lastMessageSenderId
 let users = {}
@@ -70,11 +72,16 @@ const formatAction = (obj) => {
 
 const formatSlotSet = (obj) => {
   obj.event = 'slot value was set'
-  if (obj.name === 'active_user') {
-    obj.story_step = 'active_user: ' + obj.value
-  } else if (obj.name === 'last_message_sender') {
+
+  if (storyAlteringSlots.includes(obj.name)) {
+    obj.story_step = obj.name + ': ' + obj.value
+  }
+  
+  if (obj.name === 'last_message_sender') {
     lastMessageSenderId = obj.value
+  } else if (obj.name ==='active_user'){
   } else if (obj.name === 'users') {
+    // console.log(obj.value)
     formatUserJoiningOrLeaving(obj)
     const temp = obj.value
     obj.value = formatObjectSlotValue(users, obj.value)
@@ -83,7 +90,7 @@ const formatSlotSet = (obj) => {
     const temp = obj.value
     obj.value = formatObjectSlotValue(artists, obj.value)
     artists = temp
-  }
+  } 
 
   obj.name = 'slot: ' + obj.name + ' | ' + obj.value
 
@@ -109,7 +116,7 @@ const formatUserEvent = (obj) => {
 
 const formatObjectSlotValue = (oldValue, newValue) => {
   const changes = diff(oldValue, newValue)
-  console.log(changes)
+  // console.log(changes)
   if (changes !== undefined) {
     const path = JSON.stringify(changes[0].path).replace(/["\[\]]/g, '').replace(/,/g, '.')
     const value = JSON.stringify(changes[0].rhs)

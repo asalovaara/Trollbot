@@ -62,8 +62,8 @@ const logMessage = async (message) => {
 }
 
 // define csv file location + titles
-const roomName = '' + getBotRoom()
-const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName)
+// const roomName = '' + getBotRoom()
+const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, 'Test')
 const writer = createWriter({
   path: logPath,
   header: [
