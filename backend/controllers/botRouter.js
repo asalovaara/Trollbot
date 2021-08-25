@@ -25,7 +25,19 @@ botRouter.get('/genre/:artist', async (req, res) => {
   if (response === undefined) {
     res.json(undefined)
   } else {
+    console.log(response)
+    console.log(response.genres[0])
     res.json(response.genres[0])
+  }
+})
+
+botRouter.get('/:artist', async (req, res) => {
+  const artist = req.params.artist
+  const response = await getArtistByName(artist)
+  if (response === undefined) {
+    res.json(undefined)
+  } else {
+    res.json(response)
   }
 })
 
