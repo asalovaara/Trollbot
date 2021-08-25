@@ -110,34 +110,36 @@ class ActionSetGenreSlot(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         """Sets the genre of the artist currently in the artist slot and stores the information in the artists slot."""
         try:
-            # artist = tracker.get_slot('artist')
             artists = tracker.get_slot('artists')
             # latest message's artist entity extracted by DIETClassifier. index 1 would be RegexEntityClassifier's artist entity
             new_artist = tracker.latest_message['entities'][0]['value']
             # new_artist used instead of artist so that artists not in the lookup table can be searched
-            try:
-                genre = requests.get('http://localhost:3001/api/trollbot/genre/' + new_artist)
-                genre = genre.json()
-                print(genre)
-            except Exception as e:
-                print('ERROR in trying to fetch genre')
-                print(e)
-                genre = None
-            print('genre: ' + genre)
             if new_artist not in artists:
-                artists[new_artist] = {}
-            artists[new_artist]['genre'] = genre
-
-            try:
-                artist = requests.get('http://localhost:3001/api/trollbot/' + new_artist)
-                artist = artist.json()
-                print(artist)
-                artists[new_artist] = artist
-                print(artists[new_artist])
-            except Exception as e:
-                print("ERROR in trying to fetch artist:")
-                print(e)
-
+                try:
+                    artist = requests.get('http://localhost:3001/api/trollbot/' + new_artist)
+                    artist = artist.json()
+                    print(artist)
+                    artists[new_artist] = {}
+                    name = artist['professionalName']
+                    artists[new_artist]['professionalName'] = name
+                    artists[new_artist]['gender'] = 'band'
+                    if artist['gender'] is not None:
+                        artists[new_artist]['gender'] = artist['gender']
+                    try:
+                        genre = requests.get('http://localhost:3001/api/trollbot/genre/' + new_artist)
+                        genre = genre.json()
+                    except Exception as e:
+                        print('ERROR in trying to fetch genre')
+                        print(e)
+                        genre = None
+                    artists[new_artist]['genre'] = genre
+                    print(artists[new_artist])
+                except Exception as e:
+                    print("ERROR in trying to fetch artist:")
+                    print(e)
+            else:
+                genre = artists[new_artist]['genre']
+                print(genre)
         except Exception as e:
             genre = None
             print("An error occurred during action_set_genre_slot:")

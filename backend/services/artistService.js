@@ -7,7 +7,6 @@ const { API_URL, MONGODB_URI } = require('../utils/config')
 const mongoose = require('mongoose')
 const { saveArtistToDatabase, deleteAll } = require('../database/databaseService')
 const { getArtist } = require('./musicbrainzService')
-const { getGenreByName } = require('./spotifyService') // Used for genre extraction when musicbrainz has no data for it
 
 // run this file to add artists to the database
 
@@ -47,11 +46,6 @@ const addAllArtistsFromTextFile = async (filepath) => {
     try {
       const artistObj = await getArtist(line)
       if (artistObj !== undefined) {
-        if (artistObj.genres === null) {
-          console.log(artistObj.professionalName, ' has no genres')
-          artistObj.genres[0] = await getGenreByName(artistObj.professionalName)
-          console.log(artistObj.genres)
-        }
         await saveArtistToDatabase(artistObj)
       }
       // Added this sleep because I think the queries were executing too fast and they stopped after a few queries. This fixed it
