@@ -122,8 +122,14 @@ class ActionSetGenreSlot(Action):
                     artists[new_artist] = {}
                     name = artist['professionalName']
                     artists[new_artist]['professionalName'] = name
+                    artists[new_artist]['firstName'] = None
+                    if 'firstName' in artist:
+                        artists[new_artist]['firstName'] = artist['firstName']
+                    artists[new_artist]['lastName'] = None
+                    if 'lastName' in artist:
+                        artists[new_artist]['lastName'] = artist['lastName']
                     artists[new_artist]['gender'] = 'band'
-                    if artist['gender'] is not None:
+                    if 'gender' in artist:
                         artists[new_artist]['gender'] = artist['gender']
                     try:
                         genre = requests.get('http://localhost:3001/api/trollbot/genre/' + new_artist)
@@ -140,12 +146,16 @@ class ActionSetGenreSlot(Action):
             else:
                 genre = artists[new_artist]['genre']
                 print(genre)
+            artistName = artists[new_artist]['professionalName']
+            if artists[new_artist]['firstName'] is not None:
+                artistName = artists[new_artist]['firstName']
         except Exception as e:
             genre = None
+            artistName = new_artist
             print("An error occurred during action_set_genre_slot:")
             print(e)
 
-        return [SlotSet("genre", genre), SlotSet("artists", artists), SlotSet("artist", new_artist)]
+        return [SlotSet("genre", genre), SlotSet("artists", artists), SlotSet("artist", artistName)]
 
 # Bot utters a greeting.
 # Greets the user by name if the user's name is set in the users slot.
@@ -307,7 +317,7 @@ class ActionHandleClaim(Action):
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        artist = tracker.get_slot('artist')
+        artist = tracker.latest_message['entities'][0]['value']
 
         if artist is None:
             dispatcher.utter_message(
@@ -332,7 +342,7 @@ class ActionSetArtistForUser(Action):
 
         last_message_sender = tracker.get_slot('last_message_sender')
         users = tracker.get_slot('users')
-        artist = tracker.get_slot('artist')
+        artist = tracker.latest_message['entities'][0]['value']
         opinion = tracker.get_slot('opinion')
 
         if artist:
@@ -356,7 +366,7 @@ class ActionPostDecision(Action):
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        artist = tracker.get_slot('artist')
+        artist = tracker.latest_message['entities'][0]['value']
 
         return [SlotSet("final_decision", artist)]
 
