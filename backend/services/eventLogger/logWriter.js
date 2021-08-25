@@ -2,7 +2,6 @@ const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
-const { getBotRoom } = require('./../userService')
 const logger = require('../../utils/logger')
 
 const main = async () => {

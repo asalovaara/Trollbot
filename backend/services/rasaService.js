@@ -23,8 +23,6 @@ const getBotMessage = () => {
         name: 'Bot'
       }
     }
-
-    console.log(response)
     return response
   }
 }

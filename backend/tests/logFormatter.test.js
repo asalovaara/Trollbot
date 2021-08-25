@@ -1,7 +1,19 @@
 const formatter = require('../services/eventLogger/logFormatter')
 
+let defaultActionEvent
+let responseEvent
+let customActionEvent
+let userEvent
+let botEvent
+let slotEvent
+let ignoredEvent
+let usersEvent1
+let usersEvent2
+let artistsEvent1
+let artistsEvent2
+
 beforeEach(() => {
-   defaultActionEvent = {
+  defaultActionEvent = {
     event: 'action',
     timestamp: 1627495215.7365131,
     name: 'action_listen',
