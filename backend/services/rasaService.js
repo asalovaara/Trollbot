@@ -1,6 +1,7 @@
 const axios = require('axios')
 const { inspect } = require('util')
 const logger = require('../utils/logger')
+const { RASA_ENDPOINT } = require('../utils/config')
 var bot_messages = []
 
 const saveBotMessage = (message) => {
@@ -38,7 +39,7 @@ const sendMessageToRasa = async (roomId, { body, user }) => {
   logger.info('Entering sendMessageToRasa(): ', body, user.name)
   try {
     logger.info(inspect(body))
-    const response = await axios.post('http://localhost:5005/webhooks/callback/webhook', {
+    const response = await axios.post(RASA_ENDPOINT + '/webhooks/callback/webhook', {
       'sender': roomId,
       'message': body
     })
@@ -66,7 +67,7 @@ const setRasaUsersSlot = async (channel_id, users) => {
         rasa_users[user.senderId] = user
       }
     }
-    let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, {
+    let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
       'value': rasa_users
@@ -91,7 +92,7 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
   logger.info(`Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).`)
   try {
     logger.info('setRasaLastMessageSenderSlot', channel_id)
-    let tracker = await axios.get(`http://localhost:5005/conversations/${channel_id}/tracker`)
+    let tracker = await axios.get(RASA_ENDPOINT + `/conversations/${channel_id}/tracker`)
     let users = tracker.data.slots.users
 
     for (const user in users) {
@@ -99,8 +100,8 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
       users[user].active = false
     }
     users[user_id].active = true
-
-    let response = await axios.post(`http://localhost:5005/conversations/${channel_id}/tracker/events`, [
+    
+    let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, [
       {
         'event': 'slot',
         'name': 'users',
