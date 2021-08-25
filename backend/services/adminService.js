@@ -2,12 +2,14 @@ const logger = require('../utils/logger')
 
 let rooms = [
   {
-    name: 'A room',
+    name: 'TestA',
     botType: 'Normal',
+    id: 1
   },
   {
-    name: 'Second Room',
-    botType: 'Troll'
+    name: 'TestB',
+    botType: 'Troll',
+    id: 2
   },
 ]
 
