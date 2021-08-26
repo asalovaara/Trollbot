@@ -61,8 +61,8 @@ const ChatRoom = (props) => {
     scrollToBottom()
   })
 
-  const uniqueUsers = [...new Set(users)]
-  const uniqueTyping = [...new Set(typingUsers)]
+  const uniqueUsers = [...new Set(users)].filter(u => u.name !== undefined)
+  const uniqueTyping = [...new Set(typingUsers)].filter(u => u.name !== undefined)
 
   return (
     <Container>
