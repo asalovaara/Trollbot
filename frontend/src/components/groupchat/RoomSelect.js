@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link as ReactLink } from 'react-router-dom'
 import { TITLE } from '../../config'
@@ -11,25 +11,19 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-
-let rooms = []
+import InputLabel from '@material-ui/core/InputLabel'
 
 const RoomSelect = () => {
+  const [rooms, setRooms] = useState([])
   const classes = useTextInputStyles()
   const roomName = useField('text')
 
   useEffect(() => {
     adminServices.getRooms()
       .then(roomList => {
-        rooms = roomList
+        setRooms(roomList)
       })
   }, [])
-
-  const handleRoomSelect = (event) => {
-    const room = event.target.value
-    console.log('room', room)
-    roomName.value = room
-  }
 
   return (
     <Container>
@@ -38,7 +32,8 @@ const RoomSelect = () => {
       </Helmet>
       <Typography className={classes.titleText} variant="h4" paragraph>Select Room</Typography>
       <form className={classes.wrapForm} noValidate autoComplete='off'>
-        <Select clear={null} onChange={handleRoomSelect}>
+        <InputLabel id="demo-simple-select-helper-label">Select Room</InputLabel>
+        <Select clear={null} {...roomName} >
           {rooms.map(room =>
             <MenuItem key={room.id} value={room.name}>{room.name}</MenuItem>
           )}

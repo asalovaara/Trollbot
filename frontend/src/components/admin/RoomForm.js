@@ -15,8 +15,6 @@ const RoomForm = ({ rooms, setRooms }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    rooms = adminServices.getRooms()
-    console.log('RoomForm - rooms', rooms)
     const bot = botType.value < 20 ? 'Normal' : 'Troll'
     console.log(`Create room named '${roomName.value}' with bot '${bot}'`)
     const room = {
@@ -25,7 +23,8 @@ const RoomForm = ({ rooms, setRooms }) => {
     }
     adminServices.addRoom(room)
       .then(returnedRooms => {
-        setRooms(returnedRooms.data)
+        setRooms(rooms.concat(returnedRooms.data))
+        roomName.clear()
       })
   }
 

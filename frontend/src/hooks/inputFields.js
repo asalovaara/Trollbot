@@ -7,8 +7,7 @@ export const useField = (type, defaultValue) => {
     setValue(event.target.value)
   }
 
-  const clear = (event) => {
-    event.preventDefault()
+  const clear = () => {
     setValue('')
   }
 

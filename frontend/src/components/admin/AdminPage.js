@@ -10,10 +10,8 @@ const AdminPage = () => {
   const [rooms, setRooms] = useState([])
 
   useEffect(() => {
-    adminServices.getRooms()
-      .then(returnedRooms => {
-        setRooms(returnedRooms)
-      })
+    adminServices.getRooms().then(initialRooms => setRooms(initialRooms))
+    console.log(rooms)
   }, [])
 
   return (
@@ -22,7 +20,7 @@ const AdminPage = () => {
         <title>{`Admin Page - ${TITLE}`}</title>
       </Helmet>
       <RoomForm rooms={rooms} setRooms={setRooms} />
-      <RoomList rooms={rooms} />
+      {rooms && <RoomList rooms={rooms} />}
     </Box>
   )
 }
