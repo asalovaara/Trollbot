@@ -4,9 +4,9 @@
 
 This application requires Python, Node.js, npm and rasa to run.
 
- - (Node.js and npm installation guide)[https://docs.npmjs.com/downloading-and-installing-node-js-and-npm]
- - (Python downloads)[https://www.python.org/downloads/]
- - (Rasa installation guide)[https://rasa.com/docs/rasa/installation]
+ - [Node.js and npm installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+ - [Python downloads](https://www.python.org/downloads)
+ - [Rasa installation guide](https://rasa.com/docs/rasa/installation)
 
 ### Setting things up
 
@@ -36,7 +36,7 @@ There are some environment variables that cannot be publicly avalible, se they a
 Another way to deploy the application is by using Docker. Docker has the advantage in the fact that you do not need to have all the dependencies installed locally in order to run the application. It also allows you to control the environment in which the app runs in. 
 It can be a bit difficult to use in developement though. Building an image takes some time, so a small change can become an hour-long wait. Regardless, Docker can be useful when there is a need to get the application running quickly or there is a need to control the environment the application runs in.
 
-(Docker installation guide can be found here)[https://docs.docker.com/engine/install/#desktop]. 
+[Docker installation guide can be found here](https://docs.docker.com/engine/install/#desktop). 
 
 First, you should edit the Dockerfiles and docker-compose.yml to match the environment you want to run your application in. Guide on how to do this can be found in the Docker guide.
 
