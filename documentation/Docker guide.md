@@ -27,9 +27,9 @@ REACT_APP_API_URL=https<nolink>://ohtup-staging.cs.helsinki.fi/trollbot/api
 
 REACT_APP_SOCKET_SERVER_URL=/trollbot
 
-REACT_APP_SOCKET_ENDPOINT=https://ohtup-staging.cs.helsinki.fi
+REACT_APP_SOCKET_ENDPOINT=https<nolink>://ohtup-staging.cs.helsinki.fi
 
-RASA_ENDPOINT=http://trollbot-rasa:5005
+RASA_ENDPOINT=http<nolink>://trollbot-rasa:5005
 
 
 These define various addressess the app uses. PUBLIC_URL defines the location of the app in relation to the domain. As stated previously, our staging environment ran in subfolder  \/trollbot, so right now it has the value \/trollbot. This value can contain the entire address, if needed. 
