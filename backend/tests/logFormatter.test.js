@@ -7,6 +7,10 @@ let userEvent
 let botEvent
 let slotEvent
 let ignoredEvent
+let usersEvent1
+let usersEvent2
+let artistsEvent1
+let artistsEvent2
 
 beforeEach(() => {
   defaultActionEvent = {
@@ -81,6 +85,59 @@ beforeEach(() => {
     timestamp: 1627495216.0099509,
     use_text_for_featurization: false
   }
+
+  usersEvent1 = {
+    event: 'slot',
+    timestamp: 1628705618.6094000,
+    name: 'users',
+    value: {
+      '5i-abcdefghijklmnopq': {
+        id: '753fd7c8-a973-4333-a6b5-085b9107ddc1',
+        senderId: '5i-abcdefghijklmnopq',
+        name: 'Tester1',
+        room: 'testroom'
+      }
+    }
+  }
+
+  usersEvent2 = {
+    event: 'slot',
+    timestamp: 1628705618.6094093,
+    name: 'users',
+    value: {
+      '5i-abcdefghijklmnopq': {
+        id: '753fd7c8-a973-4333-a6b5-085b9107ddc1',
+        senderId: '5i-abcdefghijklmnopq',
+        name: 'Tester1',
+        room: 'testroom'
+      },
+      '6i-jklmnopqrstuvwxyz': {
+        id: '753fd7c8-a973-4333-a6b5-085b9107ddc2',
+        senderId: '6i-jklmnopqrstuvwxyz',
+        name: 'Tester2',
+        room: 'testroom'
+      }
+    }
+  }
+
+  artistsEvent1 = {
+    event: 'slot',
+    timestamp: 1629147874.8944200,
+    name: 'artists',
+    value: {
+      Testband1: { genre: 'pop' },
+    }
+  }
+
+  artistsEvent2 = {
+    event: 'slot',
+    timestamp: 1629147874.8944395,
+    name: 'artists',
+    value: {
+      Testband1: { genre: 'pop' },
+      Testband2: { genre: 'metal' },
+    }
+  }
 })
 
 test('correctly formats default action event', () => {
@@ -104,7 +161,7 @@ test('correctly formats response event', () => {
 test('correctly formats slot event', () => {
   const formattedEvent = formatter.formatEvent(slotEvent)
   expect(formattedEvent.event).toEqual('slot value was set')
-  expect(formattedEvent.name).toEqual('slot: test_passed | value: true')
+  expect(formattedEvent.name).toEqual('slot: test_passed | true')
 })
 
 test('correctly formats user utterance', () => {
@@ -122,6 +179,20 @@ test('correctly formats timestamp', () => {
   const formattedEvent = formatter.formatEvent(defaultActionEvent)
   const date = new Date(Date.UTC(2021, 6, 28, 18, 0, 15)).toLocaleString()
   expect(formattedEvent.timestamp).toEqual(date)
+})
+
+test('correctly formats users object updates', () => {
+  const formattedEvent1 = formatter.formatEvent(usersEvent1)
+  const formattedEvent2 = formatter.formatEvent(usersEvent2)
+  expect(formattedEvent1.name).toEqual('slot: users | 5i-abcdefghijklmnopq: {"id":"753fd7c8-a973-4333-a6b5-085b9107ddc1","senderId":"5i-abcdefghijklmnopq","name":"Tester1","room":"testroom"}')
+  expect(formattedEvent2.name).toEqual('slot: users | 6i-jklmnopqrstuvwxyz: {"id":"753fd7c8-a973-4333-a6b5-085b9107ddc2","senderId":"6i-jklmnopqrstuvwxyz","name":"Tester2","room":"testroom"}')
+})
+
+test('correctly formats artists object updates', () => {
+  const formattedEvent1 = formatter.formatEvent(artistsEvent1)
+  const formattedEvent2 = formatter.formatEvent(artistsEvent2)
+  expect(formattedEvent1.name).toEqual('slot: artists | Testband1: {"genre":"pop"}')
+  expect(formattedEvent2.name).toEqual('slot: artists | Testband2: {"genre":"metal"}')
 })
 
 test('removes ignored events from the log', () => {

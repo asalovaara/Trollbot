@@ -1,12 +1,13 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-const {setRasaUsersSlot} = require('./rasaService')
-let users = [{
+const { setRasaUsersSlot } = require('./rasaService')
+let users = []
+let bot = {
   id: 'bot',
   senderId: 'bot',
   name: 'Bot',
-  room: 'Test',
-}]
+  room: 'room'
+}
 
 const login = (username) => {
   const user = users.find(u => u.name.toLowerCase() == username.toLowerCase())
@@ -44,6 +45,9 @@ const addUser = (senderId, room, name) => {
   return user
 }
 
+const getBotRoom = () => {
+  return users[0].room
+}
 
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id)
@@ -53,6 +57,11 @@ const removeUser = (id) => {
 
 const getUser = (id) => users.find((user) => user.id === id)
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room)
+const getUsersInRoom = (room) => {
+  let roomUsers = users.filter((user) => user.room === room)
+  bot.room = room
+  roomUsers.push(bot)
+  return roomUsers
+}
 
-module.exports = { login, addUser, removeUser, getUser, getUsersInRoom }
+module.exports = { login, addUser, removeUser, getUser, getUsersInRoom, getBotRoom }
