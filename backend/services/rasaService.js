@@ -5,10 +5,7 @@ const { RASA_ENDPOINT } = require('../utils/config')
 var bot_messages = []
 
 const saveBotMessage = (message) => {
-
-  console.log(message.text)
   bot_messages.push(message)
-
 }
 
 const getBotMessage = () => {
@@ -16,34 +13,18 @@ const getBotMessage = () => {
   if (bot_messages.length != 0) {
 
     const reply = bot_messages.shift()
+    const room = reply.recipient_id
 
-    let replies = []
-    const replyObject = {
+    let response = {
+      room: room,
       body: reply.text,
-      user: 'Bot',
-      date: new Date().toISOString(),
-      id: 111
-    }
-
-    replies.push(replyObject)
-
-    let responses = []
-    for (let i = 0; i < replies.length; i++) {
-      const msg = {
-        id: 'botanswerid' + (replies[i].id + i),
-        room: 'Test',
-        body: replies[i].body,
-        senderId: 'bot',
-        user: {
-          name: 'Bot'
-        }
+      senderId: 'bot',
+      user: {
+        name: 'Bot'
       }
-      responses.push(msg)
     }
-
-    console.log(responses)
-    return responses
-  } 
+    return response
+  }
 }
 
 /**
@@ -52,20 +33,20 @@ const getBotMessage = () => {
  * @param {*} param1 
  * @returns 
  */
-const getRasaRESTResponse = async (roomId, { body, user }) => {
-  logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
+const sendMessageToRasa = async (roomId, { body, user }) => {
+  logger.info('Entering sendMessageToRasa(): ', body, user.name)
   try {
     logger.info(inspect(body))
     const response = await axios.post(RASA_ENDPOINT + '/webhooks/callback/webhook', {
       'sender': roomId,
       'message': body
     })
-    logger.info(`response: ${inspect(response.data[0].text)}`)
+    logger.info(`Rasa received message status: ${inspect(response.data)}`)
 
     return response.data
 
   } catch (error) {
-    logger.error(`An error occurred during rasaController:getRasaRESTResponse: ${error}`)
+    logger.error(`An error occurred while sending message to Rasa: ${error}`)
   }
 }
 
@@ -93,7 +74,7 @@ const setRasaUsersSlot = async (channel_id, users) => {
       logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
       return true
     }
-    
+
   } catch (e) {
     logger.error(e)
   }
@@ -145,7 +126,7 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
 
 }
 
-exports.getRasaRESTResponse = getRasaRESTResponse
+exports.sendMessageToRasa = sendMessageToRasa
 exports.setRasaUsersSlot = setRasaUsersSlot
 exports.setRasaLastMessageSenderSlot = setRasaLastMessageSenderSlot
 exports.saveBotMessage = saveBotMessage
