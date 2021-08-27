@@ -17,7 +17,10 @@ const saveUserToDatabase = async (user) => {
 const saveArtistToDatabase = async (artist) => {
   const artistModel = new Artist({
     professionalName: artist.professionalName,
-    genres: []
+    firstName: artist.firstName,
+    lastName: artist.lastName,
+    gender: artist.gender,
+    genres: artist.genres
   })
   return await artistModel.save()
 }
@@ -34,6 +37,10 @@ const addGenreToArtist = async (professionalName, genre) => {
   return await Artist.findByIdAndUpdate(professionalName, { $push: { genres: genre } }, { new: true })
 }
 
+const deleteAll = async () => {
+  return await Artist.deleteMany( {} )
+}
+
 module.exports = {
   getUsers,
   saveUserToDatabase,
@@ -41,4 +48,5 @@ module.exports = {
   getUserByName,
   getArtistByName,
   addGenreToArtist,
+  deleteAll
 }
