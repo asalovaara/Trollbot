@@ -95,36 +95,37 @@
 
 # # --------------suggested active/inactive user implementation----------------------
 
-# - story: active user suggests artist 
+# - story: active user suggests artist
 #   steps:
 #   - intent: suggest_artist # user suggests artist
 #   - slot_was_set: # task phase true check
-#     - task_activated: true  
+#     - task_activated: true
 #   - slot_was_set: # active user true check
-#     - active_user: true 
+#     - active_user: true
 #   - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
 #   - slot_was_set: # tell rasa genre slot was set by custom action
-#     - genre 
+#     - genre
 #   - action: action_set_opinion_slot_as_good
 #   - slot_was_set: # tell rasa opinion slot was set
 #     - opinion
 #   - action: action_set_artist_for_user # append the liked artist list of the user object
 #   - action: utter_artist_dismissal # dismiss user's suggested artist
 
-# - story: inactive user suggests artist 
+
+# - story: inactive user suggests artist
 #   steps:
 #   - intent: suggest_artist # user suggests artist
 #   - slot_was_set: # task phase true check
-#     - task_activated: true  
+#     - task_activated: true
 #   - slot_was_set: # active user false check
-#     - active_user: false 
+#     - active_user: false
 #   - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
 #   - slot_was_set: # tell rasa genre slot was set by custom action
-#     - genre 
-#   - action: action_set_opinion_slot_as_good 
+#     - genre
+#   - action: action_set_opinion_slot_as_good
 #   - slot_was_set: # tell rasa opinion slot was set
 #     - opinion
-#   - action: action_set_artist_for_user # append the liked artist list of the user object  
+#   - action: action_set_artist_for_user # append the liked artist list of the user object
 #   - action: action_listen # default action, wait for the next user message
 
 # - story: active user likes artist
@@ -177,13 +178,13 @@
 #   - slot_was_set:
 #     - task_activated: true
 #   - slot_was_set: # active user false check
-#     - active_user: false   
+#     - active_user: false
 #   - action: action_set_genre_slot
 #   - slot_was_set:
 #     - genre
 #   - action: action_set_opinion_slot_as_good
 #   - slot_was_set:
-#     - opinion    
+#     - opinion
 #   - action: action_set_artist_for_user
 #   - action: action_listen # default action, wait for the next user message
 
