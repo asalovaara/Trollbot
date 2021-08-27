@@ -2,11 +2,11 @@ FROM node:14-slim
 
 ENV SKIP_PREFLIGHT_CHECK=true
 
-#ENV PUBLIC_URL=/trollbot
-#ENV API_URL=/api
-#ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
-#ENV REACT_APP_SOCKET_SERVER_URL=/trollbot
-#ENV REACT_APP_SOCKET_ENDPOINT=https://ohtup-staging.cs.helsinki.fi
+ENV PUBLIC_URL=/trollbot
+ENV API_URL=/api
+ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
+ENV REACT_APP_SOCKET_SERVER_URL=/trollbot
+ENV REACT_APP_SOCKET_ENDPOINT=https://ohtup-staging.cs.helsinki.fi
 ENV RASA_ENDPOINT=http://trollbot-rasa:5005
 
 # Install app dependencies
