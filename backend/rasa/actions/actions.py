@@ -122,15 +122,9 @@ class ActionSetGenreSlot(Action):
                     artists[new_artist] = {}
                     name = artist['professionalName']
                     artists[new_artist]['professionalName'] = name
-                    artists[new_artist]['firstName'] = None
-                    if 'firstName' in artist:
-                        artists[new_artist]['firstName'] = artist['firstName']
-                    artists[new_artist]['lastName'] = None
-                    if 'lastName' in artist:
-                        artists[new_artist]['lastName'] = artist['lastName']
-                    artists[new_artist]['gender'] = 'band'
-                    if 'gender' in artist:
-                        artists[new_artist]['gender'] = artist['gender']
+                    artists[new_artist]['firstName'] = artist['firstName'] if 'firstName' in artist else None
+                    artists[new_artist]['lastName'] = artist['lastName'] if 'lastName' in artist else None
+                    artists[new_artist]['gender'] = artist['gender'] if 'gender' in artist else 'band'
                     try:
                         genre = requests.get('http://localhost:3001/api/trollbot/genre/' + new_artist)
                         genre = genre.json()
@@ -139,6 +133,9 @@ class ActionSetGenreSlot(Action):
                         print(e)
                         genre = None
                     artists[new_artist]['genre'] = genre
+                    artists[new_artist]['area'] = artist['area'] if 'area' in artist else None
+                    artists[new_artist]['begin'] = artist['begin'] if 'begin' in artist else None
+                    artists[new_artist]['end'] = artist['end'] if 'end' in artist else None
                     print(artists[new_artist])
                 except Exception as e:
                     print("ERROR in trying to fetch artist:")
@@ -146,9 +143,8 @@ class ActionSetGenreSlot(Action):
             else:
                 genre = artists[new_artist]['genre']
                 print(genre)
-            artistName = artists[new_artist]['professionalName']
-            if artists[new_artist]['firstName'] is not None:
-                artistName = artists[new_artist]['firstName']
+            artistName = artists[new_artist]['firstName'] if artists[new_artist]['firstName'] is not None else artists[new_artist]['professionalName']
+                
         except Exception as e:
             genre = None
             artistName = new_artist
