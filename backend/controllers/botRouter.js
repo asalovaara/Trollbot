@@ -2,6 +2,7 @@ const botRouter = require('express').Router()
 // const { rasaAnswer, getMessages, clearMessages, genreToRasa } = require('../services/trollbot')
 const { getArtistByName } = require('../database/databaseService')
 const { getGenreByName } = require('../services/spotifyService')
+const { updateOneArtist } = require('../services/artistService')
 
 // botRouter.get('/', (req, res) => {
 //   res.json(getMessages())
@@ -36,6 +37,9 @@ botRouter.get('/genre/:artist', async (req, res) => {
 
 botRouter.get('/:artist', async (req, res) => {
   const artist = req.params.artist
+  // Updates the artist in the database. Remove later when artist fields are final!
+  await updateOneArtist(artist)
+  // Gets artist from database.
   const response = await getArtistByName(artist)
   console.log(response)
   if (response === undefined) {

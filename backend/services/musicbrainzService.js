@@ -21,7 +21,7 @@ const getArtist = async (artistName) => {
         return undefined
       }
 
-      const fullName = firstResult.sortname
+      const fullName = firstResult['sort-name']
       let firstName = getFirstName(fullName)
       let lastName = getLastName(fullName)
 
@@ -31,11 +31,11 @@ const getArtist = async (artistName) => {
         'lastname': lastName,
         'gender': firstResult.gender,
         'genres': getBestTag(firstResult.tags),
-        'area': firstResult.area,
-        'begin': firstResult.begin,
-        'end': firstResult.end
+        'area': firstResult.area.name,
+        'begin': firstResult['life-span'].begin,
+        'end': firstResult['life-span'].end
       }
-
+      console.log(artistObj)
       return artistObj
     })
     .catch((error) => {
@@ -74,15 +74,15 @@ const getFullLegalName = (aliases) => {
 const getFirstName = (fullName) => {
   const arr = fullName.split(',')
   if (arr.length == 1) {
-    return 'None'
+    return undefined
   }
-  return arr[arr.length - 1]
+  return arr[1]
 }
 
 const getLastName = (fullName) => {
   const arr = fullName.split(',')
   if (arr.length == 1) {
-    return 'None'
+    return undefined
   }
   return arr[0]
 }

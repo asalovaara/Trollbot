@@ -37,6 +37,10 @@ const getArtistByName = async (name) => {
   return await Artist.findOne({ professionalName: { $regex: new RegExp(name, "i")} })
 }
 
+const updateArtist = async(professionalName, artist) => {
+  return await Artist.findOneAndUpdate(professionalName, artist)
+}
+
 const addGenreToArtist = async (professionalName, genre) => {
   return await Artist.findByIdAndUpdate(professionalName, { $push: { genres: genre } }, { new: true })
 }
@@ -51,6 +55,7 @@ module.exports = {
   saveArtistToDatabase,
   getUserByName,
   getArtistByName,
+  updateArtist,
   addGenreToArtist,
   deleteAll
 }
