@@ -4,11 +4,9 @@ describe('Room Service tests', () => {
   const room = { name: 'Test' }
 
   beforeAll(() => {
-    const foundRoom = roomService.addRoom(room)
-    console.log(foundRoom)
-    const user = roomService.addUserIntoRoom(room, 'Testuser')
-    console.log(user)
-    roomService.addMessage(room, 'Testmessage')
+    roomService.addRoom(room)
+    roomService.addUserIntoRoom('Test', 'Testuser')
+    roomService.addMessage('Test', { user: 'Testuser', body: 'Testmessage' })
   })
 
   it('Finds room', () => {
@@ -22,20 +20,22 @@ describe('Room Service tests', () => {
   })
 
   it('Finds users in room', () => {
-    const users = roomService.getUsersInRoom(room)
-    expect(users.find(u => u.id === 123).name).toBe('Testuser')
+    const users = roomService.getUsersInRoom('Test')
+    expect(users.find(u => u.name === 'Testuser').name).toBe('Testuser')
     expect(users.find(u => u.id === 4654654)).toBe(undefined)
   })
 
   it('Finds messages in room', () => {
-    const messages = roomService.getMessageInRoom(room)
+    const messages = roomService.getMessagesInRoom('Test')
     const message = messages.find(m => m.body === 'Testmessage')
     expect(message.body).toBe('Testmessage')
   })
 
   it('Removes user from room', () => {
-    const removedUser = roomService.removeUserFromRoom(room, 'Testuser')
+    const removedUser = roomService.removeUserFromRoom('Test', 'Testuser')
     expect(removedUser.name).toBe('Testuser')
+    const users = roomService.getUsersInRoom('Test')
+    expect(users.find(u => u.name === 'Testuser')).toBe(undefined)
   })
 
 })
