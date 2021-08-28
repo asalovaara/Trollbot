@@ -56,6 +56,7 @@ slots:
     type: any
   active_user:
     type: bool
+    influence_conversation: false
   last_message_sender:
     type: bool
   name:
@@ -92,7 +93,8 @@ actions:
 - action_end_conversation
 - action_greet_user_by_name
 - action_greet_users
-- action_handle_claim
+- action_handle_claim_nice
+- action_handle_claim_troll
 - action_post_decision
 - action_set_decision_phase
 - action_set_genre_slot
@@ -243,8 +245,11 @@ responses:
   utter_genre:
   - text: "{genre}"
 
-  utter_same_artist_liked:
+  utter_same_artist_liked_troll:
   - text: "Looks like you both like the same artist. I guess birds of a feather do flock together."
+
+  utter_same_artist_liked_nice:
+  - text: "Oh nice, you both like {artist}!"
 
 session_config:
   session_expiration_time: 60
