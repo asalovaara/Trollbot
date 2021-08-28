@@ -2,9 +2,10 @@ describe('Trollbot app E2E testing', () => {
 
   beforeEach(() => {
     cy.visit('http://localhost:3001')
+    loginHelper()
   })
 
-  afterEach(() => {
+  after(() => {
     logoutHelper()
   })
 
@@ -21,19 +22,16 @@ describe('Trollbot app E2E testing', () => {
   // Tests
 
   it('Select room page can be visited', function () {
-    loginHelper()
     cy.contains('Select Room')
   })
 
   it('Can select a room ', function () {
-    loginHelper()
     cy.get('#room').type('Test')
     cy.get('#join').click()
     cy.contains('Room:')
   })
 
   it('Can send a message', function () {
-    loginHelper()
     cy.get('#room').type('Test')
     cy.get('#join').click()
     cy.get('#message-field').type('Test message')
