@@ -11,7 +11,7 @@
 # https://rasa.com/docs/rasa/custom-actions
 
 action_endpoint:
- url: http://localhost:5055/webhook
+ url: ${ACTION_ENDPOINT_URL}
 
 # Tracker store which is used to store the conversations.
 # By default the conversations are stored in memory.
@@ -33,7 +33,7 @@ action_endpoint:
 #   username:
 #   password:
 
-# stuff to add to readme if needed
+# stuff to add to readme if needed 
 
 # to run mongo database:
 # C://Program Files/MongoDB/Server/4.4/bin/mongod.exe

@@ -26,12 +26,12 @@ module.exports = {
           // Bot reply timeout chain
 
           setTimeout(() => {
-            logger.info('Bot start typing', { senderId: botMessage[0].senderId, user: botMessage[0].user })
-            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: botMessage[0].senderId, user: botMessage[0].user })
+            logger.info('Bot start typing', { senderId: botMessage.senderId, user: botMessage.user })
+            io.in(botMessage.room).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: botMessage.senderId, user: botMessage.user })
             setTimeout(() => {
-              logger.info('End typing', { senderId: botMessage[0].senderId, user: botMessage[0].user })
-              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: botMessage[0].senderId, user: botMessage[0].user })
-              io.in(roomId).emit(events.BOT_SENDS_MESSAGE_EVENT, botMessage[0])
+              logger.info('End typing', { senderId: botMessage.senderId, user: botMessage.user })
+              io.in(botMessage.room).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: botMessage.senderId, user: botMessage.user })
+              io.in(botMessage.room).emit(events.BOT_SENDS_MESSAGE_EVENT, botMessage)
             }, 2000)
           }, 500)
         }
@@ -48,24 +48,6 @@ module.exports = {
         await setRasaLastMessageSenderSlot(roomId, data.senderId)
         const answers = getAnswer(roomId, data)
         logger.info('Bot answer', answers)
-
-        // socket.on(events.BOT_ANSWER_EVENT, async (data) => {
-        //   await setRasaLastMessageSenderSlot(roomId, data.senderId)
-        // const answers = await getAnswer(roomId, data)
-
-        
-        /*         setTimeout(() => {
-          logger.info('Bot start typing', { senderId: answers[0].senderId, user: answers[0].user })
-          io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: answers[0].senderId, user: answers[0].user })
-          setTimeout(() => {
-            logger.info('End typing', { senderId: answers[0].senderId, user: answers[0].user })
-            io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: answers[0].senderId, user: answers[0].user })
-            answers.map(answer => {
-              io.in(roomId).emit(events.BOT_ANSWER_EVENT, answer)
-            })
-          }, 2000)
-        }, 500)   */
-
       })
 
       // Listen typing events

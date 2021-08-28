@@ -27,22 +27,35 @@ REACT_APP_API_URL=https<nolink>://ohtup-staging.cs.helsinki.fi/trollbot/api
 
 REACT_APP_SOCKET_SERVER_URL=/trollbot
 
+REACT_APP_SOCKET_ENDPOINT=https<nolink>://ohtup-staging.cs.helsinki.fi
+
+RASA_ENDPOINT=http<nolink>://trollbot-rasa:5005
 
 
 These define various addressess the app uses. PUBLIC_URL defines the location of the app in relation to the domain. As stated previously, our staging environment ran in subfolder  \/trollbot, so right now it has the value \/trollbot. This value can contain the entire address, if needed. 
 API_URL defines the backend's api address, and REACT_APP_API_URL defines the api address that the client uses to connect to it. 
 As you may notice, these addresses were different in our particular use case. You may have to change these depending on your needs. 
-Finally, REACT_APP_SOCKET_SERVER_URL defines where the socket connects. This can be the same location as the PUBLIC_URL, but it is seperately configurable. Unlike PUBLIC_URL, this cannot contain the entire address.
+REACT_APP_SOCKET_SERVER_URL defines where the socket connects. This can be the same location as the PUBLIC_URL, but it is seperately configurable. Unlike PUBLIC_URL, this cannot contain the entire address.
+REACT_APP_SOCKET_ENDPOINT defines the domain from which the backend is called. It should contain the entire domain without the subfolder.
+Finally, RASA_ENDPOINT has the location of the rasa server. If rasa is run in a docker container it should be the name of the rasa service or the hostname, if it has been defined.
+If the app is run locally, it should be "localhost". If the port the rasa server is located is somehow changed, the port should be changed here too.
 
 After making changes, please run "docker-compose build" to build the project. If you want to test the application locally, run "docker-compose up". If you want to update docker hub, run "docker-compose push".
 Please note that if the application is configured to run in a subfolder, it will not work locally. 
 
+### Rasa's environment variables
+
+Rasa has two environment variables. If the entire application is run through docker containers, there is no need to change these unless the hostnames are changed in docker-compose.
+If hostnames are changed, the locations should be changed accordingly. If the port the backend deploys to is changed, the port in BACKEND_API_LOCATION should also be changed.
+
 ### Configuring docker-compose
 
-In the docker-compose.yml file you can configure the services that the application is composed of. There are two services that are important for this application. trollbot-server runs the server, and trollbot-rasa runs the rasa-chatbot.
+In the docker-compose.yml file you can configure the services that the application is composed of. There are two services that are important for this application. trollbot runs the server, and trollbot-rasa runs the rasa-chatbot.
 Both of these services have an image associated with them. If you wish to change the docker repository where the images are pushed or pulled from, please change the "image" field to match it. The format is  \[User]/\[Repository].
 
-The "build" field links to the folder the Dockerfile associated with this service resides in. If you wish to add more services or change the location of the dockerfile of the existing services, edit this field.
+The "build" field links to the folder the Dockerfile associated with this service resides in. If you wish to add more services or change the locations of the dockerfiles of the existing services, edit this field.
+
+The "hostname" field defines the name of the service's network. Changing this means changing the relevant fields in Dockerfiles. 
 
 ### Adding files to .dockerignore
 

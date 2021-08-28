@@ -9,6 +9,7 @@ from rasa_sdk.events import FollowupAction, UserUtteranceReverted, SlotSet, Remi
 from rasa_sdk.types import DomainDict
 import requests
 import datetime
+import os
 
 # Used if and only if the bot begins the conversation.
 # Not currently in use.
@@ -114,6 +115,19 @@ class ActionSetGenreSlot(Action):
             # latest message's artist entity extracted by DIETClassifier. index 1 would be RegexEntityClassifier's artist entity
             new_artist = tracker.latest_message['entities'][0]['value']
             # new_artist used instead of artist so that artists not in the lookup table can be searched
+
+            try:
+                BACKEND_API_LOCATION = 'localhost:3001'
+                if 'BACKEND_API_LOCATION' in os.environ:
+                    BACKEND_API_LOCATION = os.environ.get('BACKEND_API_LOCATION')
+                
+                genre = requests.get('http://' + BACKEND_API_LOCATION + '/api/trollbot/genre/' + new_artist)
+                genre = genre.json()
+            except Exception as e:
+                print(e)
+                genre = None
+            print('genre: ' + genre)
+            
             if new_artist not in artists:
                 try:
                     artist = requests.get('http://localhost:3001/api/trollbot/' + new_artist)
