@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Helmet } from 'react-helmet'
 
 import useChat from '../../services/chat'
@@ -17,9 +17,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 
 const ChatRoom = (props) => {
-
   const { roomId } = props.match.params
-
   const {
     messages,
     users,
@@ -30,10 +28,14 @@ const ChatRoom = (props) => {
     stopTypingMessage,
   } = useChat(roomId)
   const [newMessage, setNewMessage] = useState('')
-
   const { isTyping, startTyping, stopTyping, cancelTyping } = useTyping()
+  const scrollRef = useRef(null)
 
-  let messagesEnd = React.createElement()
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behaviour: 'smooth' })
+    }
+  }, [messages])
 
   const handleNewMessageChange = (event) => {
     setNewMessage(event.target.value)
@@ -48,18 +50,10 @@ const ChatRoom = (props) => {
     setNewMessage('')
   }
 
-  const scrollToBottom = () => {
-    messagesEnd.scrollIntoView({ behavior: 'smooth' })
-  }
-
   useEffect(() => {
     if (isTyping) startTypingMessage()
     else stopTypingMessage()
   }, [isTyping])
-
-  useEffect(() => {
-    scrollToBottom()
-  })
 
   const uniqueUsers = [...new Set(users)].filter(u => u.name !== undefined)
   const uniqueTyping = [...new Set(typingUsers)].filter(u => u.name !== undefined)
@@ -81,6 +75,7 @@ const ChatRoom = (props) => {
                 </ListItem>
               </li>
             ))}
+            <li ref={scrollRef} />
           </ul>
         </List>
       </Box>
@@ -102,9 +97,6 @@ const ChatRoom = (props) => {
         handleStopTyping={stopTyping}
         handleSendMessage={handleSendMessage}
       />
-      <div style={{ float: 'left', clear: 'both' }}
-        ref={(el) => { { messagesEnd = el } }}>
-      </div>
     </Container >
   )
 }

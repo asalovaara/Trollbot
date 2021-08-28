@@ -4,7 +4,7 @@ import { Link as ReactLink } from 'react-router-dom'
 import { TITLE } from '../../config'
 import { useTextInputStyles } from '../../styles/TextInputStyles.js'
 import { useField } from '../../hooks/inputFields'
-import adminServices from '../../services/admin'
+import roomService from '../../services/room'
 
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
@@ -19,7 +19,7 @@ const RoomSelect = () => {
   const roomName = useField('text')
 
   useEffect(() => {
-    adminServices.getRooms()
+    roomService.getRooms()
       .then(roomList => {
         setRooms(roomList)
       })
@@ -33,7 +33,7 @@ const RoomSelect = () => {
       <Typography className={classes.titleText} variant="h4" paragraph>Select Room</Typography>
       <form className={classes.wrapForm} noValidate autoComplete='off'>
         <InputLabel id="demo-simple-select-helper-label">Select Room</InputLabel>
-        <Select clear={null} {...roomName} >
+        <Select {...roomName} >
           {rooms.map(room =>
             <MenuItem key={room.id} value={room.name}>{room.name}</MenuItem>
           )}

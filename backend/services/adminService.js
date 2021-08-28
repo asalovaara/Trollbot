@@ -15,9 +15,9 @@ let rooms = [
 
 const addRoom = (room) => {
   logger.info('adminService - addRoom - room', room)
-  const savedRooms = { ...room, id: rooms.length + 1 }
-  rooms.push(savedRooms)
-  return savedRooms
+  const savedRoom = { ...room, id: rooms.length + 1 }
+  rooms.push(savedRoom)
+  return savedRoom
 }
 
 const getRooms = () => {

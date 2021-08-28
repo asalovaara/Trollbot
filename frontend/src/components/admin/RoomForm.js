@@ -1,17 +1,19 @@
 import React from 'react'
 import { useField } from '../../hooks/inputFields'
-import { Box, Grid, TextField, Button, Select, MenuItem, InputLabel, Typography } from '@material-ui/core'
-import adminServices from '../../services/admin'
+import roomService from '../../services/room'
+
+import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import InputLabel from '@material-ui/core/InputLabel'
+import Typography from '@material-ui/core/Typography'
 
 const RoomForm = ({ rooms, setRooms }) => {
   const roomName = useField('text')
   const botType = useField('number', 10)
-
-  // useEffect(() => {
-  //   const storedRooms = adminServices.getRooms()
-  //   console.log('storedRooms', storedRooms)
-  //   rooms.concat(storedRooms)
-  // }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -21,7 +23,7 @@ const RoomForm = ({ rooms, setRooms }) => {
       name: roomName.value,
       botType: bot,
     }
-    adminServices.addRoom(room)
+    roomService.addRoom(room)
       .then(returnedRooms => {
         setRooms(rooms.concat(returnedRooms.data))
         roomName.clear()

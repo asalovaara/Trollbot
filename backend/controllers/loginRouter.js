@@ -1,7 +1,6 @@
 const loginRouter = require('express').Router()
 const logger = require('../utils/logger')
-const { getUsers, login } = require('../services/userService')
-const User = require('../models/user')
+const { getUsers, login } = require('../services/roomService')
 
 loginRouter.post('/', async (request, response) => {
   const body = request.body
@@ -9,11 +8,6 @@ loginRouter.post('/', async (request, response) => {
   logger.info('Logged in as:', logginUser)
   response.status(200).send(logginUser)
 
-})
-
-loginRouter.get('/:id', async (request, response) => {
-  const user = await User.findOne({}).populate('courses')
-  response.json(user)
 })
 
 loginRouter.get('/', (request, response) => {

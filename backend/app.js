@@ -7,17 +7,14 @@ const logger = require('./utils/logger')
 const { API_URL, MONGODB_URI } = require('./utils/config')
 const mongoose = require('mongoose')
 
-const botRouter = require('./controllers/botRouter')
-const rasaRouter = require('./controllers/rasaRouter')
 const loginRouter = require('./controllers/loginRouter')
 const roomRouter = require('./controllers/roomRouter')
-const adminRouter = require('./controllers/adminRouter')
 
 const app = express()
 
 logger.info('connecting to Mongoose')
 
-mongoose.connect(MONGODB_URI, { useUnifiedTopology: false, useNewUrlParser: true, useCreateIndex: true })
+mongoose.connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true })
   .then(() => {
     logger.info('connected to MongoDB')
   })
@@ -28,14 +25,11 @@ mongoose.connect(MONGODB_URI, { useUnifiedTopology: false, useNewUrlParser: true
 app.use(express.json()) // for parsing JSON
 app.use(express.urlencoded({ extended: true }))
 app.use(cors()) // to enable cross-origin resource sharing
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(path.join(__dirname, 'build'))) // find and use static build
 
 // Routers
-app.use(`${API_URL}/trollbot`, botRouter)
-app.use(`${API_URL}/rasa`, rasaRouter)
 app.use(`${API_URL}/login`, loginRouter)
 app.use(`${API_URL}/rooms`, roomRouter)
-app.use(`${API_URL}/admin`, adminRouter)
 
 // Static Build
 app.get('/*', (request, response) => {

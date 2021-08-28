@@ -3,14 +3,14 @@ import RoomList from './RoomList'
 import RoomForm from './RoomForm'
 import { Helmet } from 'react-helmet'
 import { TITLE } from '../../config'
-import { Box } from '@material-ui/core'
-import adminServices from '../../services/admin'
+import Box from '@material-ui/core/Box'
+import roomService from '../../services/room'
 
 const AdminPage = () => {
   const [rooms, setRooms] = useState([])
 
   useEffect(() => {
-    adminServices.getRooms().then(initialRooms => setRooms(initialRooms))
+    roomService.getRooms().then(initialRooms => setRooms(initialRooms))
     console.log(rooms)
   }, [])
 
