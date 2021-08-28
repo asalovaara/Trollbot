@@ -5,7 +5,7 @@ const readline = require('readline')
 const logger = require('../utils/logger')
 const { API_URL, MONGODB_URI } = require('../utils/config')
 const mongoose = require('mongoose')
-const { saveArtistToDatabase, updateArtist, deleteAll } = require('../database/databaseService')
+const { saveArtistToDatabase, deleteAll } = require('../database/databaseService')
 const { getArtist } = require('./musicbrainzService')
 
 // run this file to add artists to the database
@@ -31,6 +31,7 @@ const main = async () => {
 
 }
 
+<<<<<<< HEAD
 const updateOneArtist = async (artist) => {
   const artistObj = await getArtist(artist)
   if (artistObj !== undefined) {
@@ -38,6 +39,8 @@ const updateOneArtist = async (artist) => {
   }
 }
 
+=======
+>>>>>>> parent of da32e4d (Merge branch 'artist_object' of github.com:sumuh/Trollbot into artist_object)
 // Go through all artists (lines) in file.
 // Add genre if doesn't exist yet.
 // Add artist to genre sub-document.
@@ -69,7 +72,3 @@ const sleep = (ms) => {
 }
 
 main().catch(console.error)
-
-module.exports = {
-  updateOneArtist
-}
