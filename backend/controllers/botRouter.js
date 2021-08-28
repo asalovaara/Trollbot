@@ -7,7 +7,7 @@ const { updateOneArtist } = require('../services/artistService')
 botRouter.get('/genre/:artist', async (req, res) => {
 
   const artist = req.params.artist
-  const response = await getArtistByName(artist)
+  let response = await getArtistByName(artist)
   if (response === undefined) {
     // If musicbrainz does not have the genre, gets it from spotify
     response = await getGenreByName(artist)

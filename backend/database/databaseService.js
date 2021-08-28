@@ -34,7 +34,7 @@ const getUserByName = async (username) => {
 
 // Added regex to make the search case insensitive? Revert if does not work
 const getArtistByName = async (name) => {
-  return await Artist.findOne({ professionalName: { $regex: new RegExp(name, "i")} })
+  return await Artist.findOne({ professionalName: { $regex: new RegExp(name, 'i')} })
 }
 
 const updateArtist = async(professionalName, artist) => {

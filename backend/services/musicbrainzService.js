@@ -57,7 +57,7 @@ const getBestTag = (tags) => {
   }
   return best.name
 }
-
+/*
 const getFullLegalName = (aliases) => {
   if (aliases === undefined) {
     return 'None'
@@ -70,7 +70,7 @@ const getFullLegalName = (aliases) => {
 
   return 'None'
 }
-
+*/
 const getFirstName = (fullName) => {
   const arr = fullName.split(',')
   if (arr.length == 1) {
