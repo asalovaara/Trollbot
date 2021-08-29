@@ -79,7 +79,6 @@ const formatSlotSet = (obj) => {
   
   if (obj.name === 'last_message_sender') {
     lastMessageSenderId = obj.value
-  } else if (obj.name ==='active_user'){
   } else if (obj.name === 'users') {
     // console.log(obj.value)
     formatUserJoiningOrLeaving(obj)
@@ -118,7 +117,7 @@ const formatObjectSlotValue = (oldValue, newValue) => {
   const changes = diff(oldValue, newValue)
   // console.log(changes)
   if (changes !== undefined) {
-    const path = JSON.stringify(changes[0].path).replace(/["\[\]]/g, '').replace(/,/g, '.')
+    const path = JSON.stringify(changes[0].path).replace(/["[\]]/g, '').replace(/,/g, '.')
     const value = JSON.stringify(changes[0].rhs)
 
     return path + ': ' + value

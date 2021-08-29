@@ -1,9 +1,6 @@
 const YAML = require('yaml')
 const _ = require('lodash')
 
-//story steps from stories.yml not used in matching
-const ignoredSteps = ['checkpoint']
-
 // matches event log with stories, adds corresponding story tags to the log
 const matchLogWithStories = (stories, rules, logArray) => {
   let i = 0
@@ -13,7 +10,7 @@ const matchLogWithStories = (stories, rules, logArray) => {
     let matchingRules = _.cloneDeep(rules)
     let stepCounter = 0
 
-    console.log(stories)
+    // console.log(stories)
 
     while (i < logArray.length) {
       let logStep = logArray[i].story_step
@@ -45,7 +42,7 @@ const matchLogWithStories = (stories, rules, logArray) => {
 
 // filter stories not containing a given story step
 const matchStep = (logStep, stories) => {
-  matchedStories = stories.filter(story => YAML.stringify(story.steps).includes(logStep))
+  let matchedStories = stories.filter(story => YAML.stringify(story.steps).includes(logStep))
 
   matchedStories = removeMatchedSteps(matchedStories, logStep)
 

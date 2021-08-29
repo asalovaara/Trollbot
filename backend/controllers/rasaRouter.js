@@ -4,7 +4,7 @@ const logger = require('../utils/logger')
 
 rasaRouter.post('/bot', (req, res) => {
   const message = req.body
-  console.log(message)
+  logger.info(message)
   saveBotMessage(message)
   res.status(200).json({'status': 'message sent'})
 })

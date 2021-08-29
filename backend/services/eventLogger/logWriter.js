@@ -2,85 +2,168 @@ const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
-const { getBotRoom } = require('./../userService')
 const logger = require('../../utils/logger')
 
 const main = async () => {
-  const mongoUrl = 'mongodb://localhost:27017'
-  const client = new MongoClient(mongoUrl)
+
+  logger.show('Running Trollbot log writer app with following options:')
+  const options = handleParameters()
+  logger.show(options)
+
+  let mongoUrl
+
+  if (options.source === 'ATLAS') {
+    mongoUrl = 'mongodb+srv://trollbot:1234567890@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority'
+  } else {
+    mongoUrl = 'mongodb://localhost:27017'
+  }
+
+  const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 
   try {
     await client.connect()
-    await findEvents(client)
-    logger.show('Successfully created log')
+    if (options.list === true) {
+      await listItems(client, options.source)
+    }
+    else if (options.delete === true) {
+      await deleteItems(client, options.room, options.source)
+    } else {
+      await findEvents(client, options.room, options.source)
+    }
   } catch (e) {
     logger.error(e)
   } finally {
     await client.close()
   }
+}
 
+const handleParameters = () => {
+
+  let options = {
+    source: 'LOCAL',
+    delete: false,
+    room: 'all',
+    list: false
+  }
+
+  const paramArray = process.argv.slice(2)
+  paramArray.forEach(param => {
+    if (param.includes('--atlas')) {
+      options.source = 'ATLAS'
+    } else if (param.includes('--delete')) {
+      options.delete = true
+    } else if (param.includes('--room')) {
+      let rArray = param.split(':')
+      rArray.shift()
+      options.room = rArray.join('')
+    } else if (param.includes('--list')) {
+      options.list = true
+      options.room = 'all'
+      options.delete = false
+    }
+  })
+
+  return options
 }
 
 // query the db
-const findEvents = async (client) => {
-  const result = await client.db('rasalogs').collection('conversations').find({})
+const findEvents = async (client, room, source) => {
 
-  await result.forEach(obj => {
+  let result
 
-    let arr = obj.events
+  if (room === 'all') {
+    result = await client.db('Trollbot').collection('conversations').find({})
+  } else {
+    result = await client.db('Trollbot').collection('conversations').find({ sender_id: room })
+  }
+
+  logger.show('\nSearching for ' + source + ' tracker store conversation log(s):')
+  let i = 0
+
+  await result.forEach(room => {
+
+    let arr = room.events
     const trimmedArr = removeIgnoredEvents(arr)
 
-    arr.forEach(obj => {
-      formatEvent(obj)
+    arr.forEach(event => {
+      formatEvent(event)
     })
 
     const logWithStories = formatStories(trimmedArr)
-    logMessage(logWithStories)
+    logMessage(logWithStories, room.sender_id)
+    logger.show(room.sender_id + ' found')
+    i++
   })
+
+  if (i === 0) {
+    logger.show('No log(s) found.')
+  } else {
+    logger.show(i + ' csv file(s) succesfully created.')
+  }
 }
 
-// finds the conversation id.
-// const getConversationId = async (client) => {
-//   const result = await client.db('rasalogs').collection('conversations').find( {} )
-//   let id
-//   await result.forEach( obj => {
-//     id = obj._id + ''
-//   })
-//   let idArr = id.split('\"')
-//   return idArr[0]
-// }
+const listItems = async (client, source) => {
+  const result = await client.db('Trollbot').collection('conversations').find({})
+
+  let i = 0
+  logger.show('\nListing ' + source + ' tracker store conversation logs:')
+
+  await result.forEach(room => {
+    logger.show(room.sender_id)
+    i++
+  })
+
+  if (i === 0) {
+    logger.show('No tracker store conversation logs found.')
+  } else {
+    logger.show(i + ' tracker store conversation log(s) found.')
+  }
+}
+
+const deleteItems = async (client, room, source) => {
+  let result
+
+  if (room === 'all') {
+    result = await client.db('Trollbot').collection('conversations').deleteMany({})
+    logger.show('All ' + source + ' tracker store logs succesfully deleted.')
+  } else {
+    result = await client.db('Trollbot').collection('conversations').findOneAndDelete({ sender_id: room })
+    if (result.value === null) {
+      logger.show('No ' + source + ' tracker store conversation log found for room ' + room + '.')
+    } else {
+      logger.show(source + ' tracker store conversation log for room ' + room + ' succesfully deleted.')
+    }
+  }
+}
 
 // write stuff into the csv file
-const logMessage = async (message) => {
+const logMessage = async (message, roomName) => {
+
+  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName)
+  const writer = createWriter({
+    path: logPath,
+    header: [
+      { id: 'timestamp', title: 'timestamp' },
+      { id: 'event', title: 'event' },
+      { id: 'name', title: 'name' },
+      { id: 'source', title: 'event source' },
+      { id: 'userID', title: 'userID' },
+      { id: 'username', title: 'username' },
+      { id: 'text', title: 'message' },
+      { id: 'policy', title: 'policy' },
+      { id: 'confidence', title: 'confidence' },
+      { id: 'intent', title: 'interpreted intent' },
+      { id: 'story_step', title: 'story step' },
+      { id: 'story', title: 'story' },
+      { id: 'rule', title: 'rule' }
+    ]
+  })
 
   try {
     await writer.writeRecords(message)
   } catch (e) {
     logger.error(e)
   }
-
 }
-
-// define csv file location + titles
-// const roomName = '' + getBotRoom()
-const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, 'Test')
-const writer = createWriter({
-  path: logPath,
-  header: [
-    { id: 'timestamp', title: 'timestamp' },
-    { id: 'event', title: 'event' },
-    { id: 'name', title: 'name' },
-    { id: 'source', title: 'event source'},
-    { id: 'userID', title: 'userID'},
-    { id: 'username', title: 'username'},
-    { id: 'text', title: 'message' },
-    { id: 'policy', title: 'policy' },
-    { id: 'confidence', title: 'confidence' },
-    { id: 'intent', title: 'interpreted intent' },
-    { id: 'story_step', title: 'story step'},
-    { id: 'story', title: 'story'},
-    { id: 'rule', title: 'rule'}
-  ]
-})
 
 main().catch(console.error)
