@@ -54,14 +54,17 @@ const getBotMessage = () => {
  */
 const getRasaRESTResponse = async (roomId, { body, user }) => {
   logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
+  logger.info('getRasaRESTResponse:roomId', roomId)
   try {
     logger.info(inspect(body))
     const response = await axios.post(RASA_ENDPOINT + '/webhooks/callback/webhook', {
       'sender': roomId,
       'message': body
     })
-    logger.info(`response: ${inspect(response.data[0].text)}`)
+      .then(res => logger.info('res:', res))
 
+    logger.info(`response: ${inspect(response.data[0].text)}`)
+    logger.info('getRasaRESTResponse:response.data', response.data)
     return response.data
 
   } catch (error) {
@@ -80,10 +83,13 @@ const setRasaUsersSlot = async (channel_id, users) => {
   try {
     let rasa_users = {}
     for (const user of users) {
+      logger.info('setRasaUsersSlot:user.room', user.room)
+      logger.info('setRasaUsersSlot:channel_id', channel_id)    
       if (user.room === channel_id) {
         rasa_users[user.senderId] = user
       }
     }
+    logger.info('setRasaUsersSlot:rasa_users', rasa_users)
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'users',

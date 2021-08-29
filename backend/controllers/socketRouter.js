@@ -11,7 +11,7 @@ module.exports = {
       const { roomId, name } = socket.handshake.query
       logger.info(`Socket.io: ${name} joined ${roomId}.`)
       socket.join(roomId)
-      const user = addUserIntoRoom(roomId, name)
+      const user = addUserIntoRoom(socket.id, roomId, name)
       console.log('user joined', user)
       io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 

@@ -3,7 +3,8 @@ const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { setRasaUsersSlot, getRasaRESTResponse } = require('./rasaService')
 
-let users = [{ name: 'Testuser', id: 1 }, { name: 'Removeme', id: 2 },]
+// let users = [{ name: 'Testuser', id: 1 }, { name: 'Removeme', id: 2 },]
+let users = []
 
 let rooms = [{
   id: 1,
@@ -26,7 +27,7 @@ const getUsersInRoom = (roomName) => {
   return rooms.find(r => r.name === roomName).users
 }
 
-const addUserIntoRoom = (roomName, name) => {
+const addUserIntoRoom = (senderId, roomName, name) => {
   const existingUser = getUserInRoom(roomName, name)
   const existingRoom = getRoom(roomName)
 
@@ -34,13 +35,17 @@ const addUserIntoRoom = (roomName, name) => {
   if (!existingRoom) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
+  const room = roomName
+  const user = { id: uuid.v4(), senderId, name, room }
+  logger.info('addUser:user', user)
+  // const user = addUser(senderId, name, roomName)
+  // user.room = roomName
 
-  const user = addUser(name)
   existingRoom.users.push(user)
 
   logger.info(`Adding user: '${user.name}' into room: '${roomName}'`)
 
-  setRasaUsersSlot(roomName, users)
+  setRasaUsersSlot(roomName, existingRoom.users)
 
   return user
 }
@@ -101,13 +106,14 @@ const getAnswer = async (roomName, data) => {
   return responses
 }
 
-const addUser = (name) => {
+const addUser = (senderId, name, room) => {
   if (!name) return { error: 'Username and room are required.' }
 
   const existingUser = users.find((u) => u.name === name)
   if (existingUser) return existingUser
 
-  const user = { id: users.length + 1, name }
+  const user = { id: users.length + 1, senderId, name, room }
+  // const user = { id: users.length + 1, name, room }
   users = users.concat(user)
   return user
 }
