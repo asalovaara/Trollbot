@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import socketIOClient from 'socket.io-client'
-import socketService from './socket'
+import roomService from './room'
 import loginService from './login'
 import { SOCKET_SERVER_URL, SOCKET_ENDPOINT } from '../config'
 
@@ -40,16 +40,17 @@ const useChat = (roomId) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const result = await socketService.getRoomUsers(roomId)
-      setUsers(result)
+      const initialUsers = await roomService.getUsersInRoom(roomId)
+      console.log('Users in room', initialUsers.users.map(u => u.name))
+      setUsers(initialUsers.users)
     }
     fetchUsers()
   }, [roomId])
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const result = await socketService.getRoomMessages(roomId)
-      setMessages(result)
+      const initialMessages = await roomService.getRoomMessages(roomId)
+      setMessages(initialMessages.messages)
     }
     fetchMessages()
   }, [roomId])
@@ -77,9 +78,10 @@ const useChat = (roomId) => {
     })
 
     socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
+      console.log('Incomming message', message)
       const incomingMessage = {
         ...message,
-        ownedByCurrentUser: message.senderId === socketRef.current.id,
+        ownedByCurrentUser: false,
       }
       setMessages((m) => [...m, incomingMessage])
     })

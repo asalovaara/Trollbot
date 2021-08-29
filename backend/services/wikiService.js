@@ -41,8 +41,7 @@ class SPARQLQueryDispatcher {
         }
       })
       .then((response) => {
-        let genres = response.data.results.bindings
-        return genres
+        return response.data.results.bindings
       })
   }
 }
@@ -71,7 +70,7 @@ const getArtistID = async (artist) => {
 const getGenre = async (artist) => {
   const failedMessage = 'Could not find information on this band.'
   const artistID = await getArtistID(artist)
-  if (artistID === false) {
+  if (!artistID) {
     return failedMessage
   }
   const endpointUrl = 'https://query.wikidata.org/sparql'

@@ -112,6 +112,8 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
     let tracker = await axios.get(RASA_ENDPOINT + `/conversations/${channel_id}/tracker`)
     let users = tracker.data.slots.users
 
+    logger.info('setRasaLastMessageSenderSlot:users', users)
+
     for (const user in users) {
       logger.info(user)
       users[user].active = false

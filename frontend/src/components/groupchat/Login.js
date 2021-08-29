@@ -14,7 +14,6 @@ const Login = ({ user, setUser }) => {
   const classes = useTextInputStyles()
 
   const handleUsernameChange = (event) => {
-    console.log(username)
     setUsername(event.target.value)
   }
 

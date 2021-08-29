@@ -1,79 +1,94 @@
 /* eslint-disable no-unused-vars */
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-const { getRasaRESTResponse } = require('./rasaService')
-const { getUser } = require('./userService')
+const { setRasaUsersSlot, getRasaRESTResponse } = require('./rasaService')
+
+let users = [{ name: 'Testuser', id: 1 }, { name: 'Removeme', id: 2 },]
 
 let rooms = [{
-  roomId: 123,
+  id: 1,
   name: 'Test',
-  users: [{ name: 'Testuser', id: 123 }, { name: 'Removeme', id: 321 }],
-  messages: [{ user: 'Testuser', room: 'Test', id: 123, body: 'Testmessage' },]
+  users: [],
+  messages: []
 }]
+
+const getUsers = () => users
+
+const getRooms = () => rooms
 
 const getRoom = (room) => rooms.find(r => r.name === room)
 
-const addUserIntoRoom = (senderId, roomName, name) => {
+const getMessagesInRoom = (roomName) => {
+  return rooms.find(r => r.name === roomName).messages
+}
 
+const getUsersInRoom = (roomName) => {
+  return rooms.find(r => r.name === roomName).users
+}
+
+const addUserIntoRoom = (roomName, name) => {
   const existingUser = getUserInRoom(roomName, name)
+  const existingRoom = getRoom(roomName)
 
   if (!name || !roomName) return { error: 'Username and room are required.' }
+  if (!existingRoom) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
-  const user = { id: uuid.v4(), senderId, name }
 
-  logger.info(`Add user:${user} into room:${roomName}`)
+  const user = addUser(name)
+  existingRoom.users.push(user)
 
-  // ! This function needs to be fixed !
-  // setRasaUsersSlot(room, user)
+  logger.info(`Adding user: '${user.name}' into room: '${roomName}'`)
+
+  setRasaUsersSlot(roomName, users)
 
   return user
 }
 
-
-const removeUserFromRoom = (roomName, id) => {
-  console.log('Trying to remove user', id)
-  const existingRoom = rooms.find(r => r.name === roomName)
+const removeUserFromRoom = (roomName, name) => {
+  const existingRoom = getRoom(roomName)
   if (!existingRoom) return
-  console.log('Found room', existingRoom)
-  const users = existingRoom.users
-  const index = users.findIndex((user) => user.id === id)
-  console.log('remove index', index, users[index])
-  if (index !== -1) return users.splice(index, 1)[0]
+
+  logger.info(`Removing ${name} from ${existingRoom}`)
+
+  const roomUsers = existingRoom.users
+  const index = roomUsers.findIndex((user) => user.name === name)
+
+  if (index !== -1) return roomUsers.splice(index, 1)[0]
 }
 
 const getUserInRoom = (roomName, name) => {
-  const existingRoom = rooms.find(r => r.name === roomName)
+  const existingRoom = getRoom(roomName)
   if (!existingRoom) return
   return existingRoom.users.find(u => u.name === name)
 }
 
 const addMessage = (roomName, message) => {
-  const existingRoom = rooms.find(r => r.name === roomName)
+  const existingRoom = getRoom(roomName)
   if (!existingRoom) return
 
   const msg = { id: uuid.v4(), room: roomName, ...message }
-  logger.info('addMessage', roomName, message)
+  logger.info('Add message:', msg)
 
   existingRoom.messages.push(msg)
   return msg
 }
 
-const getMessageInRoom = (roomName) => rooms.find(r => r.name === roomName)?.messages
+const addRoom = (room) => {
+  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [] }
+  logger.info('Added room:', newRoom)
+  rooms.push(newRoom)
+  return newRoom
+}
 
-const getUsersInRoom = (roomName) => rooms.find(r => r.name === roomName)?.users
-
-const getAnswer = async (data) => {
-  const response = await getRasaRESTResponse(data)
-
-  logger.info('Rasa Rest Response', response)
-
+const getAnswer = async (roomName, data) => {
   let responses = []
+  const response = await getRasaRESTResponse(data)
 
   for (let i = 0; i < response.length; i++) {
     const msg = {
       id: 'botanswerid' + (response[i].id + i),
-      room: 'Test',
+      room: roomName,
       senderId: 'bot',
       body: response[i].text,
       user: {
@@ -83,16 +98,45 @@ const getAnswer = async (data) => {
     }
     responses.push(msg)
   }
-
   return responses
 }
 
+const addUser = (name) => {
+  if (!name) return { error: 'Username and room are required.' }
+
+  const existingUser = users.find((u) => u.name === name)
+  if (existingUser) return existingUser
+
+  const user = { id: users.length + 1, name }
+  users = users.concat(user)
+  return user
+}
+
+const login = (username) => {
+  const user = users.find(u => u.name.toLowerCase() == username.toLowerCase())
+
+  if (user == undefined) {
+    const newUser = {
+      id: users.length + 1,
+      name: username,
+    }
+    users = users.concat(newUser)
+    return newUser
+  }
+  return user
+}
+
 module.exports = {
+  login,
+  addUser,
+  addRoom,
+  getUsers,
+  getRooms,
   getRoom,
   addMessage,
   getAnswer,
   addUserIntoRoom,
-  getMessageInRoom,
+  getMessagesInRoom,
   removeUserFromRoom,
   getUserInRoom,
   getUsersInRoom
