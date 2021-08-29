@@ -34,6 +34,8 @@ There are some environment variables that cannot be publicly avalible, se they a
 
  - MONGODB_URI: MONGODB_URI defines the location of the MongoDB database. As this has connected to a database in a cloud server, it contains the username and password of the account used. Please consult MongoDB-documentation on the exact content for this field.
 
+ - CLIENT_ID and CLIENT_SECRET: These variables are for using Spotify's API. To set these values, a Spotify account is needed. This account is then linked to Spotify for Developers, where the values of these variables are generated. 
+ 
 
 ### Deploying with docker
 
