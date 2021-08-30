@@ -37,13 +37,9 @@ const RoomSelect = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <InputLabel id="room-label">Room</InputLabel>
-            <Select labelId="room-label" {...roomName} style={{ minWidth: 150 }}
-              inputProps={{
-                name: 'roomName',
-                id: 'selected-room',
-              }}>
+            <Select id="select-room" labelId="room-label" {...roomName} style={{ minWidth: 150 }}>
               {rooms.map(room =>
-                <MenuItem key={room.id} value={room.name}>{room.name}</MenuItem>
+                <MenuItem id={`select-${room.name}`} key={room.id} value={room.name}>{room.name}</MenuItem>
               )}
             </Select>
           </Grid>
