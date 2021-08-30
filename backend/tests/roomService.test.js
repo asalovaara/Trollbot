@@ -5,8 +5,7 @@ describe('Room Service tests', () => {
 
   beforeAll(() => {
     roomService.addRoom(room)
-    const added = roomService.addUserIntoRoom(123, 'Jest', 'Testuser')
-    console.log(added)
+    roomService.addUserIntoRoom(123, 'Jest', 'Testuser')
     roomService.addMessage('Jest', { user: 'Testuser', body: 'Testmessage' })
   })
 

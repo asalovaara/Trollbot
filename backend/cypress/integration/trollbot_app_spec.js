@@ -28,13 +28,14 @@ describe('Trollbot app E2E testing', () => {
   it('Can visit admin page', () => {
     logoutHelper()
     loginHelper('Admin')
+    cy.get('#admin').click()
     cy.contains('Create Room')
   })
 
   it('Can create room in admin page', () => {
     logoutHelper()
     loginHelper('Admin')
-    cy.contains('Create Room')
+    cy.get('#admin').click()
     cy.get('#room-field').type('Cypress')
     cy.get('#create-room-button').click()
     cy.get('#room-list').contains('Cypres')
