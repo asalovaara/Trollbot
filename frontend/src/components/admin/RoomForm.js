@@ -36,7 +36,7 @@ const RoomForm = ({ rooms, setRooms }) => {
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <TextField label="Room Name" variant="outlined" {...roomName} clear={null} autoFocus fullWidth required />
+            <TextField id='room-field' label="Room Name" variant="outlined" {...roomName} clear={null} autoFocus fullWidth required />
           </Grid>
           <Grid item xs={12}>
             <InputLabel id="bot-input-lable">Bot Type</InputLabel>
@@ -46,7 +46,7 @@ const RoomForm = ({ rooms, setRooms }) => {
             </Select>
           </Grid>
           <Grid item xs={12} sm={2}>
-            <Button variant="contained" color="primary" type="submit">Create</Button>
+            <Button id="create-room-button" variant="contained" color="primary" type="submit">Create</Button>
           </Grid>
         </Grid>
       </form>

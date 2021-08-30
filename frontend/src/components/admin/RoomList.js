@@ -8,9 +8,9 @@ const RoomList = ({ rooms }) => {
   return (
     <Box>
       <Typography variant="h4" paragraph>Room List:</Typography>
-      <ul>
+      <ul id="room-list">
         {rooms.map((r) => {
-          return <li key={r.name}>{r.name}</li>
+          return <li id={`list-item-${r.name}`} key={r.name}>{r.name}</li>
         })}
       </ul>
     </Box >
