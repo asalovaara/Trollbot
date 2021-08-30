@@ -1,6 +1,6 @@
 # Guide to using the logger feature to create logs of conversations
 
-## Setting up a MongoTrackerStore for Rasa
+## Setting up the MongoTrackerStore for Rasa
 
 Rasa's conversation data must be stored within a MongoDB database. This is done by:
 
@@ -10,8 +10,8 @@ Rasa's conversation data must be stored within a MongoDB database. This is done 
 
 ### Using a local tracker store
 
-1. [Instructions for installing and running MongoDB locally](https://docs.mongodb.com/manual/administration/install-community/)
-2. The configuration for the tracker store can be found in the `endpoints.yml` file of the rasa folder. For the local MongoTrackerStore, use: 
+1. [Instructions for installing and running MongoDB locally.](https://docs.mongodb.com/manual/administration/install-community/)
+2. The configuration for the tracker store can be found in the `endpoints.yml` file of the `backend/rasa` folder. For the local MongoTrackerStore, use: 
 
 ```YAML
 tracker_store:
@@ -23,7 +23,7 @@ tracker_store:
   ```
 3. Use the `--endpoints` flag when starting the Rasa server (recommended command: `rasa run --enable-api --cors "*" --endpoints endpoints.yml --debug`).
 
-### Using the tracker store in MongoDB Atlas cloud service**
+### Using the tracker store in MongoDB Atlas cloud service
 
 1. Already up and running. For more info on MongoDB Atlas, see https://docs.atlas.mongodb.com/.
 2. Config provided separately.
@@ -31,25 +31,35 @@ tracker_store:
 
 ## Logger
 
-Create log files by running the command `npm run log` in the backend folder. This generates CSV-format log files in the logs folder. The behavior of the logger can be altered with parameters by using `npm run log -- --parameter1 --parameter2`. Following parameters are available:
+Create log files by running the command `npm run log` in the backend folder. This generates CSV-format log files in the `logs` folder. The behavior of the logger can be altered with parameters by using `npm run log -- --parameter` for one parameter or `npm run log -- --parameter1 --parameter2` etc. for multiple parameters. 
 
-**atlas**
+NOTE: Parameters with invalid names are ignored.  
+
+### Parameters
+
+**-\-atlas**
 
 By default, `npm run log` generates csv log files based on the contents of the local MongoDb tracker store. Use the parameter `--atlas` to generate csv logs based on the conversations stored in the MongoDB Atlas cloud.
 
-**room**
+**-\-room**
 
-By default, `npm run log` generates csv logs for all conversations found in the tracker store. To generate a csv log for only one room, use the parameter `--room` followed by a room name. Example: To generate a csv log for the room *Testroom*, run `npm run log -- --room Testroom`.
+By default, `npm run log` generates csv logs for all conversations found in the tracker store. To generate a csv log for only one room, use the parameter `--room` followed by a space and the room name.
 
-**delete**
+Example: To generate a csv log for the room *Testroom*, run `npm run log -- --room Testroom`.
 
-When using the `--delete` parameter, instead of writing csv files, the application will delete conversation histories from the tracker store. Example: To delete the tracker store conversation history for room *Testroom*, run `npm run log -- --room Testroom --delete`.
+**-\-delete**
 
-WARNING! Tracker store conversation histories contain all of the raw conversation data saved by Rasa and deletion is not advised unless backups have been made. This option was mainly added for removing test room conversation histories from the tracker store.
+When using the `--delete` parameter, instead of writing csv files, the application will delete all conversation histories from the tracker store. Individual conversations can be deleted by specifying a room with the `--room` parameter.
 
-**list**
+Example: To delete the tracker store conversation history for room *Testroom*, run `npm run log -- --room Testroom --delete`.
 
-Using the parameter `--list` will print a list of the conversation histories stored in the tracker store. No csv files are written and `--delete` and `--room` parameter are ignored. Example: To list conversation histories in the Atlas cloud tracker store, run `npm run log -- --atlas --list`.
+*WARNING!* Tracker store conversation histories contain all of the raw conversation data saved by Rasa and deletion is not advised unless backups have been made. This option was mainly added for removing test room conversation histories from the tracker store.
+
+**-\-list**
+
+Using the parameter `--list` will print a list of the conversation histories stored in the tracker store. **No csv files are written and** `--delete` **and** `--room` **parameters are ignored**. 
+
+Example: To list conversation histories in the MongoDB Atlas cloud tracker store, run `npm run log -- --atlas --list`.
 
 ## Log contents
 
@@ -106,3 +116,7 @@ The story matcher reads the log row by row and every time a story step tag is en
 2. If the list of possible stories is now empty, the list is refreshed and 1. is repeated.
 
 3. The names of possible stories are written under the stories column next to the story step.
+
+## Updating the logFormatter
+
+Correct formatting of new custom actions and slots may require manually updating the `logFormatter.js` located in the `backend/services/eventLogger` folder.
