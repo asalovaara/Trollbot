@@ -15,7 +15,7 @@ const getBotMessage = () => {
     const reply = bot_messages.shift()
     const room = reply.recipient_id
 
-    let response = {
+    return {
       room: room,
       body: reply.text,
       senderId: 'bot',
@@ -23,7 +23,6 @@ const getBotMessage = () => {
         name: 'Bot'
       }
     }
-    return response
   }
 }
 

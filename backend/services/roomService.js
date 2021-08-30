@@ -43,9 +43,8 @@ const addUserIntoRoom = (senderId, roomName, name) => {
   if (!name || !roomName) return { error: 'Username and room are required.' }
   if (!existingRoom) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
-
-  const room = roomName
-  const user = { id: uuid.v4(), senderId, name, room }
+  
+  const user = { id: uuid.v4(), senderId, name }
 
   existingRoom.users.push(user)
 
