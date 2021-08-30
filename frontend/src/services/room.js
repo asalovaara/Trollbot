@@ -12,6 +12,11 @@ const getRooms = async () => {
   const response = await axios.get(baseUrl).then(res => res.data)
   return response
 }
+
+const getBot = async (roomName) => {
+  const response = await axios.get(`${baseUrl}/${roomName}/bot`).then(res => res.data)
+  return response
+}
 const getUsersInRoom = async (roomName) => {
   const response = await axios.get(`${baseUrl}/${roomName}/users`).then(res => res.data)
   return response
@@ -22,4 +27,4 @@ const getRoomMessages = async (roomName) => {
   return response
 }
 
-export default { addRoom, getRooms, getUsersInRoom, getRoomMessages }
+export default { addRoom, getRooms, getBot, getUsersInRoom, getRoomMessages }

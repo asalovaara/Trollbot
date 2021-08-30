@@ -16,6 +16,7 @@ const useChat = (roomId) => {
 
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
+  const [botType, setBot] = useState(null)
   const [typingUsers, setTypingUsers] = useState([])
   const [user, setUser] = useState(null)
   const socketRef = useRef()
@@ -37,6 +38,15 @@ const useChat = (roomId) => {
       fetchUser()
     }
   }, [])
+
+  useEffect(() => {
+    const fetchBotType = async () => {
+      const bot = roomService.getBot(roomId)
+      console.log('Bot type:', bot)
+      setBot(botType)
+    }
+    fetchBotType()
+  }, [roomId])
 
   useEffect(() => {
     const fetchUsers = async () => {
