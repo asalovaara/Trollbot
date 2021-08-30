@@ -1,135 +1,99 @@
-version: "2.0"
+# version: "2.0"
 
-# Stories for 2 users (strict patterns)
+# # Stories for 2 users (strict patterns)
 
-stories:
+# stories:
 
-# Opening pattern 1 (MULTIUSER)
-- story: from opening to task
-  steps:
-  - intent: opening
-  - slot_was_set:
-    - task_activated: false
-  - action: action_greet_user_by_name
-  - action: utter_task_introduction
-  - action: utter_question_suggestions
-  - action: action_set_task_slot
-  - slot_was_set:
-    - task_activated: true
-
-# Multiuser opening pattern 2
-- story: second user opening
-  steps:
-  - intent: opening
-  - slot_was_set:
-    - task_activated: true
-  - action: action_greet_user_by_name
-
-#Opening pattern 2 and Task introduction pattern 1 (SINGLEUSER)
-- story: from no introduction to task
-  steps:
-  - or:
-    - intent: closing
-    - intent: suggest_artist
-    - intent: likes_artist
-    - intent: dislikes_artist
-    - intent: request_for_suggestion_from_bot
-    - intent: suggestion_to_make_decision
-    - intent: suggestion_for_decision
-    - intent: agreement
-    - intent: disagreement
-  - slot_was_set:
-    - task_activated: false
-  - action: utter_task_introduction
-  - action: utter_question_suggestions
-  - action: action_set_task_slot
-  - slot_was_set:
-    - task_activated: true
-
-# Task introduction pattern 2 (SINGLEUSER)
-- story: handle user introducing task
-  steps:
-  - intent: task_introduction
-  - slot_was_set:
-    - task_activated: false
-  - action: utter_question_suggestions
-  - action: action_set_task_slot
-  - slot_was_set:
-    - task_activated: true
-
-# Testing introduction form for multi-user chat
-
+# # Opening pattern 1 (SINGLEUSER)
 # - story: from opening to task
 #   steps:
 #   - intent: opening
 #   - slot_was_set:
 #     - task_activated: false
-#   - action: introduction_form
-#   - active_loop: introduction_form
-#   - slot_was_set:
-#     - requested_slot: introductions_finished
-#   - slot_was_set:
-#     - introductions_finished
-#   - slot_was_set:
-#     - counter
-#   - active_loop: null
-#   - slot_was_set:
-#     - requested_slot: null
-#   - action: utter_nice_to_meet_you
+#   - action: action_greet_user_by_name
 #   - action: utter_task_introduction
 #   - action: utter_question_suggestions
 #   - action: action_set_task_slot
 #   - slot_was_set:
 #     - task_activated: true
 
+# # Opening pattern 2 and Task introduction pattern 1 (SINGLEUSER)
+# - story: from no introduction to task
+#   steps:
+#   - or:
+#     - intent: closing
+#     - intent: suggest_artist
+#     - intent: likes_artist
+#     - intent: dislikes_artist
+#     - intent: request_for_suggestion_from_bot
+#     - intent: suggestion_to_make_decision
+#     - intent: suggestion_for_decision
+#     - intent: agreement
+#     - intent: disagreement
+#   - slot_was_set:
+#     - task_activated: false  
+#   - action: utter_task_introduction
+#   - action: utter_question_suggestions
+#   - action: action_set_task_slot
+#   - slot_was_set:
+#     - task_activated: true
 
-# Artist suggestion pattern 1 (MULTIUSER)
-- story: user suggests artist
-  steps:
-  - or:
-    - intent: suggest_artist
-    - intent: likes_artist
-  - action: action_check_if_same_liked_artist
-  - slot_was_set:
-    - same_artist_liked: false
-    - task_activated: true
-    - artist
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre: filled
-  - action: action_set_opinion_slot_as_good
-  - action: action_set_artist_for_user # append the liked artist list of the user object
-  - slot_was_set:
-    - opinion
-  - action: action_dismiss_artist
+# # Task introduction pattern 2 (SINGLEUSER)
+# - story: handle user introducing task
+#   steps:
+#   - intent: task_introduction
+#   - slot_was_set:
+#     - task_activated: false
+#   - action: utter_question_suggestions
+#   - action: action_set_task_slot
+#   - slot_was_set:
+#     - task_activated: true
 
-# Artist suggestion pattern 2 (MULTIUSER)
-- story: users like the same artist
-  steps:
-  - or:
-    - intent: suggest_artist
-    - intent: likes_artist
-  - action: action_check_if_same_liked_artist
-  - slot_was_set:
-    - same_artist_liked: true
-    - task_activated: true
-    - artist
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre: filled
-  - action: action_set_opinion_slot_as_good
-  - action: action_set_artist_for_user # append the liked artist list of the user object
-  - slot_was_set:
-    - opinion
-  - action: utter_same_artist_liked
+# # Testing introduction form for multi-user chat
+    
+# # - story: from opening to task
+# #   steps:
+# #   - intent: opening
+# #   - slot_was_set:
+# #     - task_activated: false
+# #   - action: introduction_form
+# #   - active_loop: introduction_form
+# #   - slot_was_set:
+# #     - requested_slot: introductions_finished
+# #   - slot_was_set:
+# #     - introductions_finished
+# #   - slot_was_set:
+# #     - counter
+# #   - active_loop: null
+# #   - slot_was_set:
+# #     - requested_slot: null  
+# #   - action: utter_nice_to_meet_you
+# #   - action: utter_task_introduction
+# #   - action: utter_question_suggestions
+# #   - action: action_set_task_slot
+# #   - slot_was_set:
+# #     - task_activated: true
 
+# - story: user suggests artist
+#   steps:
+#   - intent: suggest_artist
+#   - slot_was_set:
+#     - task_activated: true
+#     - artist
+#   - action: action_set_genre_slot
+#   - slot_was_set:
+#     - genre: filled
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion
+#   - action: action_delayed_positive_evaluation
 
-- story: request suggestion after dismissal
-  steps:
-  - intent: dismissing_claim
-  - action: utter_request_suggestion
+# - story: request suggestion after dismissal
+#   steps:
+#   - intent: dismissing_claim
+#   - action: utter_request_suggestion
 
-# --------------suggested active/inactive user implementation----------------------
+# # --------------suggested active/inactive user implementation----------------------
 
 # - story: active user suggests artist
 #   steps:
@@ -142,11 +106,10 @@ stories:
 #   - slot_was_set: # tell rasa genre slot was set by custom action
 #     - genre
 #   - action: action_set_opinion_slot_as_good
-#   - action: utter_artist_dismissal # dismiss user's suggested artist
 #   - slot_was_set: # tell rasa opinion slot was set
 #     - opinion
 #   - action: action_set_artist_for_user # append the liked artist list of the user object
-#   - action: action_dismiss_artist # dismiss user's suggested artist
+#   - action: utter_artist_dismissal # dismiss user's suggested artist
 
 
 # - story: inactive user suggests artist
@@ -165,47 +128,46 @@ stories:
 #   - action: action_set_artist_for_user # append the liked artist list of the user object
 #   - action: action_listen # default action, wait for the next user message
 
-- story: active user likes artist
-  steps:
-  - intent: likes_artist
-  - slot_was_set:
-    - task_activated: true
-  - action: action_check_users_active_user_slot
-  - slot_was_set: # active user true check
-    - active_user: true
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user
-  - action: action_delayed_positive_evaluation
+# - story: active user likes artist
+#   steps:
+#   - intent: likes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true     
+#   - action: action_set_genre_slot
+#   - slot_was_set:
+#     - genre
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion 
+#   - action: action_set_artist_for_user
+#   - action: action_delayed_positive_evaluation
 
-# Unknown artist, user tells genre
-- story: user likes artist path, unknown artist
-  steps:
-  - or:
-    - intent: likes_artist
-    - intent: suggestion_for_decision
-    - intent: suggest_artist
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true
-  - action: action_set_genre_slot
-  - action: action_set_artist_for_user
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion
-  - slot_was_set:
-    - genre: None
-  - action: utter_unknown_artist
-  - action: utter_ask_genre
-  - intent: tell_genre
-  - slot_was_set:
-    - told_genre: filled
-  - action: utter_thanks
+# # Unknown artist, user tells genre
+# - story: user likes artist path, unknown artist
+#   steps:
+#   - or:
+#     - intent: likes_artist
+#     - intent: suggestion_for_decision
+#     - intent: suggest_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true
+#   - action: action_set_genre_slot
+#   - action: action_set_artist_for_user
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion 
+#   - slot_was_set:
+#     - genre: None
+#   - action: utter_unknown_artist
+#   - action: utter_ask_genre
+#   - intent: tell_genre
+#   - slot_was_set:
+#     - told_genre: filled
+#   - action: utter_thanks
 
 # - story: inactive user likes artist
 #   steps:
@@ -226,132 +188,130 @@ stories:
 #   - action: action_set_artist_for_user
 #   - action: action_listen # default action, wait for the next user message
 
-- story: active user dislikes artist path
-  steps:
-  - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: true
-  - action: action_check_users_active_user_slot
-  - slot_was_set: # active user true check
-    - active_user: true
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre: filled
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user
-  - action: utter_artist_praise
+# - story: active user dislikes artist path
+#   steps:
+#   - intent: dislikes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true       
+#   - action: action_set_genre_slot
+#   - slot_was_set:
+#     - genre: filled
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user    
+#   - action: utter_artist_praise
 
-# Unknown artist, user tells genre (SINGLEUSER)
-- story: user dislikes artist path, unknown artist
-  steps:
-  - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: true
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre: None
-  - action: utter_unknown_artist
-  - action: utter_ask_genre
-  - intent: tell_genre
-  - slot_was_set:
-    - told_genre: filled
-  - action: utter_thanks
+# # # Unknown artist, user tells genre (SINGLEUSER)
+# # - story: user dislikes artist path, unknown artist
+# #   steps:
+# #   - intent: dislikes_artist
+# #   - slot_was_set:
+# #     - task_activated: true
+# #   - action: action_set_genre_slot
+# #   - slot_was_set:
+# #     - genre: None
+# #   - action: utter_unknown_artist
+# #   - action: utter_ask_genre
+# #   - intent: tell_genre
+# #   - slot_was_set:
+# #     - told_genre: filled
+# #   - action: utter_thanks
 
-- story: inactive user dislikes artist path
-  steps:
-  - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: true
-  - action: action_check_users_active_user_slot
-  - slot_was_set: # active user false check
-    - active_user: false
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user
-  - action: action_listen # default action, wait for the next user message
+# - story: inactive user dislikes artist path
+#   steps:
+#   - intent: dislikes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false 
+#   - action: action_set_genre_slot
+#   - slot_was_set:
+#     - genre
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user    
+#   - action: action_listen # default action, wait for the next user message
+  
 
+# # TROLL
+# - story: active user praises artist
+#   steps:
+#   - intent: praising_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true 
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion
+#   - action: action_handle_claim
 
-# TROLL
-- story: active user praises artist
-  steps:
-  - intent: praising_claim
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion
-  - action: action_handle_claim
+# - story: inactive user praises artist
+#   steps:
+#   - intent: praising_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion
+#   - action: action_listen
 
-- story: inactive user praises artist
-  steps:
-  - intent: praising_claim
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user false check
-    - active_user: false
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion
-  - action: action_listen
+# # TROLL 
+# - story: active user dismisses artist
+#   steps:
+#   - intent: dismissing_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true 
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_handle_claim
 
-# TROLL
-- story: active user dismisses artist
-  steps:
-  - intent: dismissing_claim
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_handle_claim
+# - story: inactive user dismisses artist
+#   steps:
+#   - intent: dismissing_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_listen
 
-- story: inactive user dismisses artist
-  steps:
-  - intent: dismissing_claim
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user false check
-    - active_user: false
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_listen
+#   # TROLL
+# - story: user asks the bot for its opinion
+#   steps:
+#   - intent: request_for_suggestion_from_bot
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: action_deflect_opinion_question
 
-  # TROLL
-- story: user asks the bot for its opinion
-  steps:
-  - intent: request_for_suggestion_from_bot
-  - slot_was_set:
-    - task_activated: true
-  - action: action_deflect_opinion_question
+# # Personal attacks / praise in conversation
 
-# Personal attacks / praise in conversation
+# # Insulting the bot; placeholder response
+# - story: user insults bot
+#   steps:
+#   - intent: insult_person
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: action_listen
 
-# Insulting the bot; placeholder response
-- story: user insults bot
-  steps:
-  - intent: insult_person
-  - slot_was_set:
-    - task_activated: true
-  - action: action_listen
-
-# Praising the bot; placeholder response
-- story: user praises bot
-  steps:
-  - intent: praise_person
-  - slot_was_set:
-    - task_activated: true
-  - action: utter_thanks
+# # Praising the bot; placeholder response
+# - story: user praises bot
+#   steps:
+#   - intent: praise_person
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: utter_thanks
 
 # - story: bs after task introduction
 #   steps:
@@ -362,99 +322,99 @@ stories:
 #     - task_activated: true
 #   - action: utter_back_to_task
 
-# Decision phase patterns
+# # Decision phase patterns
 
-# Suggestion to make decision_pattern, Nice Bot
-- story: start decision phase auto-success
-  steps:
-  - intent: suggestion_to_make_decision
-  - slot_was_set:
-    - task_activated: true
-  - action: utter_agreement
-  - action: action_set_decision_phase
-  - slot_was_set:
-    - decision_phase: true
+# # Suggestion to make decision_pattern, Nice Bot
+# - story: start decision phase auto-success
+#   steps:
+#   - intent: suggestion_to_make_decision
+#   - slot_was_set:
+#     - task_activated: true
+#   - action: utter_agreement
+#   - action: action_set_decision_phase
+#   - slot_was_set:
+#     - decision_phase: true
 
-# Suggestion_for_decision_pattern_1, Trolling Bot
-# - story: user suggests decision auto-fail
+# # Suggestion_for_decision_pattern_1, Trolling Bot
+# # - story: user suggests decision auto-fail
+# #   steps:
+# #   - intent: suggestion_for_decision
+# #   - slot_was_set:
+# #     - task_activated: true
+# #     - decision_phase: true
+# #     - artist
+# #   - action: utter_reject_claim
+
+# # Suggestion_for_decision_pattern_1, Nice Bot
+# - story: user suggests decision auto-success
 #   steps:
 #   - intent: suggestion_for_decision
 #   - slot_was_set:
 #     - task_activated: true
 #     - decision_phase: true
 #     - artist
-#   - action: utter_reject_claim
+#   - action: utter_agreement
+#   - checkpoint: decision_reached
 
-# Suggestion_for_decision_pattern_1, Nice Bot
-- story: user suggests decision auto-success
-  steps:
-  - intent: suggestion_for_decision
-  - slot_was_set:
-    - task_activated: true
-    - decision_phase: true
-    - artist
-  - action: utter_agreement
-  - checkpoint: decision_reached
+# # Closing patterns for the Nice Bot
 
-# Closing patterns for the Nice Bot
+# # Posting_decision_pattern1
+# - story: bot posts decision
+#   steps:
+#   - checkpoint: decision_reached
+#   - slot_was_set:
+#     - task_activated: true
+#     - decision_phase: true
+#     - artist
+#   - action: utter_question_posting
+#   - or:
+#     - intent: agreement
+#     - intent: thanks
+#   - action: action_post_decision
+#   - slot_was_set:
+#     - final_decision
+#   - action: utter_post_decision
+#   - checkpoint: goodbye
 
-# Posting_decision_pattern1
-- story: bot posts decision
-  steps:
-  - checkpoint: decision_reached
-  - slot_was_set:
-    - task_activated: true
-    - decision_phase: true
-    - artist
-  - action: utter_question_posting
-  - or:
-    - intent: agreement
-    - intent: thanks
-  - action: action_post_decision
-  - slot_was_set:
-    - final_decision
-  - action: utter_post_decision
-  - checkpoint: goodbye
+# # Posting_decision_pattern2
+# - story: user offers to post decision
+#   steps:
+#   - checkpoint: decision_reached 
+#   - slot_was_set:
+#     - task_activated: true
+#     - decision_phase: true
+#     - artist
+#   - action: utter_question_posting
+#   - or:
+#     - intent: offer_posting
+#     - intent: disagreement
+#   - action: utter_agreement
+#   - checkpoint: user_should_post
 
-# Posting_decision_pattern2
-- story: user offers to post decision
-  steps:
-  - checkpoint: decision_reached
-  - slot_was_set:
-    - task_activated: true
-    - decision_phase: true
-    - artist
-  - action: utter_question_posting
-  - or:
-    - intent: offer_posting
-    - intent: disagreement
-  - action: utter_agreement
-  - checkpoint: user_should_post
+# # Posting_decision_pattern3
+# - story: user posts decision
+#   steps:
+#   - checkpoint: user_should_post
+#   - slot_was_set:
+#     - task_activated: true
+#     - decision_phase: true
+#     - artist
+#   - intent: post_decision
+#   - slot_was_set:
+#     - artist
+#   - action: action_post_decision
+#   - slot_was_set:
+#     - final_decision
+#   - checkpoint: goodbye
 
-# Posting_decision_pattern3
-- story: user posts decision
-  steps:
-  - checkpoint: user_should_post
-  - slot_was_set:
-    - task_activated: true
-    - decision_phase: true
-    - artist
-  - intent: post_decision
-  - slot_was_set:
-    - artist
-  - action: action_post_decision
-  - slot_was_set:
-    - final_decision
-  - checkpoint: goodbye
-
-# Goodbye_pattern
-- story: closing
-  steps:
-  - checkpoint: goodbye
-  - action: utter_closing
-  - or:
-    - intent: closing
-    - intent: agreement
-    - intent: opening
-    - intent: thanks
-  - action: action_end_conversation
+# # Goodbye_pattern
+# - story: closing
+#   steps:
+#   - checkpoint: goodbye
+#   - action: utter_closing
+#   - or:
+#     - intent: closing
+#     - intent: agreement
+#     - intent: opening
+#     - intent: thanks
+#   - action: action_end_conversation

@@ -1,78 +1,78 @@
-version: "2.0"
+# version: "2.0"
 
-rules:
+# rules:
 
-# Fallback rules
+# # Fallback rules
 
-- rule: Nlu fallback before task activated
-  condition:
-  - slot_was_set:
-    - task_activated: false
-  steps:
-  - intent: nlu_fallback
-  - action: action_listen
+# - rule: Nlu fallback before task activated
+#   condition:
+#   - slot_was_set:
+#     - task_activated: false
+#   steps:
+#   - intent: nlu_fallback
+#   - action: action_listen
 
-- rule: Nlu fallback after task set
-  condition:
-  - slot_was_set:
-    - task_activated: true
-  steps:
-  - intent: nlu_fallback
-  - action: utter_please_rephrase
+# - rule: Nlu fallback after task set
+#   condition:
+#   - slot_was_set:
+#     - task_activated: true
+#   steps:
+#   - intent: nlu_fallback
+#   - action: utter_please_rephrase
 
-- rule: user keysmashes
-  condition:
-  - slot_was_set:
-    - task_activated: true
-  steps:
-  - intent: keysmash
-  - action: action_listen
+# - rule: user keysmashes
+#   condition:
+#   - slot_was_set:
+#     - task_activated: true
+#   steps:
+#   - intent: keysmash
+#   - action: action_listen
 
-# NiceBot
-# NiceBot explains the situation.
-- rule: user is confused in the beginning
-  condition:
-  - slot_was_set:
-    - task_activated: false
-  steps:
-  - intent: confusion
-  - action: utter_task_introduction
+# # NiceBot
+# # NiceBot explains the situation.
+# - rule: user is confused in the beginning
+#   condition:
+#   - slot_was_set:
+#     - task_activated: false
+#   steps:
+#   - intent: confusion
+#   - action: utter_task_introduction
 
-# TROLL
-# The troll does not respond when the user needs guidance
+# # TROLL
+# # The troll does not respond when the user needs guidance
 
-- rule: user is confused, troll
-  condition:
-  - slot_was_set:
-    - task_activated: true
-  steps:
-  - intent: confusion
-  - action: action_listen
+# - rule: user is confused, troll
+#   condition:
+#   - slot_was_set:
+#     - task_activated: true
+#   steps:
+#   - intent: confusion
+#   - action: action_listen
 
-# Temporary debugging tools
+# # Temporary debugging tools
 
-- rule: get genre data
-  condition:
-  - slot_was_set:
-    - task_activated: true
-    - genre: filled
-  steps: 
-  - intent: get_genre
-  - action: utter_genre
+# - rule: get genre data
+#   condition:
+#   - slot_was_set:
+#     - task_activated: true
+#     - genre: filled
+#   steps: 
+#   - intent: get_genre
+#   - action: utter_genre
 
-- rule: Restart conversation at will
-  condition:
-  - slot_was_set:
-    - task_activated: True
-  steps:
-  - intent: restart_conversation
-  - action: action_end_conversation
+# - rule: Restart conversation at will
+#   condition:
+#   - slot_was_set:
+#     - task_activated: True
+#   steps:
+#   - intent: restart_conversation
+#   - action: action_end_conversation
 
-# EXTERNAL intent sent to tracker by Rasa when timer reaches 0
-- rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
-  condition:
-  - slot_was_set:
-    - task_activated: true
-  steps:
-  - intent: EXTERNAL_positive_evaluation_timer
-  - action: action_trigger_positive_evaluation
+# # EXTERNAL intent sent to tracker by Rasa when timer reaches 0
+# - rule: Trigger `action_trigger_positive_evaluation` for `EXTERNAL_positive_evaluation_timer`
+#   condition:
+#   - slot_was_set:
+#     - task_activated: true
+#   steps:
+#   - intent: EXTERNAL_positive_evaluation_timer
+#   - action: action_trigger_positive_evaluation

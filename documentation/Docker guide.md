@@ -2,21 +2,21 @@
 
 ### About Dockerfiles and docker-compose
 
-There are two dockerfiles in this project. One resides in the project root, and the second is in the rasa-files, at \/backend/rasa.
-The one in project root is responsible for creating the application server. The one in the rasa folder is responsible for building the rasa-server.
+There are two dockerfiles in this project. One is located in the project root, and the second in the rasa files, at \/backend/rasa.
+The one in project root is responsible for creating the application server. The one in the rasa folder is responsible for building the rasa servers.
 
-There should be no need to configure the dockerfile for rasa, but it can be edited if needed. The important thing is, that the ports used match with those programmed into the main application.
+If any of the ports are changed, remember to also change the ports both in the main application's dockerfile and in rasa's dockerfile.
 
-These dockerfiles are used by and the images they create can be managed with the docker-compose.yml file. It is located in the project root.
+These dockerfiles and the images they create are managed with the docker-compose.yml file. It is located in the project root.
 
  
 ### Editing or changing the address subfolder Docker image deploys to
 
 In this project, we have used Docker as part of our staging configuration. 
 In our staging environment, Docker was used to help us maintain an up-to-date version of our program at all times.
-Because of this, the current Docker configuration is for the specific needs of that staging server. As such, if you intend to set up this software for your own use, you may need to make changes to the current configuration.
+Because of this, the current Docker configuration is for the specific needs of that staging server. As such, the main dockerfile has to be tailored to the intended use environment.
 
-On the staging server, our application was running in a subfolder \/trollbot. If you do not intend to run this software in a subfolder, or if you intend to use a subfolder with a different address, you should change the environment variables defined in Dockerfile. 
+On the staging server, our application was running in a subfolder \/trollbot. If the final URL the app is intended to run in is not DOMAINNAME/trollbot, the environment variables defined in the main dockerfile have to be changed. 
 In the Dockerfile found in the root of the project there are four environment variables which need to be changed:
 
 PUBLIC_URL=/trollbot
@@ -32,16 +32,23 @@ REACT_APP_SOCKET_ENDPOINT=https<nolink>://ohtup-staging.cs.helsinki.fi
 RASA_ENDPOINT=http<nolink>://trollbot-rasa:5005
 
 
-These define various addressess the app uses. PUBLIC_URL defines the location of the app in relation to the domain. As stated previously, our staging environment ran in subfolder  \/trollbot, so right now it has the value \/trollbot. This value can contain the entire address, if needed. 
-API_URL defines the backend's api address, and REACT_APP_API_URL defines the api address that the client uses to connect to it. 
-As you may notice, these addresses were different in our particular use case. You may have to change these depending on your needs. 
-REACT_APP_SOCKET_SERVER_URL defines where the socket connects. This can be the same location as the PUBLIC_URL, but it is seperately configurable. Unlike PUBLIC_URL, this cannot contain the entire address.
-REACT_APP_SOCKET_ENDPOINT defines the domain from which the backend is called. It should contain the entire domain without the subfolder.
-Finally, RASA_ENDPOINT has the location of the rasa server. If rasa is run in a docker container it should be the name of the rasa service or the hostname, if it has been defined.
-If the app is run locally, it should be "localhost". If the port the rasa server is located is somehow changed, the port should be changed here too.
+These define various addressess the app uses. 
 
-After making changes, please run "docker-compose build" to build the project. If you want to test the application locally, run "docker-compose up". If you want to update docker hub, run "docker-compose push".
-Please note that if the application is configured to run in a subfolder, it will not work locally. 
+PUBLIC_URL defines the location of the app in relation to the domain. As stated previously, our staging environment ran in subfolder  \/trollbot, so right now it has the value \/trollbot. This value can contain the entire address, if needed. 
+
+API_URL defines the server's api address, and REACT_APP_API_URL defines the api address that the client uses to connect to it. As such, they may have different content.
+
+REACT_APP_SOCKET_SERVER_URL defines where the socket connects. The value should be the subfolder the app runs in. Unlike PUBLIC_URL, this cannot contain the entire URL. If the application is not deployed into a subfolder, this line can be removed.
+
+REACT_APP_SOCKET_ENDPOINT defines the domain from which the backend is called. It should contain the entire domain without the subfolder.
+
+Finally, RASA_ENDPOINT has the location of the main rasa server. If rasa is run in a docker container the value should be the hostname of the rasa service.
+If the rasa server not run through a docker container, it should be "localhost". Otherwise its value should be the hostname of the rassa service. If the port the rasa server is located is somehow changed, the port should be changed here too.
+
+If the app is run locally, with rasa running in a container, every environment variable other than RASA_ENDPOINT can be left unset, as the values default to localhost.
+
+After making changes running the command "docker-compose build" builds the project. The application can now be run with the command "docker-compose up". If you want to update the docker images in docker hub, run "docker-compose push".
+Please note that if the application is configured to run in a subfolder, it will not work locally.
 
 ### Rasa's environment variables
 
