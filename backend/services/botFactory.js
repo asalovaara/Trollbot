@@ -4,7 +4,7 @@ const names = ['Bob', 'Alice', 'John', 'Dylan']
 
 const generateName = () => names[Math.floor(Math.random() * names.length)]
 
-const createBot = (type, room) => {
+const createBot = (room, type) => {
   if (!room && !type) return { error: 'Room and Type are required' }
 
   const botName = generateName()
