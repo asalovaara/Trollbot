@@ -56,20 +56,20 @@ const getBestTag = (tags) => {
   }
   return best.name
 }
+/*
+const getFullLegalName = (aliases) => {
+  if (aliases === undefined) {
+    return 'None'
+  }
+  for (let i = 0; i < aliases.length; i++) {
+    if (aliases[i].type === 'Legal name') {
+      return aliases[i].name
+    }
+  }
 
-// const getFullLegalName = (aliases) => {
-//   if (aliases === undefined) {
-//     return 'None'
-//   }
-//   for (let i = 0; i < aliases.length; i++) {
-//     if (aliases[i].type === 'Legal name') {
-//       return aliases[i].name
-//     }
-//   }
-
-//   return 'None'
-// }
-
+  return 'None'
+}
+*/
 const getFirstName = (fullName) => {
   const arr = fullName.split(',')
   if (arr.length == 1) {

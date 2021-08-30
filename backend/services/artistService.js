@@ -33,9 +33,9 @@ const main = async () => {
 
 const updateOneArtist = async (artist) => {
   const artistObj = await getArtist(artist)
-    if (artistObj !== undefined) {
-      await updateArtist(artistObj)
-    }
+  if (artistObj !== undefined) {
+    await updateArtist(artistObj)
+  }
 }
 
 // Go through all artists (lines) in file.

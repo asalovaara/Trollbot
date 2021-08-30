@@ -5,10 +5,11 @@ from typing import Dict, Text, List, Optional, Any
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction
-from rasa_sdk.events import FollowupAction, UserUtteranceReverted, SlotSet, ReminderScheduled, ReminderCancelled
+from rasa_sdk.events import FollowupAction, UserUtteranceReverted, SlotSet, ReminderScheduled, ReminderCancelled, Restarted
 from rasa_sdk.types import DomainDict
 import requests
 import datetime
+import os
 
 # Used if and only if the bot begins the conversation.
 # Not currently in use.
@@ -114,6 +115,18 @@ class ActionSetGenreSlot(Action):
             # latest message's artist entity extracted by DIETClassifier. index 1 would be RegexEntityClassifier's artist entity
             new_artist = tracker.latest_message['entities'][0]['value']
             # new_artist used instead of artist so that artists not in the lookup table can be searched
+
+            try:
+                BACKEND_API_LOCATION = 'localhost:3001'
+                if 'BACKEND_API_LOCATION' in os.environ:
+                    BACKEND_API_LOCATION = os.environ.get('BACKEND_API_LOCATION')
+                
+                genre = requests.get('http://' + BACKEND_API_LOCATION + '/api/trollbot/genre/' + new_artist)
+                genre = genre.json()
+            except Exception as e:
+                print(e)
+                genre = None
+            print('genre: ' + genre)
             if new_artist not in artists:
                 try:
                     artist = requests.get('http://localhost:3001/api/trollbot/' + new_artist)
@@ -303,10 +316,10 @@ class ActionDeflectOpinionQuestion(Action):
 # If the artist slot is unfilled (i.e. the user says something like "she is so cool" without clarifying the artist first),
 # then the bot asks the user to clarify who the user is talking about.
 # Otherwise the bot insults the expressed opinion.
-class ActionHandleClaim(Action):
+class ActionHandleClaimTroll(Action):
     def name(self) -> Text:
 
-        return "action_handle_claim"
+        return "action_handle_claim_troll"
 
     def run(self,
         dispatcher: CollectingDispatcher,
@@ -325,7 +338,36 @@ class ActionHandleClaim(Action):
                 response="utter_reject_claim"
             )
             return []
-    
+
+class ActionHandleClaimNice(Action):
+    def name(self) -> Text:
+
+        return "action_handle_claim_nice"
+
+    def run(self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        artist = tracker.get_slot('artist')
+        opinion = tracker.get_slot('opinion')
+
+        if artist is None:
+            dispatcher.utter_message(
+                response="utter_ask_clarification_of_artist"
+            )
+            return [SlotSet("opinion", None)]
+        elif opinion == "good":
+            dispatcher.utter_message(
+                response="utter_artist_praise_agree"
+            )
+            return []
+        else:
+            dispatcher.utter_message(
+                response="utter_neutral_comment"
+            )
+            return []
+
 class ActionSetArtistForUser(Action):
     
     def name(self) -> Text:

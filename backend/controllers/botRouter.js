@@ -4,26 +4,10 @@ const { getArtistByName } = require('../database/databaseService')
 const { getGenreByName } = require('../services/spotifyService')
 const { updateOneArtist } = require('../services/artistService')
 
-// botRouter.get('/', (req, res) => {
-//   res.json(getMessages())
-// })
-
-// botRouter.post('/', async (req, res) => {
-//   // const response = await botAnswer(req.body)
-//   const response = await rasaAnswer(req.body)
-//   console.log('trollbotRouter-post bot response', response)
-//   res.json(response)
-// })
-
-// botRouter.delete('/', (req, res) => {
-//   clearMessages()
-//   res.json(getMessages())
-// })
-
 botRouter.get('/genre/:artist', async (req, res) => {
 
   const artist = req.params.artist
-  const response = await getArtistByName(artist)
+  let response = await getArtistByName(artist)
   if (response === undefined) {
     // If musicbrainz does not have the genre, gets it from spotify
     response = await getGenreByName(artist)
