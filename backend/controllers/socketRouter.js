@@ -16,20 +16,20 @@ module.exports = {
       io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
       setInterval(() => {
-        const body = getBotMessage()
-        const bot = getBot(roomId)
+        const botMessage = getBotMessage()
+        const { id, name: botName } = getBot(roomId)
 
         if (typeof botMessage !== 'undefined') {
-
           // Bot reply timeout chain
-
           setTimeout(() => {
-            logger.info('Bot start typing', bot)
-            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { roomId, user: bot })
+            logger.info('Bot start typing', botName)
+            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id, name: botName } })
             setTimeout(() => {
-              logger.info('End typing', bot)
-              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { roomId, user: bot })
-              io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, { body, senderId: bot.senderId, user: bot })
+              logger.info('End typing', botName)
+              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id, name: botName } })
+              console.log('Bot message as: ', { body: botMessage.body, senderId: roomId, user: { id, name: botName } })
+              addMessage(roomId, { body: botMessage.body, senderId: roomId, user: { id, name: botName } })
+              io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, { body: botMessage.body, senderId: roomId, user: { id, name: botName } })
             }, 2000)
           }, 500)
         }
