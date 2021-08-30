@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "log": "node services/eventLogger/logWriter",
+    "log": "node runLogger",
     "rasa": "cd rasa/ && rasa run",
     "all": "npm-run-all --parallel dev rasa",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --testPathPattern=/tests",
@@ -32,6 +32,7 @@
     "express-async-errors": "^3.1.1",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
+    "minimist": "^1.2.5",
     "mongodb": "^4.0.1",
     "mongoose": "^5.13.8",
     "mongoose-unique-validator": "^2.0.3",
