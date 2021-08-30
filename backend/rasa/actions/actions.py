@@ -459,6 +459,8 @@ class checkIfSameLikedArtist(Action):
             if 'liked_artist' in users[user]:
                 if liked_artist == '':
                     liked_artist = users[user]['liked_artist']
-                elif users[user]['liked_artist'] != liked_artist:
+                elif users[user]['liked_artist'] == liked_artist:
+                    print('Users like the same artist.')
                     return [SlotSet('same_artist_liked', True)]
+        print('Users do not like the same artist.')
         return [SlotSet('same_artist_liked', False)]
