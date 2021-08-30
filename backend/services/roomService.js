@@ -10,7 +10,7 @@ const testBot = {
   type: 'Troll',
 }
 
-let users = [testBot]
+let users = [testBot,]
 
 let rooms = [{
   id: 1,
@@ -18,18 +18,18 @@ let rooms = [{
   bot: testBot,
   users: [testBot],
   messages: []
-}]
+},]
 
 const getUsers = () => users
 
 const getRooms = () => rooms
 
-const getRoom = (room) => rooms.find(r => r.name === room)
+const getRoom = (roomName) => rooms.find(r => r.name === roomName)
 
-const getBot = (room) => {
-  const foundRoom = rooms.find(r => r.name === room)
-  if (!foundRoom) return
-  return room.bot
+const getBot = (roomName) => {
+  const foundRoom = getRoom(roomName)
+  if(foundRoom === undefined) return
+  return foundRoom.bot
 }
 
 const getMessagesInRoom = (roomName) => {
