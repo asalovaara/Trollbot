@@ -61,7 +61,7 @@ const setRasaUsersSlot = async (channel_id, users) => {
   for (const user of users) {
     rasa_users[user.senderId] = user
   }
-  logger.info('Entered rasaController:setRasaUsersSlot().')
+  logger.info('Entered rasaController:setRasaUsersSlot().', users)
   try {
     logger.info('setRasaUsersSlot:rasa_users', rasa_users)
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, {

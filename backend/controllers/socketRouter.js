@@ -1,4 +1,4 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom } = require('../services/roomService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, getRasaRESTResponse } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
@@ -16,19 +16,20 @@ module.exports = {
       io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
       setInterval(() => {
-        const botMessage = getBotMessage()
+        const body = getBotMessage()
+        const bot = getBot(roomId)
 
         if (typeof botMessage !== 'undefined') {
 
           // Bot reply timeout chain
 
           setTimeout(() => {
-            logger.info('Bot start typing', { senderId: botMessage.senderId, user: botMessage.user })
-            io.in(botMessage.room).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: botMessage.senderId, user: botMessage.user })
+            logger.info('Bot start typing', bot)
+            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { roomId, user: bot })
             setTimeout(() => {
-              logger.info('End typing', { senderId: botMessage.senderId, user: botMessage.user })
-              io.in(botMessage.room).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: botMessage.senderId, user: botMessage.user })
-              io.in(botMessage.room).emit(events.BOT_SENDS_MESSAGE_EVENT, botMessage)
+              logger.info('End typing', bot)
+              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { roomId, user: bot })
+              io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, { body, senderId: bot.senderId, user: bot })
             }, 2000)
           }, 500)
         }
@@ -54,6 +55,7 @@ module.exports = {
         io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, data)
       })
       socket.on(events.STOP_TYPING_MESSAGE_EVENT, (data) => {
+        logger.info('Stop typing data:', data)
         io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
       })
 
