@@ -4,11 +4,14 @@ const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormat
 const path = require('path')
 const logger = require('../../utils/logger')
 
-const main = async () => {
+/**
+ * Runs the log writer with given options
+ * @param {source: 'LOCAL' or 'ATLAS', room: 'all' or 'roomName', delete: true or false, list: true or false} options 
+ */
 
-  logger.show('Running Trollbot log writer app with following options:')
-  const options = handleParameters()
-  logger.show(options)
+const runLogger = async (options) => {
+
+  logger.show('Running Trollbot log writer with following options:')
 
   let mongoUrl
 
@@ -22,10 +25,10 @@ const main = async () => {
 
   try {
     await client.connect()
-    if (options.list === true) {
+    if (options.list) {
       await listItems(client, options.source)
     }
-    else if (options.delete === true) {
+    else if (options.delete) {
       await deleteItems(client, options.room, options.source)
     } else {
       await findEvents(client, options.room, options.source)
@@ -37,47 +40,23 @@ const main = async () => {
   }
 }
 
-const handleParameters = () => {
 
-  let options = {
-    source: 'LOCAL',
-    delete: false,
-    room: 'all',
-    list: false
-  }
-
-  const paramArray = process.argv.slice(2)
-  paramArray.forEach(param => {
-    if (param.includes('--atlas')) {
-      options.source = 'ATLAS'
-    } else if (param.includes('--delete')) {
-      options.delete = true
-    } else if (param.includes('--room')) {
-      let rArray = param.split(':')
-      rArray.shift()
-      options.room = rArray.join('')
-    } else if (param.includes('--list')) {
-      options.list = true
-      options.room = 'all'
-      options.delete = false
-    }
-  })
-
-  return options
-}
 
 // query the db
 const findEvents = async (client, room, source) => {
 
   let result
+  let searchMsg
 
   if (room === 'all') {
     result = await client.db('Trollbot').collection('conversations').find({})
+    searchMsg = '\nSearching for ' + source + ' tracker store conversation log(s).'
   } else {
     result = await client.db('Trollbot').collection('conversations').find({ sender_id: room })
+    searchMsg = '\nSearching for ' + source + ' tracker store conversation log for room ' + room + '.'
   }
 
-  logger.show('\nSearching for ' + source + ' tracker store conversation log(s):')
+  logger.show(searchMsg)
   let i = 0
 
   await result.forEach(room => {
@@ -166,4 +145,4 @@ const logMessage = async (message, roomName) => {
   }
 }
 
-main().catch(console.error)
+module.exports = {runLogger}
