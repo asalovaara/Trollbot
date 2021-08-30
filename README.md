@@ -18,28 +18,35 @@ Single page web application using Node.js and React.
 
 Read the README at backend folder.
 
-Rasa: run `rasa train` when you first pull the new directory to initialise the
-Rasa model.
+Create folders named `models_nice` and `models_troll` in backend/rasa/, because these folders are currently gitignored. These will be used to store models for the two bots.
 
-To start the Rasa action server (required for custom actions), run the command `rasa run actions`.
+Remember to train the Rasa bots when you pull:
 
-To start the Rasa HTTP API server, run the command `rasa run --enable-api --cors "*"`.
+Nicebot: `rasa train --data data_nice --out models_nice`
 
-## Testing conversations in Rasa Shell
+Trollbot: `rasa train --data data_troll --out models_troll`
 
-In backend folder:
+(The data for Nicebot comes from directory `data_nice` and the model is saved into directory `models_nice`.)
 
-Run backend with `npm start` (required for genre search).
+The nlu file is not shared between Nicebot and Trollbot. If you modify nice_nlu.yml, apply the same change to troll_nlu.yml as well.
+
+## Usage
+
+Start the local MongoDB database (instructions in backend README).
+
+In backend folder: run backend with `npm start` (required for genre search).
 
 In backend/rasa folder:
 
 Use `rasa run actions` to run Rasa action server (required for custom actions).
 
-Use `rasa shell` to test conversations on the command line.
+Use `rasa run -m models_nice --enable-api --cors "*"` to run Rasa server for Nicebot 
 
-Use `rasa shell nlu` to test the intent recognition on individual messages.
+or `rasa run -m models_troll --enable-api --cors "*"` for Trollbot.
 
-(Currently broken) You can also use `rasa test` to run the automated tests.
+(The `-m` argument chooses the latest model in the specified directory.)
+
+In frontend folder: run frontend with `npm start`.
 
 ## Documentation
 
