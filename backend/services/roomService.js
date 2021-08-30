@@ -2,21 +2,24 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { setRasaUsersSlot, getRasaRESTResponse } = require('./rasaService')
+const { createBot } = require('./botFactory')
 
 // let users = [{ name: 'Testuser', id: 1 }, { name: 'Removeme', id: 2 },]
-let bot = {
+const testBot = {
   id: 'bot',
   senderId: 'bot',
-  name: 'Bot',
-  room: 'room'
+  name: 'Test Bot',
+  type: 'Troll',
+  room: 'Test',
 }
 
-let users = []
+let users = [testBot]
 
 let rooms = [{
   id: 1,
   name: 'Test',
-  users: [],
+  bot: testBot,
+  users: [testBot],
   messages: []
 }]
 
@@ -26,16 +29,14 @@ const getRooms = () => rooms
 
 const getRoom = (room) => rooms.find(r => r.name === room)
 
+const getBot = (room) => rooms.find(r => r.name === room).bot
+
 const getMessagesInRoom = (roomName) => {
   return rooms.find(r => r.name === roomName).messages
 }
 
 const getUsersInRoom = (roomName) => {
-  let roomUsers = users.filter((user) => user.room === roomName)
-  bot.room = roomName
-  roomUsers.push(bot)
-  return roomUsers
-  // return rooms.find(r => r.name === roomName).users
+  return rooms.find(r => r.name === roomName).users
 }
 
 const addUserIntoRoom = (senderId, roomName, name) => {
@@ -92,6 +93,12 @@ const addMessage = (roomName, message) => {
 
 const addRoom = (room) => {
   const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [] }
+
+  const bot = createBot(room.name, room.botType)
+
+  newRoom.users.push(bot)
+  users.push(bot)
+
   logger.info('Added room:', newRoom)
   rooms.push(newRoom)
   return newRoom
@@ -147,6 +154,7 @@ module.exports = {
   login,
   addUser,
   addRoom,
+  getBot,
   getUsers,
   getRooms,
   getRoom,
