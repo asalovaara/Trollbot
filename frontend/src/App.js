@@ -31,13 +31,15 @@ const App = () => {
   }, [])
 
   const conditionalRender = () => {
-    // Directs to Admin page instead of room selection.
-    if (user && user.name === 'Admin') return <AdminPage />
     if (!user) return <Login user={user} setUser={setUser} />
 
     return (
       <Switch>
         <Route exact path='/' component={Home} />
+        {user.name === 'Admin' &&
+          <Route exact path='/admin/main'>
+            <AdminPage user={user} />
+          </Route>}
         <Route exact path='/:roomId' component={ChatRoom} />
       </Switch>
     )

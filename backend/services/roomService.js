@@ -1,16 +1,13 @@
-/* eslint-disable no-unused-vars */
 const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { setRasaUsersSlot, getRasaRESTResponse } = require('./rasaService')
 const { createBot } = require('./botFactory')
 
-// let users = [{ name: 'Testuser', id: 1 }, { name: 'Removeme', id: 2 },]
 const testBot = {
   id: 'bot',
   senderId: 'bot',
   name: 'Test Bot',
   type: 'Troll',
-  room: 'Test',
 }
 
 let users = [testBot]
@@ -49,9 +46,6 @@ const addUserIntoRoom = (senderId, roomName, name) => {
 
   const room = roomName
   const user = { id: uuid.v4(), senderId, name, room }
-  logger.info('addUser:user', user)
-  // const user = addUser(senderId, name, roomName)
-  // user.room = roomName
 
   existingRoom.users.push(user)
 

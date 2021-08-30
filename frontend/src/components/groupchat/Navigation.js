@@ -20,6 +20,7 @@ const Navigation = ({ user, setUser }) => {
     <AppBar position="static">
       <Toolbar>
         <Button color="inherit" component={ReactLink} to="/">Trollbot</Button>
+        {user && user.name === 'Admin' && <Button color="inherit" component={ReactLink} to="/admin/main">Admin</Button>}
         {user && <Button id='logout' color="inherit" onClick={handleLogout}>Logout</Button>}
       </Toolbar>
     </AppBar>

@@ -60,19 +60,11 @@ const getRasaRESTResponse = async (roomId, { body, user }) => {
 const setRasaUsersSlot = async (channel_id, users) => {
   logger.info('Entered rasaController:setRasaUsersSlot().')
   try {
-    let rasa_users = {}
-    for (const user of users) {
-      logger.info('setRasaUsersSlot:user.room', user.room)
-      logger.info('setRasaUsersSlot:channel_id', channel_id)    
-      if (user.room === channel_id) {
-        rasa_users[user.senderId] = user
-      }
-    }
-    logger.info('setRasaUsersSlot:rasa_users', rasa_users)
+    logger.info('setRasaUsersSlot:rasa_users', users)
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
-      'value': rasa_users
+      'value': users
     })
     if (response) {
       logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
@@ -104,7 +96,7 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
       users[user].active = false
     }
     users[user_id].active = true
-    
+
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, [
       {
         'event': 'slot',

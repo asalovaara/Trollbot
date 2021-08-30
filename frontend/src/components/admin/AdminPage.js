@@ -6,13 +6,22 @@ import { TITLE } from '../../config'
 import Box from '@material-ui/core/Box'
 import roomService from '../../services/room'
 
-const AdminPage = () => {
+const AdminPage = (user) => {
   const [rooms, setRooms] = useState([])
 
   useEffect(() => {
     roomService.getRooms().then(initialRooms => setRooms(initialRooms))
     console.log(rooms)
   }, [])
+
+  if (!user && user.name !== 'Admin') {
+    console.log(user.name !== 'Admin')
+    return (
+      <div>
+        <h2>Access denied</h2>
+      </div>
+    )
+  }
 
   return (
     <Box>
