@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 
 const loginRouter = require('./controllers/loginRouter')
 const roomRouter = require('./controllers/roomRouter')
+const rasaRouter = require('./controllers/rasaRouter')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'build'))) // find and use static bu
 // Routers
 app.use(`${API_URL}/login`, loginRouter)
 app.use(`${API_URL}/rooms`, roomRouter)
+app.use(`${API_URL}/rasa`, rasaRouter)
 
 // Static Build
 app.get('/*', (request, response) => {

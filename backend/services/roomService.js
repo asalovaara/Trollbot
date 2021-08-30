@@ -4,6 +4,13 @@ var uuid = require('uuid')
 const { setRasaUsersSlot, getRasaRESTResponse } = require('./rasaService')
 
 // let users = [{ name: 'Testuser', id: 1 }, { name: 'Removeme', id: 2 },]
+let bot = {
+  id: 'bot',
+  senderId: 'bot',
+  name: 'Bot',
+  room: 'room'
+}
+
 let users = []
 
 let rooms = [{
@@ -24,7 +31,11 @@ const getMessagesInRoom = (roomName) => {
 }
 
 const getUsersInRoom = (roomName) => {
-  return rooms.find(r => r.name === roomName).users
+  let roomUsers = users.filter((user) => user.room === roomName)
+  bot.room = roomName
+  roomUsers.push(bot)
+  return roomUsers
+  // return rooms.find(r => r.name === roomName).users
 }
 
 const addUserIntoRoom = (senderId, roomName, name) => {

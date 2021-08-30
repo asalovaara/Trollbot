@@ -61,9 +61,8 @@ const getRasaRESTResponse = async (roomId, { body, user }) => {
       'sender': roomId,
       'message': body
     })
-      .then(res => logger.info('res:', res))
 
-    logger.info(`response: ${inspect(response.data[0].text)}`)
+    // logger.info(`response: ${inspect(response.data[0].text)}`)
     logger.info('getRasaRESTResponse:response.data', response.data)
     return response.data
 
