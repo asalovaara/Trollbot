@@ -55,8 +55,8 @@ const ChatRoom = (props) => {
     else stopTypingMessage()
   }, [isTyping])
 
-  const uniqueUsers = [...new Set(users)].filter(u => u.name !== undefined)
-  const uniqueTyping = [...new Set(typingUsers)].filter(u => u.name !== undefined)
+  const uniqueUsers = [...new Set(users)].filter(u => u.name !== undefined && u.name !== 'Admin')
+  const uniqueTyping = [...new Set(typingUsers)].filter(u => u.name !== undefined && u.name !== 'Admin')
 
   return (
     <Container>

@@ -1,6 +1,6 @@
 {
-  "short_name": "Trollbot",
-  "name": "Chatbot that can be used for testing automated trolling",
+  "short_name": "Chatroom",
+  "name": "Chatroom host website",
   "icons": [
     {
       "src": "favicon.ico",

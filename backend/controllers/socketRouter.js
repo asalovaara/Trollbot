@@ -1,4 +1,4 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot } = require('../services/roomService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getRooms } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, getRasaRESTResponse } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
@@ -9,6 +9,8 @@ module.exports = {
     io.on('connection', (socket) => {
       // Join a conversation
       const { roomId, name } = socket.handshake.query
+      const rooms = getRooms()
+
       logger.info(`Socket.io: ${name} joined ${roomId}.`)
       socket.join(roomId)
       const user = addUserIntoRoom(socket.id, roomId, name)
@@ -17,19 +19,22 @@ module.exports = {
 
       setInterval(() => {
         const botMessage = getBotMessage()
-        const { id, name: botName } = getBot(roomId)
+        if (rooms.find(r => r.name === roomId) === undefined) return
 
-        if (typeof botMessage !== 'undefined') {
+        const bot = getBot(roomId)
+
+        if (typeof botMessage !== 'undefined' && bot !== undefined) {
           // Bot reply timeout chain
+
           setTimeout(() => {
-            logger.info('Bot start typing', botName)
-            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id, name: botName } })
+            logger.info('Bot start typing', bot)
+            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id: bot.id, name: bot.name } })
             setTimeout(() => {
-              logger.info('End typing', botName)
-              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id, name: botName } })
-              console.log('Bot message as: ', { body: botMessage.body, senderId: roomId, user: { id, name: botName } })
-              addMessage(roomId, { body: botMessage.body, senderId: roomId, user: { id, name: botName } })
-              io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, { body: botMessage.body, senderId: roomId, user: { id, name: botName } })
+              logger.info('End typing', bot)
+              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id: bot.id, name: bot.name } })
+              console.log('Bot message as: ', { body: botMessage.body, senderId: roomId, user: { id: bot.id, name: bot.name } })
+              addMessage(roomId, { body: botMessage.body, senderId: roomId, user: { id: bot.id, name: bot.name } })
+              io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, { body: botMessage.body, senderId: roomId, user: { id: bot.id, name: bot.name } })
             }, 2000)
           }, 500)
         }

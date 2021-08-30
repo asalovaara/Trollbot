@@ -26,7 +26,11 @@ const getRooms = () => rooms
 
 const getRoom = (room) => rooms.find(r => r.name === room)
 
-const getBot = (room) => rooms.find(r => r.name === room).bot
+const getBot = (room) => {
+  const foundRoom = rooms.find(r => r.name === room)
+  if (!foundRoom) return
+  return room.bot
+}
 
 const getMessagesInRoom = (roomName) => {
   return rooms.find(r => r.name === roomName).messages
@@ -43,7 +47,7 @@ const addUserIntoRoom = (senderId, roomName, name) => {
   if (!name || !roomName) return { error: 'Username and room are required.' }
   if (!existingRoom) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
-  
+
   const user = { id: uuid.v4(), senderId, name }
 
   existingRoom.users.push(user)
