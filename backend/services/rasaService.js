@@ -132,7 +132,7 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
 
 }
 
-exports.sendMessageToRasa = sendMessageToRasa
+exports.getRasaRESTResponse = getRasaRESTResponse
 exports.setRasaUsersSlot = setRasaUsersSlot
 exports.setRasaLastMessageSenderSlot = setRasaLastMessageSenderSlot
 exports.saveBotMessage = saveBotMessage
