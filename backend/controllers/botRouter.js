@@ -29,8 +29,6 @@ botRouter.get('/genre/:artist', async (req, res) => {
     response = await getGenreByName(artist)
     res.json(response)
   } else {
-    console.log(response)
-    console.log(response.genres[0])
     res.json(response.genres[0])
   }
 })
@@ -41,7 +39,6 @@ botRouter.get('/:artist', async (req, res) => {
   await updateOneArtist(artist)
   // Gets artist from database.
   const response = await getArtistByName(artist)
-  console.log(response)
   if (response === undefined) {
     res.json(undefined)
   } else {
