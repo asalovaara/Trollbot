@@ -1,7 +1,7 @@
 describe('Trollbot app E2E testing', () => {
 
   beforeEach(() => {
-    cy.visit('http://localhost:3000')
+    cy.visit('http://localhost:3001')
     loginHelper('cypress')
   })
 
