@@ -27,14 +27,14 @@ const getBotMessage = () => {
 }
 
 /**
- * Gets the Rasa text response from the Rasa HTTP server.
+ * Sends a user message to the Rasa HTTP server.
  * @param {*} room 
  * @param {*} param1 
  * @returns 
  */
-const getRasaRESTResponse = async (roomId, { body, user }) => {
-  logger.info('Entered rasaController:getRasaRESTResponse(): ', body, user.name)
-  logger.info('getRasaRESTResponse:roomId', roomId)
+const sendMessageToRasa = async (roomId, { body, user }) => {
+  logger.info('Entered rasaService:sendMessageToRasa(): ', body, user.name)
+  logger.info('sendMessageToRasa:roomId', roomId)
   try {
     logger.info(inspect(body))
     const response = await axios.post(RASA_ENDPOINT + '/webhooks/callback/webhook', {
@@ -42,7 +42,7 @@ const getRasaRESTResponse = async (roomId, { body, user }) => {
       'message': body
     })
 
-    logger.info('getRasaRESTResponse:response.data', response.data)
+    logger.info('sendMessageToRasa:response.data', response.data)
     return response.data
 
   } catch (error) {
@@ -57,8 +57,9 @@ const getRasaRESTResponse = async (roomId, { body, user }) => {
  * @returns 
  */
 const setRasaUsersSlot = async (channel_id, users) => {
+  const humanUsers = users.slice(1)
   let rasa_users = {}
-  for (const user of users) {
+  for (const user of humanUsers) {
     rasa_users[user.senderId] = user
   }
   logger.info('Entered rasaController:setRasaUsersSlot().', users)
@@ -127,7 +128,7 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
 
 }
 
-exports.getRasaRESTResponse = getRasaRESTResponse
+exports.sendMessageToRasa = sendMessageToRasa
 exports.setRasaUsersSlot = setRasaUsersSlot
 exports.setRasaLastMessageSenderSlot = setRasaLastMessageSenderSlot
 exports.saveBotMessage = saveBotMessage

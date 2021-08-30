@@ -1,6 +1,6 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-const { setRasaUsersSlot, getRasaRESTResponse } = require('./rasaService')
+const { setRasaUsersSlot } = require('./rasaService')
 const { createBot } = require('./botFactory')
 
 const testBot = {
@@ -91,34 +91,15 @@ const addMessage = (roomName, message) => {
 const addRoom = (room) => {
   const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [] }
 
-  const bot = createBot(room.name, room.botType)
+  const bot = createBot(room.botType)
 
+  newRoom.bot = bot
   newRoom.users.push(bot)
   users.push(bot)
 
   logger.info('Added room:', newRoom)
   rooms.push(newRoom)
   return newRoom
-}
-
-const getAnswer = async (roomName, data) => {
-  let responses = []
-  const response = await getRasaRESTResponse(data)
-
-  for (let i = 0; i < response.length; i++) {
-    const msg = {
-      id: 'botanswerid' + (response[i].id + i),
-      room: roomName,
-      senderId: 'bot',
-      body: response[i].text,
-      user: {
-        id: 'bot',
-        name: 'Bot'
-      }
-    }
-    responses.push(msg)
-  }
-  return responses
 }
 
 const addUser = (senderId, name, room) => {
@@ -156,7 +137,6 @@ module.exports = {
   getRooms,
   getRoom,
   addMessage,
-  getAnswer,
   addUserIntoRoom,
   getMessagesInRoom,
   removeUserFromRoom,

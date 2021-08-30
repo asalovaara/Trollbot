@@ -1,5 +1,5 @@
 const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot } = require('../services/roomService')
-const { getBotMessage, setRasaLastMessageSenderSlot, getRasaRESTResponse } = require('../services/rasaService')
+const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
@@ -17,20 +17,22 @@ module.exports = {
 
       setInterval(() => {
         const botMessage = getBotMessage()
-        const bot = getBot(roomId)
 
-        if (typeof botMessage !== 'undefined' && typeof bot !== 'undefined') {
+        if (typeof botMessage !== 'undefined') {
+
+          const bot = getBot(botMessage.room)
+
           // Bot reply timeout chain
           const { body } = botMessage
           const { id, name: botname } = bot
 
           setTimeout(() => {
-            io.in(roomId).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id, name: botname } })
+            io.in(botMessage.room).emit(events.START_TYPING_MESSAGE_EVENT, { senderId: botMessage.room, user: { id, name: botname } })
             setTimeout(() => {
-              io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: roomId, user: { id, name: botname } })
-              addMessage(roomId, { body, senderId: roomId, user: { id, name: botname } })
-              io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, { body, senderId: roomId, user: { id, name: botname } })
-            }, 3000)
+              io.in(botMessage.room).emit(events.STOP_TYPING_MESSAGE_EVENT, { senderId: botMessage.room, user: { id, name: botname } })
+              addMessage(botMessage.room, { body, senderId: botMessage.room, user: { id, name: botname } })
+              io.in(botMessage.room).emit(events.NEW_CHAT_MESSAGE_EVENT, { body, senderId: botMessage.room, user: { id, name: botname } })
+            }, 2000)
           }, 500)
         }
       }, 3000)
@@ -45,8 +47,8 @@ module.exports = {
       // Bot reply
       socket.on(events.SEND_MESSAGE_TO_BOT_EVENT, async (data) => {
         await setRasaLastMessageSenderSlot(roomId, data.senderId)
-        const answers = await getRasaRESTResponse(roomId, data)
-        logger.info('Bot answer', answers)
+        const response = await sendMessageToRasa(roomId, data)
+        logger.info('Message sent status: ', response)
       })
 
       // Listen typing events
