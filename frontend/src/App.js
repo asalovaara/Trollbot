@@ -40,7 +40,8 @@ const App = () => {
           <Route exact path='/admin/main'>
             <AdminPage user={user} />
           </Route>}
-        <Route exact path='/:roomId' component={ChatRoom} />
+        <Route exact path='/:roomId' component={ChatRoom}>
+        </Route>
       </Switch>
     )
   }

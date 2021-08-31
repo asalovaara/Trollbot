@@ -8,35 +8,30 @@ import Grid from '@material-ui/core/Grid'
 
 
 
-const ChatMessage = ({ message }) => {
+const ChatMessage = ({ message, user }) => {
 
   const ownerConditionalRender = () => {
-    if (!message.ownedByCurrentUser) {
+    if (message.user.name === user.name) {
       return (
-        <Paper m={1}>
-          <Grid container spacing={3} >
-            <Grid item>
-              <UserAvatar user={message.user}></UserAvatar>
-            </Grid>
-            <Grid item>
-              <Typography><b>{message.user.name}</b>: {message.body}</Typography>
-            </Grid>
+        <Grid component={Paper} container spacing={2}>
+          <Grid item xs={11}>
+            <Typography>{message.body}</Typography>
           </Grid>
-        </Paper>
-      )
-
-    }
-    return (
-      <Paper m={1}>
-        <Grid container spacing={3} >
-          <Grid item>
+          <Grid item xs={1}>
             <UserAvatar user={message.user}></UserAvatar>
           </Grid>
-          <Grid item>
-            <Typography><b>{message.user.name}</b>: {message.body}</Typography>
-          </Grid>
         </Grid>
-      </Paper>
+      )
+    }
+    return (
+      <Grid container component={Paper} spacing={2}>
+        <Grid item>
+          <UserAvatar user={message.user}></UserAvatar>
+        </Grid>
+        <Grid item>
+          <Typography> {message.body}</Typography>
+        </Grid>
+      </Grid>
     )
   }
 
