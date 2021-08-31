@@ -7,11 +7,12 @@ const { API_URL, MONGODB_URI } = require('../utils/config')
 const mongoose = require('mongoose')
 const { saveArtistToDatabase, updateArtist, deleteAll } = require('../database/databaseService')
 const { getArtist } = require('./musicbrainzService')
+const path = require('path')
 
 // run this file to add artists to the database
 
 const main = async () => {
-  const filepath = '../data/artists.txt'
+  const filepath = path.resolve(__dirname, '../data/artists.txt')
 
   try {
 
