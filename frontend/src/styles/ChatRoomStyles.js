@@ -5,11 +5,11 @@ const useChatRoomStyles = makeStyles(() =>
     chatSection: {
       padding: '16px',
       width: '100%',
-      height: '120vh',
+      height: '80vh',
     },
     messageArea: {
       listStyleType: 'none',
-      height: '60vh',
+      height: '40vh',
       overflowY: 'auto'
     },
     typingList: {

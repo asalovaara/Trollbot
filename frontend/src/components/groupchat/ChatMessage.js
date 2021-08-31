@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid'
 
 const ChatMessage = ({ message, user }) => {
 
-  const ownerConditionalRender = () => {
+  const messageOwnerRender = () => {
     if (message.user.name === user.name) {
       return (
         <Grid component={Paper} container spacing={2}>
@@ -37,7 +37,7 @@ const ChatMessage = ({ message, user }) => {
 
   return (
     <Container>
-      {ownerConditionalRender()}
+      {messageOwnerRender()}
     </Container >
   )
 }

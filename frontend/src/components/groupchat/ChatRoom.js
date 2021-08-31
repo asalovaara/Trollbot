@@ -47,6 +47,7 @@ const ChatRoom = (props) => {
     setNewMessage('')
   }
 
+  // Check localstore for saved user
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
@@ -55,21 +56,20 @@ const ChatRoom = (props) => {
     }
   }, [])
 
+  // Starts a typing event
   useEffect(() => {
     if (isTyping) startTypingMessage()
     else stopTypingMessage()
   }, [isTyping])
 
+  // Scroll to bottom on new messages
   useEffect(() => {
     if (messageRef.current) {
-      messageRef.current.scrollIntoView(
-        {
-          behavior: 'smooth',
-        })
+      messageRef.current.scrollIntoView({ behavior: 'smooth', })
     }
   }, [messages])
 
-
+  // Filter unnamed and Admin users
   const uniqueUsers = [...new Set(users)].filter(u => u.name !== undefined && u.name !== 'Admin')
   const uniqueTyping = [...new Set(typingUsers)].filter(u => u.name !== undefined && u.name !== 'Admin')
 

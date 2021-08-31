@@ -5,6 +5,7 @@ import UserAvatar from './UserAvatar'
 
 const TypingMessage = ({ user }) => {
   const classes = useTypingStyles()
+
   return (
     <div className={classes.messageItem} >
       <UserAvatar user={user} />

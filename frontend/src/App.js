@@ -16,9 +16,7 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    console.log('loggedUserJSON', loggedUserJSON)
     if (loggedUserJSON) {
-      console.log('Found user in localstorage')
       const tryLogin = async () => {
         const loggedUser = JSON.parse(loggedUserJSON)
         const userObject = await loginService.login({
