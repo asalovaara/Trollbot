@@ -18,8 +18,6 @@ const matchLogWithStories = (stories, rules, logArray) => {
         matchingStories = matchStep(logStep, matchingStories)
         matchingRules = matchStep(logStep, matchingRules)
 
-        // console.log(matchingStories)
-
         if (matchingStories.length === 0 && matchingRules.length === 0) {
           if (stepCounter === 0) {
             i++
@@ -43,7 +41,6 @@ const matchLogWithStories = (stories, rules, logArray) => {
 // filter stories not containing a given story step
 const matchStep = (logStep, stories) => {
   let matchedStories = stories.filter(story => YAML.stringify(story.steps).includes(logStep))
-
   matchedStories = removeMatchedSteps(matchedStories, logStep)
 
   return matchedStories
