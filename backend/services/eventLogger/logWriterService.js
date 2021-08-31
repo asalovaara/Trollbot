@@ -6,12 +6,13 @@ const logger = require('../../utils/logger')
 
 /**
  * Runs the log writer with given options
- * @param {source: 'LOCAL' or 'ATLAS', room: 'all' or 'roomName', delete: true or false, list: true or false} options 
+ * @param {source: 'LOCAL' or 'ATLAS', room: 'all' or 'roomName', delete: true or false, list: true or false, dataFolder: folderName} options 
  */
 
 const runLogger = async (options) => {
 
   logger.show('Running Trollbot log writer with following options:')
+  logger.show(options)
 
   let mongoUrl
 
@@ -31,7 +32,7 @@ const runLogger = async (options) => {
     else if (options.delete) {
       await deleteItems(client, options.room, options.source)
     } else {
-      await findEvents(client, options.room, options.source)
+      await findEvents(client, options.room, options.source, options.dataFolder)
     }
   } catch (e) {
     logger.error(e)
@@ -43,7 +44,7 @@ const runLogger = async (options) => {
 
 
 // query the db
-const findEvents = async (client, room, source) => {
+const findEvents = async (client, room, source, folder) => {
 
   let result
   let searchMsg
@@ -68,7 +69,7 @@ const findEvents = async (client, room, source) => {
       formatEvent(event)
     })
 
-    const logWithStories = formatStories(trimmedArr)
+    const logWithStories = formatStories(trimmedArr, folder)
     logMessage(logWithStories, room.sender_id)
     logger.show(room.sender_id + ' found')
     i++
