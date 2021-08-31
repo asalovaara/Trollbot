@@ -44,7 +44,7 @@ const RoomSelect = () => {
             </Select>
           </Grid>
           <Grid item xs={6}>
-            <ReactLink to={`/${roomName.value}`}><Button id='join' variant='contained' color='primary' type='submit'>Join</Button></ReactLink>
+            <ReactLink to={`/rooms/${roomName.value}`}><Button id='join' variant='contained' color='primary' type='submit'>Join</Button></ReactLink>
           </Grid>
         </Grid>
       </FormControl>

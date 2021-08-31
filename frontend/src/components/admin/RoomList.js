@@ -21,7 +21,7 @@ const RoomList = ({ rooms }) => {
           {rooms && rooms.map((r) => {
             return (
               <ListItem button id={`list-item-${r.name}`} key={r.id}>
-                <ListItemLink href={`/${r.name}`}>
+                <ListItemLink href={`/rooms/${r.name}`}>
                   <ListItemText primary={r.name} />
                 </ListItemLink>
               </ListItem>
