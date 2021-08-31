@@ -11,7 +11,8 @@ const handleParameters = () => {
     source: 'LOCAL',
     room: 'all',
     delete: false,
-    list: false
+    list: false,
+    dataFolder: 'data'
   }
 
   const paramArray = process.argv.slice(2)
@@ -21,9 +22,14 @@ const handleParameters = () => {
     } else if (paramArray[i] === '--delete') {
       options.delete = true
     } else if (paramArray[i] === '--room') {
-      let roomName = constructRoomName(i + 1, paramArray)
+      let roomName = constructParamValue(i + 1, paramArray)
       if (roomName != '') {
         options.room = roomName
+      }
+    } else if (paramArray[i] === '--data') {
+      let folderName = constructParamValue(i + 1, paramArray)
+      if (folderName != '') {
+        options.dataFolder = folderName
       }
     } else if (paramArray[i] === '--list') {
       options.list = true
@@ -38,7 +44,7 @@ const handleParameters = () => {
   return options
 }
 
-const constructRoomName = (nameStart, paramArray) => {
+const constructParamValue = (nameStart, paramArray) => {
   let j
   for (j = nameStart; j < paramArray.length; j++) {
     if (paramArray[j].substring(0, 2) === '--') {

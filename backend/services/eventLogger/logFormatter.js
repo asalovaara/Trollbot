@@ -164,9 +164,9 @@ const formatEvent = (obj) => {
 }
 
 // fetches rasa's stories from stories.yml and starts story matching with given event log
-const formatStories = (logArray) => {
-  const storyFile = '../../rasa/data/stories.yml'
-  const ruleFile = '../../rasa/data/rules.yml'
+const formatStories = (logArray, dataFolder) => {
+  const storyFile = '../../rasa/' + dataFolder + '/stories.yml'
+  const ruleFile = '../../rasa/' + dataFolder + '/rules.yml'
   const stories = readFile(storyFile).stories
   const rules = readFile(ruleFile).rules
 

@@ -47,6 +47,12 @@ By default, `npm run log` generates csv logs for all conversations found in the 
 
 Example: To generate a csv log for the room *Testroom*, run `npm run log -- --room Testroom`.
 
+**-\-data**
+
+By default log writer's story matcher uses the stories.yml and rules.yml files located in `backend/rasa/data` folder. However, it is possible to use other training data folders with different file contents. If a different data folder was used when training Rasa, the folder name needs to be specified with a `--data` parameter when running log writer.
+
+Example: To generate csv logs from a local tracker store when the bot was trained with the data folder `nice_data`, run `npm run log -- --data nice_data`.
+
 **-\-delete**
 
 When using the `--delete` parameter, instead of writing csv files, the application will delete all conversation histories from the tracker store. Individual conversations can be deleted by specifying a room with the `--room` parameter.
