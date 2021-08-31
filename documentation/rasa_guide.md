@@ -95,21 +95,21 @@ If any part is changed, the bots need to be trained again for the changes to app
 
 The pipeline deals with language understanding. During development, we never removed WhitespaceTokenizer, RegexFeaturizer, LexicalSyntacticFeaturizer, or either CountVectorsFeaturizer, as they appear to be crucial for our purposes.
 
-LanguageModelFeaturizer for Google's BERT was implemented, as it has excellent natural language understanding. This can be changed if necessary; more on (Rasa docs: Pipeline components; LanguageModelFeaturizer)[https://rasa.com/docs/rasa/components#languagemodelfeaturizer]
+LanguageModelFeaturizer for Google's BERT was implemented, as it has excellent natural language understanding. This can be changed if necessary; more on [Rasa docs: Pipeline components; LanguageModelFeaturizer](https://rasa.com/docs/rasa/components#languagemodelfeaturizer)
 
 For intents and entities, DIETClassifier is used. RegexEntityExtractor is used for recognizing entities that are defined in lookup tables in the NLU. Because RegexEntityExtractor is after DIETClassifier in the pipeline, entities recognized by DIETClassifier are overwritten in their respective slots by RegexEntityExtractor. In custom actions, the artist-entity is often taken from the information regarding the last message's extracted entities in order to use the DIETClassifier's entity, which is allows more artist entities to be recognized than RegexEntityExtractor. RegexEntityExtractor only recognizes artist names listed in the lookup table, while DIETClassifier analyzes the tokens more flexibly. Our plan was to **abandon lookup tables and RegexEntityExtractor entirely**, but DIETClassifier still had some troubles recognizing artist names from intents, apparently assuming parts of the names were part of the intent itself instead of the entity.
 
-DIETClassifier can be further tuned by changing the values, most importantly for epochs. A higher number of epochs may improve precision and performance, but always increases training time. More details on adjustable values in (Rasa docs: DIETClassifier)[https://rasa.com/docs/rasa/components#dietclassifier]
+DIETClassifier can be further tuned by changing the values, most importantly for epochs. A higher number of epochs may improve precision and performance, but always increases training time. More details on adjustable values in [Rasa docs: DIETClassifier](https://rasa.com/docs/rasa/components#dietclassifier)
 
 FallbackClassifier is necessary for recognizing fallbacks; specifically, nlu_fallback. When the message's intent is ambiguous (highest confidence for any intent is lower than the threshold), or many intents are almost as probable (difference between confidence for highest-scoring intents is less than ambiguity_threshold), the message's intent will be recognized as nlu_fallback. This intent will then be treated as if any intent would (the rules-files contain rules for dealing with them).
 
 Policies impact how the bot reacts to recognized intents. Policies determine how the bot is trained to learn from rules and stories. 
 
-RulePolicy has the highest priority in determining the next action from a certain intent. Whenever a situation matches a known rule in the bot's training data, the following action will be chosen explicitly from that rule. RulePolicy can be adjusted to change fallback behaviour and more, see (Rasa docs: RulePolicy)[https://rasa.com/docs/rasa/policies#rule-policy]
+RulePolicy has the highest priority in determining the next action from a certain intent. Whenever a situation matches a known rule in the bot's training data, the following action will be chosen explicitly from that rule. RulePolicy can be adjusted to change fallback behaviour and more, see [Rasa docs: RulePolicy](https://rasa.com/docs/rasa/policies#rule-policy)
 
-MemoizationPolicy and TEDPolicy are used to follow stories. MemoizationPolicy follows stories more strictly while TEDPolicy is more flexible (but occasionally assumes the next action in unpredicted ways). Using these two together has seemed to work well, as either alone is slightly too unreliable. For TEDPolicy, epochs work quite similarly as for DIETClassifier; more epochs may improve performance, but always increase training time. See docs for more details on adjustments: (Rasa docs: Machine learning policies)[https://rasa.com/docs/rasa/policies#machine-learning-policies]
+MemoizationPolicy and TEDPolicy are used to follow stories. MemoizationPolicy follows stories more strictly while TEDPolicy is more flexible (but occasionally assumes the next action in unpredicted ways). Using these two together has seemed to work well, as either alone is slightly too unreliable. For TEDPolicy, epochs work quite similarly as for DIETClassifier; more epochs may improve performance, but always increase training time. See docs for more details on adjustments: [Rasa docs: Machine learning policies](https://rasa.com/docs/rasa/policies#machine-learning-policies)
 
-See the official docs for more information on tuning the model: (Rasa docs: Pipeline components)[https://rasa.com/docs/rasa/components]
+See the official docs for more information on tuning the model: [Rasa docs: Pipeline components](https://rasa.com/docs/rasa/components)
 
 ## Other
 
