@@ -31,6 +31,7 @@ jobs:
         env:
           CLIENT_ID: ${{secrets.CLIENT_ID}}
           CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+          MONGODB_URI: ${{secrets.MONGODB_URI}}
         working-directory: backend
       - name: Install frontend
         run: npm ci
@@ -60,6 +61,9 @@ jobs:
           python -m pip install -U pip
           pip install -r requirements.txt
         working-directory: backend/rasa
-      - name: Train rasa
-        run: rasa train
+      - name: Train rasa nice
+        run: rasa train --data data_nice --out models_nice
+        working-directory: backend/rasa
+      - name: Train rasa troll
+        run: rasa train --data data_troll --out models_troll
         working-directory: backend/rasa

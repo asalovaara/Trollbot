@@ -7,10 +7,9 @@ import { useTextInputStyles } from '../../styles/TextInputStyles.js'
 import Grid from '@material-ui/core/Grid'
 
 const TextInput = (props) => {
-
   const { messages, setMessages, botReply, setBotReply } = props
-
   const [message, setMessage] = useState('')
+  const classes = useTextInputStyles()
 
   useEffect(() => {
     console.log('test timer', botReply)
@@ -35,8 +34,6 @@ const TextInput = (props) => {
     }
     setMessage('')
   }
-
-  const classes = useTextInputStyles()
 
   return (
     <Grid container spacing={3}>

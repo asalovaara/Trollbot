@@ -10,6 +10,8 @@ const matchLogWithStories = (stories, rules, logArray) => {
     let matchingRules = _.cloneDeep(rules)
     let stepCounter = 0
 
+    // console.log(stories)
+
     while (i < logArray.length) {
       let logStep = logArray[i].story_step
       if (logStep !== undefined) {

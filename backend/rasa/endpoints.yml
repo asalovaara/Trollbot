@@ -25,6 +25,7 @@ action_endpoint:
 #    password: <password used for authentication>
 #    use_ssl: <whether or not the communication is encrypted, default false>
 
+<<<<<<< HEAD
 # UNCOMMENT TO ACTIVATE TRACKER STORE (requires locally run mongodb, see backend README)
 # tracker_store:
 #   type: mongod
@@ -32,6 +33,14 @@ action_endpoint:
 #   db: rasalogs
 #   username:
 #   password:
+=======
+tracker_store:
+  type: mongod
+  url: mongodb://localhost:27017
+  db: Trollbot
+  username:
+  password:
+>>>>>>> origin/logger
 
 # stuff to add to readme if needed
 

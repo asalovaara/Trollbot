@@ -1,0 +1,380 @@
+version: "2.0"
+
+stories:
+
+# Currently all stories with active user / inactive user variants
+# are simplified down to not regard active user status at all.
+
+
+# Opening pattern 1 (SINGLEUSER)
+- story: from opening to task
+  steps:
+  - intent: opening
+  - slot_was_set:
+    - task_activated: false
+  - action: action_greet_user_by_name
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+
+# Multiuser opening pattern 2
+- story: second user opening
+  steps:
+  - intent: opening
+  - slot_was_set:
+    - task_activated: true
+  - action: action_greet_user_by_name
+
+# Opening pattern 2 and Task introduction pattern 1 (SINGLEUSER)
+- story: from no introduction to task
+  steps:
+  - or:
+    - intent: closing
+    - intent: suggest_artist
+    - intent: likes_artist
+    - intent: dislikes_artist
+    - intent: request_for_suggestion_from_bot
+    - intent: suggestion_to_make_decision
+    - intent: suggestion_for_decision
+    - intent: agreement
+    - intent: disagreement
+  - slot_was_set:
+    - task_activated: false  
+  - action: utter_task_introduction
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+
+# Task introduction pattern 2 (SINGLEUSER)
+- story: handle user introducing task
+  steps:
+  - intent: task_introduction
+  - slot_was_set:
+    - task_activated: false
+  - action: utter_question_suggestions
+  - action: action_set_task_slot
+  - slot_was_set:
+    - task_activated: true
+  
+# Discussion
+
+# Active user implementation here
+
+- story: active user suggests artist 
+  steps:
+  - or:
+    - intent: suggest_artist # user suggests artist
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+  - slot_was_set: # task phase true check
+    - task_activated: true  
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set: # tell rasa opinion slot was set
+    - opinion: good
+  - action: action_set_artist_for_user # append the liked artist list of the user object
+  - action: action_check_if_same_liked_artist
+  - slot_was_set:
+    - same_artist_liked: false
+    - artist: filled
+  - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
+  - slot_was_set: # tell rasa genre slot was set by custom action
+    - genre : filled
+  - action: utter_artist_dismissal # dismiss user's suggested artist
+
+# - story: inactive user suggests/likes artist 
+#   steps:
+#   - or:
+#     - intent: suggest_artist # user suggests artist
+#     - intent: likes_artist
+#     - intent: suggestion_for_decision
+#   - slot_was_set: # task phase true check
+#     - task_activated: true  
+#   - slot_was_set: # active user false check
+#     - active_user: false 
+#   - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
+#   - slot_was_set: # tell rasa genre slot was set by custom action
+#     - genre: filled
+#   - action: action_set_opinion_slot_as_good 
+#   - slot_was_set: # tell rasa opinion slot was set
+#     - opinion: bad
+#   - action: action_set_artist_for_user # append the liked artist list of the user object  
+#   - action: action_listen # default action, wait for the next user message
+
+# Artist suggestion pattern 2 (MULTIUSER)
+- story: users like the same artist
+  steps:
+  - or:
+    - intent: suggest_artist # user suggests artist
+    - intent: likes_artist
+    - intent: suggestion_for_decision
+  - slot_was_set: # task phase true check
+    - task_activated: true  
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set: # tell rasa opinion slot was set
+    - opinion: good
+  - action: action_set_artist_for_user # append the liked artist list of the user object
+  - action: action_check_if_same_liked_artist
+  - slot_was_set:
+    - same_artist_liked: true
+    - artist: filled
+  - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
+  - slot_was_set: # tell rasa genre slot was set by custom action
+    - genre : filled
+  - action: utter_same_artist_liked_troll # dismiss user's suggested artist
+
+
+- story: active user dislikes artist path
+  steps:
+  - intent: dislikes_artist
+  - slot_was_set:
+    - task_activated: true
+  # - slot_was_set: # active user true check
+  #   - active_user: true       
+  - action: action_set_genre_slot
+  - slot_was_set:
+    - genre: filled
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion: bad
+  - action: action_set_artist_for_user    
+  - action: utter_artist_praise
+
+# - story: inactive user dislikes artist path
+#   steps:
+#   - intent: dislikes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false 
+#   - action: action_set_genre_slot
+#   - slot_was_set:
+#     - genre
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user    
+#   - action: action_listen # default action, wait for the next user message
+
+- story: active user praises artist
+  steps:
+  - intent: praising_claim
+  - slot_was_set:
+    - task_activated: true
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
+  - action: action_set_opinion_slot_as_good
+  - slot_was_set:
+    - opinion
+  - action: action_set_artist_for_user
+  - action: action_handle_claim_troll
+
+# - story: inactive user praises artist
+#   steps:
+#   - intent: praising_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user
+#   - action: action_listen
+
+- story: active user dismisses artist
+  steps:
+  - intent: dismissing_claim
+  - slot_was_set:
+    - task_activated: true
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
+  - action: action_set_opinion_slot_as_bad
+  - slot_was_set:
+    - opinion
+  - action: action_set_artist_for_user
+  - action: action_handle_claim_troll
+
+# - story: inactive user dismisses artist
+#   steps:
+#   - intent: dismissing_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user
+#   - action: action_listen
+
+# No active user implementation
+
+# Unknown artist, user tells genre
+# - story: ask for genre of unknown artist
+#   steps:
+#   - or:
+#     - intent: likes_artist
+#     - intent: suggestion_for_decision
+#     - intent: suggest_artist
+#     - intent: dislikes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true
+#   - action: action_set_genre_slot
+#   - action: action_set_artist_for_user
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion: filled
+#   - slot_was_set:
+#     - genre: None
+#   - action: utter_unknown_artist
+#   - action: utter_ask_genre
+#   - intent: tell_genre
+#   - slot_was_set:
+#     - told_genre: filled
+#   - action: action_listen
+
+- story: user asks the bot for its opinion
+  steps:
+  - intent: request_for_suggestion_from_bot
+  - slot_was_set:
+    - task_activated: true
+  - action: action_deflect_opinion_question
+
+# TODO: recognise the target of the insult and react accordingly
+- story: user insults
+  steps:
+  - intent: insult_person
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+
+# TODO: recognise the target of the insult and react accordingly
+- story: user praises bot
+  steps:
+  - intent: praise_person
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+
+# Decision phase start success: other user approves it
+- story: start decision phase auto-success
+  steps:
+  - intent: suggestion_to_make_decision
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+  - intent: agreement
+  - action: action_set_decision_phase
+  - slot_was_set:
+    - decision_phase: true
+
+# Decision phase start fail: other user disapproves
+- story: start decision phase auto-success
+  steps:
+  - intent: suggestion_to_make_decision
+  - slot_was_set:
+    - task_activated: true
+  - action: action_listen
+  - intent: disagreement
+  - action: action_listen
+
+# Suggestion_for_decision_pattern_1
+- story: user suggests decision, other user agrees and bot disagrees
+  steps:
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: action_listen
+  - intent: agreement
+  - action: utter_reject_claim
+
+- story: user suggests decision, other user disagrees
+  steps:
+  - intent: suggestion_for_decision
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+    - artist: filled
+  - action: action_listen
+  - intent: disagreement
+  - action: action_listen
+
+# User offers to post decision, other user agrees
+- story: user offers to post decision, agreed
+  steps: 
+  - intent: offer_posting
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - action: action_listen
+  - intent: agreement
+  - checkpoint: user_should_post
+
+# User offers to post decision, other user disagrees
+- story: user offers to post decision, disagreed
+  steps:
+  - intent: offer_posting
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - action: action_listen
+  - intent: disagreement
+  - action: action_listen
+
+# User offers to post decision but the other user wants to and original user lets them
+- story: user offers to post decision, other user wants to, orig user agrees
+  steps:
+  - intent: offer_posting
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - action: action_listen
+  - intent: offer_posting
+  - action: action_listen
+  - intent: agreement
+  - action: action_listen
+  - checkpoint: user_should_post
+
+# User posts decision, no input from bot
+- story: user posts decision
+  steps: 
+  - checkpoint: user_should_post
+  - slot_was_set:
+    - task_activated: true
+    - decision_phase: true
+  - intent: post_decision
+  - slot_was_set:
+    - artist: filled
+  - action: action_post_decision
+  - slot_was_set:
+    - final_decision: filled
+  - checkpoint: goodbye
+
+# Goodbye pattern
+- story: closing
+  steps:
+  - checkpoint: goodbye
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+    - intent: thanks
+  - action: action_listen
+  - or:
+    - intent: closing
+    - intent: agreement
+    - intent: opening
+    - intent: thanks
+  # - action: action_end_conversation # Removed due to action resetting users-slot as well
+  - action: action_listen

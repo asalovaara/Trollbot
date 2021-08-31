@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useField } from '../../hooks/inputFields'
 import { Helmet } from 'react-helmet'
 import loginService from '../../services/login'
 import { useTextInputStyles } from '../../styles/TextInputStyles.js'
@@ -9,38 +10,27 @@ import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-const Login = ({ user, setUser }) => {
-  const [username, setUsername] = useState('')
-  const classes = useTextInputStyles()
 
-  const handleUsernameChange = (event) => {
-    console.log(username)
-    setUsername(event.target.value)
-  }
+const Login = ({ user, setUser }) => {
+  const username = useField('text')
+  const classes = useTextInputStyles()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
       const userObject = await loginService.login({
-        name: username
+        name: username.value
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
       setUser(userObject)
-      console.log('userObject', userObject)
-    } catch (exception) {
-      console.log('Exception when logging in', exception)
+    } catch (error) {
+      console.log('Error when logging in', error)
     }
   }
 
-  if (user) {
-    return (
-      <div>
-        <h2>Logged in</h2>
-      </div>
-    )
-  }
-  return (
+  if (user) return (<div><h2>Youa are logged in</h2></div>)
 
+  return (
     <Container>
       <Helmet >
         <title>{`Login - ${TITLE}`}</title>
@@ -50,10 +40,9 @@ const Login = ({ user, setUser }) => {
         <TextField
           required
           id='username'
-          label='Type username'
+          label='Username'
           className={classes.wrapText}
-          onChange={handleUsernameChange}
-          value={username}
+          {...username}
         />
         <Button id='login' variant='contained' color='primary' type='submit'>Login</Button>
       </form>

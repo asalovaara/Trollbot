@@ -2,36 +2,18 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 const useChatRoomStyles = makeStyles(() =>
   createStyles({
-    ChatRoomContainer: {
-      position: 'fixed',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      margin: '16px'
+    chatSection: {
+      padding: '16px',
+      width: '100%',
+      height: '80vh',
     },
-
-    chatRoomTopBar: {
-      display: 'flex',
-      alignItems: 'center',
-      h1: {
-        flex: 1,
-      }
-    },
-
-    messagesContainer: {
-      flex: 1,
-      minHeight: '100px',
-      overflow: 'auto',
-      borderRadius: '7px 7px 0 0',
-      marginBottom: '8px',
-    },
-
-    messagesList: {
+    messageArea: {
       listStyleType: 'none',
-      padding: 0,
+      height: '40vh',
+      overflowY: 'auto'
+    },
+    typingList: {
+      listStyleType: 'none'
     }
   })
 )

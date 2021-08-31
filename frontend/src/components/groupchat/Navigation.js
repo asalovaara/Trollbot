@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link as ReactLink } from 'react-router-dom'
+import { TITLE } from '../../config'
 import loginService from '../../services/login'
 
 import AppBar from '@material-ui/core/AppBar'
@@ -19,8 +20,9 @@ const Navigation = ({ user, setUser }) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Button color="inherit" component={ReactLink} to="/">Trollbot</Button>
-        {user && <Button id='logout' color="inherit" onClick={handleLogout}>Logout</Button>}
+        <Button color="inherit" component={ReactLink} to="/">{TITLE}</Button>
+        {user && user.name === 'Admin' && <Button id="admin" color="inherit" component={ReactLink} to="/admin/main">Admin</Button>}
+        {user && <Button id="logout" color="inherit" onClick={handleLogout}>Logout</Button>}
       </Toolbar>
     </AppBar>
   )
