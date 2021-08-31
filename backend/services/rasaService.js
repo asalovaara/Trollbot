@@ -15,7 +15,7 @@ const getBotMessage = () => {
     const reply = bot_messages.shift()
     const room = reply.recipient_id
 
-    let response = {
+    return {
       room: room,
       body: reply.text,
       senderId: 'bot',
@@ -23,26 +23,26 @@ const getBotMessage = () => {
         name: 'Bot'
       }
     }
-    return response
   }
 }
 
 /**
- * Gets the Rasa text response from the Rasa HTTP server.
+ * Sends a user message to the Rasa HTTP server.
  * @param {*} room 
  * @param {*} param1 
  * @returns 
  */
 const sendMessageToRasa = async (roomId, { body, user }) => {
-  logger.info('Entering sendMessageToRasa(): ', body, user.name)
+  logger.info('Entered rasaService:sendMessageToRasa(): ', body, user.name)
+  logger.info('sendMessageToRasa:roomId', roomId)
   try {
     logger.info(inspect(body))
     const response = await axios.post(RASA_ENDPOINT + '/webhooks/callback/webhook', {
       'sender': roomId,
       'message': body
     })
-    logger.info(`Rasa received message status: ${inspect(response.data)}`)
 
+    logger.info('sendMessageToRasa:response.data', response.data)
     return response.data
 
   } catch (error) {
@@ -57,14 +57,14 @@ const sendMessageToRasa = async (roomId, { body, user }) => {
  * @returns 
  */
 const setRasaUsersSlot = async (channel_id, users) => {
-  logger.info('Entered rasaController:setRasaUsersSlot().')
+  const humanUsers = users.slice(1)
+  let rasa_users = {}
+  for (const user of humanUsers) {
+    rasa_users[user.senderId] = user
+  }
+  logger.info('Entered rasaController:setRasaUsersSlot().', users)
   try {
-    let rasa_users = {}
-    for (const user of users) {
-      if (user.room === channel_id) {
-        rasa_users[user.senderId] = user
-      }
-    }
+    logger.info('setRasaUsersSlot:rasa_users', rasa_users)
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
@@ -93,12 +93,14 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
     let tracker = await axios.get(RASA_ENDPOINT + `/conversations/${channel_id}/tracker`)
     let users = tracker.data.slots.users
 
+    logger.info('setRasaLastMessageSenderSlot:users', users)
+
     for (const user in users) {
       logger.info(user)
       users[user].active = false
     }
     users[user_id].active = true
-    
+
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, [
       {
         'event': 'slot',
