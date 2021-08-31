@@ -23,18 +23,6 @@ stories:
     - task_activated: true
   - action: action_greet_user_by_name
 
-- story: from opening to task
-  steps:
-  - intent: opening
-  - slot_was_set:
-    - task_activated: false
-  - action: action_greet_user_by_name
-  - intent: task_introduction
-  - action: utter_question_suggestions
-  - action: action_set_task_slot
-  - slot_was_set:
-    - task_activated: true
-
 # Opening pattern 2 and Task introduction pattern 1
 # TODO: NEEDS TO BE A FALLBACK OF SOME KIND. OR COUNTS USER MESSAGES OTHERWISE
 - story: from no introduction to task
@@ -86,25 +74,30 @@ stories:
   - slot_was_set:
     - opinion: good
   - action: action_set_artist_for_user
+  - action: action_check_if_same_liked_artist
+  - slot_was_set:
+    - same_artist_liked: false
   - action: action_delayed_positive_evaluation
 
 - story: users like the same artist
-  steps:  
+  steps:
   - or:
     - intent: suggest_artist
     - intent: likes_artist
-  - action: action_check_if_same_liked_artist
+    - intent: suggestion_for_decision
   - slot_was_set:
-    - same_artist_liked: true
     - task_activated: true
     - artist: filled
   - action: action_set_genre_slot
   - slot_was_set:
     - genre: filled
   - action: action_set_opinion_slot_as_good
-  - action: action_set_artist_for_user # append the liked artist list of the user object
   - slot_was_set:
     - opinion: good
+  - action: action_set_artist_for_user
+  - action: action_check_if_same_liked_artist
+  - slot_was_set:
+    - same_artist_liked: true
   - action: utter_same_artist_liked_nice
 
 - story: user dislikes artist
@@ -145,45 +138,31 @@ stories:
   - action: action_set_artist_for_user
   - action: action_listen
 
-# TODO have the bot answer with an actual opinion or suggestion
-# - story: user asks the bot for its opinion
+# Removed from use because the story is not supported fully
+# # Unknown artist, user tells genre
+# - story: ask for genre of unknown artist
 #   steps:
-#   - intent: request_for_suggestion_from_bot
+#   - or:
+#     - intent: likes_artist
+#     - intent: suggestion_for_decision
+#     - intent: suggest_artist
+#     - intent: dislikes_artist
 #   - slot_was_set:
 #     - task_activated: true
-#   - action: action_make_suggestion # ACTION DOES NOT EXIST YET
-
-# TODO have the story be after one user has had intent "likes_artist" etc
-# and the dismissing_claim is in response to that
-# - story: request suggestion after dismissal
-#   steps:
-#   - intent: dismissing_claim
-#   - action: utter_request_suggestion
-
-# Unknown artist, user tells genre
-- story: ask for genre of unknown artist
-  steps:
-  - or:
-    - intent: likes_artist
-    - intent: suggestion_for_decision
-    - intent: suggest_artist
-    - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: true
-  - action: action_set_genre_slot
-  - action: action_set_artist_for_user
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion: filled
-  - action: action_set_artist_for_user
-  - slot_was_set:
-    - genre: None
-  - action: utter_unknown_artist
-  - action: utter_ask_genre
-  - intent: tell_genre
-  - slot_was_set:
-    - told_genre: filled
-  - action: utter_thanks
+#   - action: action_set_genre_slot
+#   - action: action_set_artist_for_user
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion: filled
+#   - action: action_set_artist_for_user
+#   - slot_was_set:
+#     - genre: None
+#   - action: utter_unknown_artist
+#   - action: utter_ask_genre
+#   - intent: tell_genre
+#   - slot_was_set:
+#     - told_genre: filled
+#   - action: utter_thanks
 
 # TODO: recognise the target of the insult and react accordingly
 - story: user insults
@@ -299,4 +278,5 @@ stories:
     - intent: agreement
     - intent: opening
     - intent: thanks
-  - action: action_end_conversation
+  # - action: action_end_conversation # Removed due to action resetting users-slot as well
+  - action: action_listen

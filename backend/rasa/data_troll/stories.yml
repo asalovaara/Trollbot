@@ -2,6 +2,10 @@ version: "2.0"
 
 stories:
 
+# Currently all stories with active user / inactive user variants
+# are simplified down to not regard active user status at all.
+
+
 # Opening pattern 1 (SINGLEUSER)
 - story: from opening to task
   steps:
@@ -67,18 +71,42 @@ stories:
     - intent: suggestion_for_decision
   - slot_was_set: # task phase true check
     - task_activated: true  
-  - slot_was_set: # active user true check
-    - active_user: true 
-  - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
-  - slot_was_set: # tell rasa genre slot was set by custom action
-    - genre : filled
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
   - action: action_set_opinion_slot_as_good
   - slot_was_set: # tell rasa opinion slot was set
     - opinion: good
   - action: action_set_artist_for_user # append the liked artist list of the user object
+  - action: action_check_if_same_liked_artist
+  - slot_was_set:
+    - same_artist_liked: false
+    - artist: filled
+  - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
+  - slot_was_set: # tell rasa genre slot was set by custom action
+    - genre : filled
   - action: utter_artist_dismissal # dismiss user's suggested artist
 
-- story: inactive user suggests/likes artist 
+# - story: inactive user suggests/likes artist 
+#   steps:
+#   - or:
+#     - intent: suggest_artist # user suggests artist
+#     - intent: likes_artist
+#     - intent: suggestion_for_decision
+#   - slot_was_set: # task phase true check
+#     - task_activated: true  
+#   - slot_was_set: # active user false check
+#     - active_user: false 
+#   - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
+#   - slot_was_set: # tell rasa genre slot was set by custom action
+#     - genre: filled
+#   - action: action_set_opinion_slot_as_good 
+#   - slot_was_set: # tell rasa opinion slot was set
+#     - opinion: bad
+#   - action: action_set_artist_for_user # append the liked artist list of the user object  
+#   - action: action_listen # default action, wait for the next user message
+
+# Artist suggestion pattern 2 (MULTIUSER)
+- story: users like the same artist
   steps:
   - or:
     - intent: suggest_artist # user suggests artist
@@ -86,44 +114,29 @@ stories:
     - intent: suggestion_for_decision
   - slot_was_set: # task phase true check
     - task_activated: true  
-  - slot_was_set: # active user false check
-    - active_user: false 
-  - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
-  - slot_was_set: # tell rasa genre slot was set by custom action
-    - genre: filled
-  - action: action_set_opinion_slot_as_good 
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
+  - action: action_set_opinion_slot_as_good
   - slot_was_set: # tell rasa opinion slot was set
-    - opinion: bad
-  - action: action_set_artist_for_user # append the liked artist list of the user object  
-  - action: action_listen # default action, wait for the next user message
-
-# Artist suggestion pattern 2 (MULTIUSER)
-- story: users like the same artist
-  steps:  
-  - or:
-    - intent: suggest_artist
-    - intent: likes_artist
+    - opinion: good
+  - action: action_set_artist_for_user # append the liked artist list of the user object
   - action: action_check_if_same_liked_artist
   - slot_was_set:
     - same_artist_liked: true
-    - task_activated: true
     - artist: filled
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre: filled
-  - action: action_set_opinion_slot_as_good
-  - action: action_set_artist_for_user # append the liked artist list of the user object
-  - slot_was_set:
-    - opinion: good
-  - action: utter_same_artist_liked_troll
+  - action: action_set_genre_slot # set the genre of artist slot's artist in genre slot
+  - slot_was_set: # tell rasa genre slot was set by custom action
+    - genre : filled
+  - action: utter_same_artist_liked_troll # dismiss user's suggested artist
+
 
 - story: active user dislikes artist path
   steps:
   - intent: dislikes_artist
   - slot_was_set:
     - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true       
+  # - slot_was_set: # active user true check
+  #   - active_user: true       
   - action: action_set_genre_slot
   - slot_was_set:
     - genre: filled
@@ -133,101 +146,101 @@ stories:
   - action: action_set_artist_for_user    
   - action: utter_artist_praise
 
-- story: inactive user dislikes artist path
-  steps:
-  - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user false check
-    - active_user: false 
-  - action: action_set_genre_slot
-  - slot_was_set:
-    - genre
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user    
-  - action: action_listen # default action, wait for the next user message
+# - story: inactive user dislikes artist path
+#   steps:
+#   - intent: dislikes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false 
+#   - action: action_set_genre_slot
+#   - slot_was_set:
+#     - genre
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user    
+#   - action: action_listen # default action, wait for the next user message
 
 - story: active user praises artist
   steps:
   - intent: praising_claim
   - slot_was_set:
     - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true 
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
   - action: action_set_opinion_slot_as_good
   - slot_was_set:
     - opinion
   - action: action_set_artist_for_user
   - action: action_handle_claim_troll
 
-- story: inactive user praises artist
-  steps:
-  - intent: praising_claim
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user false check
-    - active_user: false
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user
-  - action: action_listen
+# - story: inactive user praises artist
+#   steps:
+#   - intent: praising_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user
+#   - action: action_listen
 
 - story: active user dismisses artist
   steps:
   - intent: dismissing_claim
   - slot_was_set:
     - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true 
+  # - slot_was_set: # active user true check
+  #   - active_user: true 
   - action: action_set_opinion_slot_as_bad
   - slot_was_set:
     - opinion
   - action: action_set_artist_for_user
   - action: action_handle_claim_troll
 
-- story: inactive user dismisses artist
-  steps:
-  - intent: dismissing_claim
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user false check
-    - active_user: false
-  - action: action_set_opinion_slot_as_bad
-  - slot_was_set:
-    - opinion
-  - action: action_set_artist_for_user
-  - action: action_listen
+# - story: inactive user dismisses artist
+#   steps:
+#   - intent: dismissing_claim
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user false check
+#     - active_user: false
+#   - action: action_set_opinion_slot_as_bad
+#   - slot_was_set:
+#     - opinion
+#   - action: action_set_artist_for_user
+#   - action: action_listen
 
 # No active user implementation
 
 # Unknown artist, user tells genre
-- story: ask for genre of unknown artist
-  steps:
-  - or:
-    - intent: likes_artist
-    - intent: suggestion_for_decision
-    - intent: suggest_artist
-    - intent: dislikes_artist
-  - slot_was_set:
-    - task_activated: true
-  - slot_was_set: # active user true check
-    - active_user: true
-  - action: action_set_genre_slot
-  - action: action_set_artist_for_user
-  - action: action_set_opinion_slot_as_good
-  - slot_was_set:
-    - opinion: filled
-  - slot_was_set:
-    - genre: None
-  - action: utter_unknown_artist
-  - action: utter_ask_genre
-  - intent: tell_genre
-  - slot_was_set:
-    - told_genre: filled
-  - action: action_listen
+# - story: ask for genre of unknown artist
+#   steps:
+#   - or:
+#     - intent: likes_artist
+#     - intent: suggestion_for_decision
+#     - intent: suggest_artist
+#     - intent: dislikes_artist
+#   - slot_was_set:
+#     - task_activated: true
+#   - slot_was_set: # active user true check
+#     - active_user: true
+#   - action: action_set_genre_slot
+#   - action: action_set_artist_for_user
+#   - action: action_set_opinion_slot_as_good
+#   - slot_was_set:
+#     - opinion: filled
+#   - slot_was_set:
+#     - genre: None
+#   - action: utter_unknown_artist
+#   - action: utter_ask_genre
+#   - intent: tell_genre
+#   - slot_was_set:
+#     - told_genre: filled
+#   - action: action_listen
 
 - story: user asks the bot for its opinion
   steps:
@@ -300,7 +313,7 @@ stories:
 # User offers to post decision, other user agrees
 - story: user offers to post decision, agreed
   steps: 
-  - intent: offer_to_post_decision
+  - intent: offer_posting
   - slot_was_set:
     - task_activated: true
     - decision_phase: true
@@ -311,7 +324,7 @@ stories:
 # User offers to post decision, other user disagrees
 - story: user offers to post decision, disagreed
   steps:
-  - intent: offer_to_post_decision
+  - intent: offer_posting
   - slot_was_set:
     - task_activated: true
     - decision_phase: true
@@ -322,7 +335,7 @@ stories:
 # User offers to post decision but the other user wants to and original user lets them
 - story: user offers to post decision, other user wants to, orig user agrees
   steps:
-  - intent: offer_to_post_decision
+  - intent: offer_posting
   - slot_was_set:
     - task_activated: true
     - decision_phase: true
@@ -363,4 +376,5 @@ stories:
     - intent: agreement
     - intent: opening
     - intent: thanks
-  - action: action_end_conversation
+  # - action: action_end_conversation # Removed due to action resetting users-slot as well
+  - action: action_listen

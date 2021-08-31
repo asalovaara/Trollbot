@@ -9,7 +9,8 @@ COPY . ./
 RUN pip install -U pip \
   && pip install -r requirements.txt
 
-RUN rasa train
+RUN rasa train --data data_nice --out models_nice
+RUN rasa train --data data_troll --out models_troll
 
 # Start app 
 
