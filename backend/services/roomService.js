@@ -1,6 +1,6 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-const { setRasaUsersSlot } = require('./rasaService')
+const { setRasaUsersSlot, setBotType } = require('./rasaService')
 const { createBot } = require('./botFactory')
 
 const testBot = {
@@ -96,6 +96,7 @@ const addRoom = (room) => {
   newRoom.bot = bot
   newRoom.users.push(bot)
   users.push(bot)
+  setBotType(newRoom.name, bot.type)
 
   logger.info('Added room:', newRoom)
   rooms.push(newRoom)

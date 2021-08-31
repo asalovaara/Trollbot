@@ -4,6 +4,12 @@ const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormat
 const path = require('path')
 const logger = require('../../utils/logger')
 
+const botTypeDataFolders =
+{
+  Normal: 'data_nice',
+  Troll: 'data_troll'
+}
+
 /**
  * Runs the log writer with given options
  * @param {source: 'LOCAL' or 'ATLAS', room: 'all' or 'roomName', delete: true or false, list: true or false, dataFolder: folderName} options 
@@ -41,8 +47,6 @@ const runLogger = async (options) => {
   }
 }
 
-
-
 // query the db
 const findEvents = async (client, room, source, folder) => {
 
@@ -66,7 +70,11 @@ const findEvents = async (client, room, source, folder) => {
     const trimmedArr = removeIgnoredEvents(arr)
 
     arr.forEach(event => {
+      if (event.name === 'bot_type' && folder === null) {
+        folder = botTypeDataFolders[event.value]
+      }
       formatEvent(event)
+      console.log(JSON.stringify(event.name))
     })
 
     const logWithStories = formatStories(trimmedArr, folder)
@@ -146,4 +154,4 @@ const logMessage = async (message, roomName) => {
   }
 }
 
-module.exports = {runLogger}
+module.exports = { runLogger }

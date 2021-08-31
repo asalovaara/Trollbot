@@ -87,6 +87,9 @@ slots:
     influence_conversation: false
   same_artist_liked:
     type: bool
+  bot_type:
+    type: text
+    influence_conversation: false
 
 actions:
 - action_deflect_opinion_question
