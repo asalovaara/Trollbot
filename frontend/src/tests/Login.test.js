@@ -5,5 +5,5 @@ import Login from '../components/groupchat/Login'
 
 test('Renders correctly', () => {
   const component = render(<Login />)
-  expect(component.container).toHaveTextContent('Type username')
+  expect(component.container).toHaveTextContent('Username')
 })
