@@ -5,7 +5,7 @@ const readline = require('readline')
 const logger = require('../utils/logger')
 const { API_URL, MONGODB_URI } = require('../utils/config')
 const mongoose = require('mongoose')
-const { saveArtistToDatabase, deleteAll } = require('../database/databaseService')
+const { saveArtistToDatabase, updateArtist, deleteAll } = require('../database/databaseService')
 const { getArtist } = require('./musicbrainzService')
 const path = require('path')
 
@@ -30,6 +30,13 @@ const main = async () => {
     console.error(e)
   }
 
+}
+
+const updateOneArtist = async (artist) => {
+  const artistObj = await getArtist(artist)
+  if (artistObj !== undefined) {
+    await updateArtist(artistObj)
+  }
 }
 
 // Go through all artists (lines) in file.
@@ -63,3 +70,7 @@ const sleep = (ms) => {
 }
 
 main().catch(console.error)
+
+module.exports = {
+  updateOneArtist
+}
