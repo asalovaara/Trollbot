@@ -3,7 +3,7 @@ const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
 const logger = require('../../utils/logger')
-
+const { MONGODB_URI } = require('../../utils/config')
 /**
  * Runs the log writer with given options
  * @param {source: 'LOCAL' or 'ATLAS', room: 'all' or 'roomName', delete: true or false, list: true or false, dataFolder: folderName} options 
@@ -17,13 +17,13 @@ const runLogger = async (options) => {
   let mongoUrl
 
   if (options.source === 'ATLAS') {
-    mongoUrl = 'mongodb+srv://trollbot:1234567890@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority'
+    mongoUrl = MONGODB_URI
   } else {
     mongoUrl = 'mongodb://localhost:27017'
   }
 
   const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-
+  let success = true;
   try {
     await client.connect()
     if (options.list) {
@@ -36,8 +36,10 @@ const runLogger = async (options) => {
     }
   } catch (e) {
     logger.error(e)
+    success = false
   } finally {
     await client.close()
+    return success
   }
 }
 

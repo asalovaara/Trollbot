@@ -9,6 +9,21 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
+import axios from 'axios'
+import { API_URL } from '../../config'
+const baseUrl = `${API_URL}/log`
+
+async function logGen(roomId) {
+  console.log(roomId)
+  try {
+    await axios.post(`${baseUrl}/${roomId}`)
+  } catch(e) {
+    alert('Log generation failed.')
+    console.log(e)
+  }
+
+}
+
 const RoomList = ({ rooms }) => {
 
   return (
@@ -20,6 +35,7 @@ const RoomList = ({ rooms }) => {
             return (
               <ListItem id={`list-item-${r.name}`} key={r.id}>
                 <ListItemText primary={r.name} />
+                <Button onClick={async () => logGen(r.name)} variant='contained' color='primary' id='generate_log'> Generate Log </Button>
                 <ReactLink to={`/${r.name}`}><Button id='join' variant='contained' color='primary' type='submit'>Join</Button></ReactLink>
               </ListItem>
             )
