@@ -28,15 +28,23 @@ The data-argument directs the model to derive the training data from the given f
 
 More information on possible arguments for this command found in [Rasa docs: command line interface](https://rasa.com/docs/rasa/command-line-interface#rasa-train)
 
-## Modifying the training data
+## Training Data
 
 **Note: all rasa files used in model training (not only training data files!) require a `version`-key. Do not remove it.**
 
 The training data consists of NLU, rules, and stories. In the current implementation, the NLU-files in both training data sets are identical, but the rules and stories are different. This is because NLU defines user intents (how the model undertands user messages), and this does not need to be different between the two bots. The rules and stories define how the bot reacts to the users, which is different between the bots.
 
-(TODO: HOW TO DEFINE NLU, RULES, STORIES)
+#### NLU
 
-When defining a new intent, remember to add it to the list of intents in the domain file.
+The NLU files (named nlu.yml) in both bots' training data are kept identical, so that the bots understand user messages in the same way. NLU includes defining user intents and lookup tables for entities (when extracted with RegexEntityExtractor). When creating new intents, provide as many and as varied examples as possible. This will reduce the chances of mixup between intents that are similar. When the intent includes entities, mark it according to the examples, and keep in mind that Rasa may sometimes understand the entity value as affecting what intent the message is recognized as. Individual cases can be prevented by adding them to the entity examples within message examples, such as by adding "ABBA" to intent examples with negative connotations to prevent Rasa from always understanding messages containing "ABBA" as inherently positive. Lookup tables contain all the possible values for given entities for RegexEntityExtractor, and other values will not be recognized by it. If RegexEntityExtractor is removed from use (see possible reasons in *Pipeline configuration and policies* below), lookup tables are no longer needed, but varied examples of entities need to be added into the intent examples. When defining a new intent, remember to add it to the list of intents in the domain file. External intents (intents with prefix EXTERNAL, that are sent by Rasa itself instead of the users) are not defined in this file.
+
+#### Rules
+
+The rules files (named rules.yml) specify rules: actions to always take when certain conditions apply. Rules should be short and separate from story flow. Rules can be used to define fallback behaviour. Rules also include how to deal with external intents: for example, EXTERNAL_positive_evaluation_timer is an intent sent by Rasa itself to signal when to call the action action_trigger_positive_evaluation, as defined in the rule. Rules need a condition (a slot_was_set check), even when a slot's value is not relevant to the story; otherwise the rules may not be applied consistently.
+
+#### Stories
+
+(TODO)
 
 For more information on training data, see [Rasa docs: Training Data Format](https://rasa.com/docs/rasa/training-data-format#conversation-training-data)
 
