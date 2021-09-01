@@ -20,7 +20,10 @@ const saveArtistToDatabase = async (artist) => {
     firstName: artist.firstName,
     lastName: artist.lastName,
     gender: artist.gender,
-    genres: artist.genres
+    genres: artist.genres,
+    area: artist.area,
+    begin: artist.begin,
+    end: artist.end
   })
   return await artistModel.save()
 }
@@ -29,8 +32,13 @@ const getUserByName = async (username) => {
   return await User.findOne({ username })
 }
 
+// Added regex to make the search case insensitive? Revert if does not work
 const getArtistByName = async (name) => {
-  return await Artist.findOne({ professionalName: name })
+  return await Artist.findOne({ professionalName: { $regex: new RegExp(name, 'i')} })
+}
+
+const updateArtist = async(professionalName, artist) => {
+  return await Artist.findOneAndUpdate(professionalName, artist)
 }
 
 const addGenreToArtist = async (professionalName, genre) => {
@@ -47,6 +55,7 @@ module.exports = {
   saveArtistToDatabase,
   getUserByName,
   getArtistByName,
+  updateArtist,
   addGenreToArtist,
   deleteAll
 }

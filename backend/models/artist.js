@@ -9,7 +9,10 @@ const artistSchema = mongoose.Schema({
   firstname: String,
   lastname: String,
   gender: String,
-  genres: [String]
+  genres: [String],
+  area: String,
+  begin: Date,
+  end: Date
 })
 
 artistSchema.set('toJSON', {

@@ -7,7 +7,7 @@ test('returns correct professional name for artist', async () => {
 
 test('returns correct first name for artist', async () => {
   let ladygaga = await musicbrainz.getArtist('Lady Gaga')
-  expect(ladygaga.firstname).toEqual('Stefani')
+  expect(ladygaga.firstname).toEqual(undefined)
 })
 
 test('returns correct last name for artist', async () => {
