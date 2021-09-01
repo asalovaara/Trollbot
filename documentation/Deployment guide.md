@@ -25,7 +25,7 @@ Rasa's directory can be found in the "backend" directory. First rasa needs a tra
 
 Next the main rasa server can be started with the command "rasa run --enable-api --cors "*"", and the action server can be started in a separate terminal with the command "rasa run actions".
 
-If there are any need for making any changes to rasa deployment, please consult the rasa-guide.
+If there are any need for making any changes to rasa deployment, please consult the rasa guide.
 
 
 ### .env-file
