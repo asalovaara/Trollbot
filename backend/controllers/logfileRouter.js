@@ -14,7 +14,7 @@ logfileRouter.post('/:roomId', async (request, response) => {
       room: request.params.roomId,
       delete: false,
       list: false,
-      dataFolder: 'data'
+      dataFolder: null
     }
 
     const logGenerated = await runLogger(options)
