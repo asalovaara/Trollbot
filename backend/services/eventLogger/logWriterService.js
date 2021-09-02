@@ -23,7 +23,7 @@ const runLogger = async (options) => {
   }
 
   const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  let success = true;
+  let success = false;
   try {
     await client.connect()
     if (options.list) {
@@ -34,13 +34,14 @@ const runLogger = async (options) => {
     } else {
       await findEvents(client, options.room, options.source, options.dataFolder)
     }
+    success = true
   } catch (e) {
     logger.error(e)
-    success = false
+    
   } finally {
     await client.close()
-    return success
   }
+  return success
 }
 
 
