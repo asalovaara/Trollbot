@@ -6,7 +6,7 @@ const { runLogger } = require('../services/eventLogger/logWriterService')
 logfileRouter.post('/:roomId', async (request, response) => {
   const body = request.body
   logger.info('logfileRouter ', body)
-  
+
   try {
     logger.info('Trying to generate log for ', request.params.roomId)
     const options = {
@@ -19,7 +19,7 @@ logfileRouter.post('/:roomId', async (request, response) => {
 
     const logGenerated = await runLogger(options)
     logger.info(logGenerated)
-    if (!logGenerated) throw 'Ran into an error while generating log.'
+    if (!logGenerated) throw new Error('Ran into an error while generating log.')
 
     response.status(200).send()
     logger.info('Generated log for room ', request.params.roomId)
