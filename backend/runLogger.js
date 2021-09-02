@@ -12,7 +12,7 @@ const handleParameters = () => {
     room: 'all',
     delete: false,
     list: false,
-    dataFolder: 'data'
+    dataFolder: null
   }
 
   const paramArray = process.argv.slice(2)

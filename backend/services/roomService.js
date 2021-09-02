@@ -1,6 +1,5 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
-const { setRasaUsersSlot } = require('./rasaService')
 const { createBot } = require('./botFactory')
 
 const testBot = {
@@ -28,7 +27,7 @@ const getRoom = (roomName) => rooms.find(r => r.name === roomName)
 
 const getBot = (roomName) => {
   const foundRoom = getRoom(roomName)
-  if(foundRoom === undefined) return
+  if (foundRoom === undefined) return
   return foundRoom.bot
 }
 
@@ -53,8 +52,6 @@ const addUserIntoRoom = (senderId, roomName, name) => {
   existingRoom.users.push(user)
 
   logger.info(`Adding user: '${user.name}' into room: '${roomName}'`)
-
-  setRasaUsersSlot(roomName, existingRoom.users)
 
   return user
 }
@@ -109,8 +106,8 @@ const addUser = (senderId, name, room) => {
   if (existingUser) return existingUser
 
   const user = { id: users.length + 1, senderId, name, room }
-  // const user = { id: users.length + 1, name, room }
   users = users.concat(user)
+
   return user
 }
 
