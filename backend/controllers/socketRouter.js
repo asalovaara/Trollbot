@@ -14,6 +14,7 @@ module.exports = {
 
       // Set Rasa Bot
       const bot = getBot(roomId)
+      setBotType(roomId, bot.type)
 
       // Set rasa users
       const user = addUserIntoRoom(socket.id, roomId, name)
