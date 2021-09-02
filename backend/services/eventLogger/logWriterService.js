@@ -133,7 +133,7 @@ const logMessage = async (message, roomName) => {
     fs.mkdirSync(logFolder)
   }
 
-  const dateTime = moment().local().format('HHmmssDDMMYYYY')
+  const dateTime = moment().local().format('DDMMYYYY_HHmmss')
   const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName + '_' + dateTime)
   const writer = createWriter({
     path: logPath,
