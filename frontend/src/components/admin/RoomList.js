@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link as ReactLink } from 'react-router-dom'
+import axios from 'axios'
+import { API_URL } from '../../config'
 
 import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
@@ -9,17 +11,15 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import axios from 'axios'
-import { API_URL } from '../../config'
 const baseUrl = `${API_URL}/log`
 
-
 const RoomList = ({ rooms }) => {
-  async function logGen(roomId) {
+
+  const logGen = async (roomId) => {
     console.log(roomId)
     try {
       await axios.post(`${baseUrl}/${roomId}`)
-    } catch(e) {
+    } catch (e) {
       alert('Log generation failed.')
       console.log(e)
     }
