@@ -2,7 +2,9 @@ const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
+const fs = require('fs')
 const logger = require('../../utils/logger')
+const moment = require('moment')
 
 const botTypeDataFolders =
 {
@@ -74,7 +76,6 @@ const findEvents = async (client, room, source, folder) => {
         folder = botTypeDataFolders[event.value]
       }
       formatEvent(event)
-      console.log(JSON.stringify(event.name))
     })
 
     const logWithStories = formatStories(trimmedArr, folder)
@@ -127,7 +128,13 @@ const deleteItems = async (client, room, source) => {
 // write stuff into the csv file
 const logMessage = async (message, roomName) => {
 
-  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName)
+  const logFolder = path.resolve(__dirname, '../../../logs')
+  if (!fs.existsSync(logFolder)) {
+    fs.mkdirSync(logFolder)
+  }
+
+  const dateTime = moment().local().format('DDMMYYYY_HHmmss')
+  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName + '_' + dateTime)
   const writer = createWriter({
     path: logPath,
     header: [

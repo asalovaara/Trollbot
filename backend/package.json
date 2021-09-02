@@ -33,6 +33,7 @@
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.5",
+    "moment": "^2.29.1",
     "mongodb": "^4.0.1",
     "mongoose": "^5.13.8",
     "mongoose-unique-validator": "^2.0.3",
