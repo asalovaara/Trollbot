@@ -2,7 +2,15 @@ const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
+const fs = require('fs')
 const logger = require('../../utils/logger')
+const moment = require('moment')
+
+const botTypeDataFolders =
+{
+  Normal: 'data_nice',
+  Troll: 'data_troll'
+}
 
 /**
  * Runs the log writer with given options
@@ -41,8 +49,6 @@ const runLogger = async (options) => {
   }
 }
 
-
-
 // query the db
 const findEvents = async (client, room, source, folder) => {
 
@@ -66,6 +72,9 @@ const findEvents = async (client, room, source, folder) => {
     const trimmedArr = removeIgnoredEvents(arr)
 
     arr.forEach(event => {
+      if (event.name === 'bot_type' && folder === null) {
+        folder = botTypeDataFolders[event.value]
+      }
       formatEvent(event)
     })
 
@@ -119,7 +128,13 @@ const deleteItems = async (client, room, source) => {
 // write stuff into the csv file
 const logMessage = async (message, roomName) => {
 
-  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName)
+  const logFolder = path.resolve(__dirname, '../../../logs')
+  if (!fs.existsSync(logFolder)) {
+    fs.mkdirSync(logFolder)
+  }
+
+  const dateTime = moment().local().format('DDMMYYYY_HHmmss')
+  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName + '_' + dateTime)
   const writer = createWriter({
     path: logPath,
     header: [
@@ -146,4 +161,4 @@ const logMessage = async (message, roomName) => {
   }
 }
 
-module.exports = {runLogger}
+module.exports = { runLogger }
