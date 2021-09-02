@@ -1,5 +1,5 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot } = require('../services/roomService')
-const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa } = require('../services/rasaService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom } = require('../services/roomService')
+const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
@@ -9,18 +9,24 @@ module.exports = {
     io.on('connection', (socket) => {
       // Join a conversation
       const { roomId, name } = socket.handshake.query
-
       logger.info(`Socket.io: ${name} joined ${roomId}.`)
       socket.join(roomId)
+
+      // Set Rasa Bot
+      const bot = getBot(roomId)
+
+      // Set rasa users
       const user = addUserIntoRoom(socket.id, roomId, name)
+      const users = getUsersInRoom(roomId)
+      setRasaUsersSlot(roomId, users)
+
+      // Emit user joined
       io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
       setInterval(() => {
         const botMessage = getBotMessage()
 
         if (typeof botMessage !== 'undefined') {
-
-          const bot = getBot(botMessage.room)
 
           // Bot reply timeout chain
           const { body } = botMessage
