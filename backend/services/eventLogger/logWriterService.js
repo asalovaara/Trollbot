@@ -130,7 +130,7 @@ const logMessage = async (message, roomName) => {
 
   const logFolder = path.resolve(__dirname, '../../../logs')
   if (!fs.existsSync(logFolder)) {
-    fs.mkdirSync(logFolder);
+    fs.mkdirSync(logFolder)
   }
 
   const dateTime = moment().local().format('HHmmssDDMMYYYY')
