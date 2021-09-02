@@ -4,6 +4,7 @@ const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormat
 const path = require('path')
 const fs = require('fs')
 const logger = require('../../utils/logger')
+const { MONGODB_URI } = require('../../utils/config')
 const moment = require('moment')
 
 const botTypeDataFolders =
@@ -25,13 +26,13 @@ const runLogger = async (options) => {
   let mongoUrl
 
   if (options.source === 'ATLAS') {
-    mongoUrl = 'mongodb+srv://trollbot:1234567890@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority'
+    mongoUrl = MONGODB_URI
   } else {
     mongoUrl = 'mongodb://localhost:27017'
   }
 
   const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-
+  let success = false
   try {
     await client.connect()
     if (options.list) {
@@ -42,11 +43,14 @@ const runLogger = async (options) => {
     } else {
       await findEvents(client, options.room, options.source, options.dataFolder)
     }
+    success = true
   } catch (e) {
     logger.error(e)
+    
   } finally {
     await client.close()
   }
+  return success
 }
 
 // query the db
