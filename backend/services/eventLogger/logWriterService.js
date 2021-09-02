@@ -23,7 +23,7 @@ const runLogger = async (options) => {
   }
 
   const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  let success = false;
+  let success = false
   try {
     await client.connect()
     if (options.list) {

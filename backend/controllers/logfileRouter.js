@@ -22,7 +22,7 @@ logfileRouter.post('/:roomId', async (request, response) => {
     if (!logGenerated) throw 'Ran into an error while generating log.'
 
     response.status(200).send()
-	logger.info('Generated log', request.params.roomId)
+    logger.info('Generated log for room ', request.params.roomId)
   } catch (e) {
     logger.error(e)
     response.status(500).send()
