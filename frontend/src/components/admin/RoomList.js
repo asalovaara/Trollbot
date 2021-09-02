@@ -19,7 +19,7 @@ const RoomList = ({ rooms }) => {
           {rooms && rooms.map((r) => {
             return (
               <ListItem id={`list-item-${r.name}`} key={r.id}>
-                <ListItemText primary={r.name} />
+                <ListItemText primary={`Room:${r.name},    Type: ${r.bot.type},    Write log:npm run log -- --room ${r.name}`} />
                 <ReactLink to={`/${r.name}`}><Button id='join' variant='contained' color='primary' type='submit'>Join</Button></ReactLink>
               </ListItem>
             )
