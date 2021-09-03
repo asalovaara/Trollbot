@@ -28,18 +28,14 @@ const getBotMessage = () => {
 }
 
 const getPort = (roomId) => {
-
   const botType = getBot(roomId).type
 
   if(botType === 'Troll') return 5006
-
   return 5005
 }
 
 const buildRasaEndpoint = (roomId) => {
-
   return RASA_NETWORK + ':' + getPort(roomId)
-
 }
 
 /**
