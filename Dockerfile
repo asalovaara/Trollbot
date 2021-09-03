@@ -1,6 +1,7 @@
 FROM node:14-slim
-
 ENV SKIP_PREFLIGHT_CHECK=true
+
+# Environment Variables
 
 ENV PUBLIC_URL=/trollbot
 ENV API_URL=/api
