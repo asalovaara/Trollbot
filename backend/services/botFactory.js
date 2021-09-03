@@ -15,7 +15,7 @@ const createBot = (type) => {
     id: 'bot',
     senderId: 'bot',
     name: botName,
-    type,
+    type: type,
   }
 }
 
