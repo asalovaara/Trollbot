@@ -21,21 +21,25 @@ tracker_store:
   username:
   password:
   ```
-3. Use the `--endpoints` flag when starting the Rasa server (recommended command: `rasa run --enable-api --cors "*" --endpoints endpoints.yml --debug`).
+3. Use the `--endpoints` flag when starting the Rasa server (recommended commands: `rasa run -m models_nice --enable-api --cors "*" --endpoints endpoints.yml --debug` for the normal bot and `rasa run -m models_troll --enable-api --cors "*" --endpoints endpoints.yml --debug` for the troll bot).
 
 ### Using the tracker store in MongoDB Atlas cloud service
 
-1. Already up and running. For more info on MongoDB Atlas, see https://docs.atlas.mongodb.com/.
+1. Already up and running. For more information on MongoDB Atlas, see our [MongoDB Atlas guide](MongoDB%20Atlas%20guide.md) and the [MongoDB Atlas documentation](https://docs.atlas.mongodb.com/) at mongodb.com.
 2. Config provided separately.
-3. Use the `--endpoints` flag when starting the Rasa server (recommended command: `rasa run --enable-api --cors "*" --endpoints endpoints.yml --debug`).
+3. Use the `--endpoints` flag when starting the Rasa server (recommended commans: `rasa run -m models_nice --enable-api --cors "*" --endpoints endpoints.yml --debug` for the normal bot and `rasa run -m models_troll --enable-api --cors "*" --endpoints endpoints.yml --debug` for the troll bot).
 
 ## Logger
 
-Create log files by running the command `npm run log` in the backend folder. This generates CSV-format log files in the `logs` folder. The behavior of the logger can be altered with parameters by using `npm run log -- --parameter` for one parameter or `npm run log -- --parameter1 --parameter2` etc. for multiple parameters. 
+Create log files by running the command `npm run log` in the backend folder. This generates CSV-format log files in the `logs` folder. Log files use the following name format:
 
-NOTE: Parameters with invalid names are ignored.  
+`log_[room]_[file creation time (HHmmssDDMMYYYY)]`
 
 ### Parameters
+
+The behavior of the logger can be altered with parameters by using `npm run log -- --parameter` for one parameter or `npm run log -- --parameter1 --parameter2` etc. for multiple parameters. 
+
+NOTE: Parameters with invalid names are ignored.
 
 **-\-atlas**
 
@@ -49,9 +53,9 @@ Example: To generate a csv log for the room *Testroom*, run `npm run log -- --ro
 
 **-\-data**
 
-By default log writer's story matcher uses the stories.yml and rules.yml files located in `backend/rasa/data` folder. However, it is possible to use other training data folders with different file contents. If a different data folder was used when training Rasa, the folder name needs to be specified with a `--data` parameter when running log writer.
+By default, log writer's story matcher uses the stories.yml and rules.yml in the data folder associated with the conversation's bot type. The type is chosen when creating a new room via admin tools. Using the `--data` parameter overrides the automatic data folder determination with a specified folder.
 
-Example: To generate csv logs from a local tracker store when the bot was trained with the data folder `nice_data`, run `npm run log -- --data nice_data`.
+Example: To generate csv logs from a local tracker store when the bot was trained with the data folder `example_data`, run `npm run log -- --data example_data`.
 
 **-\-delete**
 
@@ -111,7 +115,7 @@ event: `triggered bot response` name: `response: utter_example_phrase` story ste
 
 event: `slot value was set` field: `slot: example_slot | example_value` story step: `example_slot: example_value` stories.yml step: `- slot was set: - example_slot: example_value`
 
-NOTE: Only slots whose values alter story paths (e.g. `task_activated`) are used in story matching. If more such slots are introduced, their names must be added to the storyAlteringSlots array in logFormatter.js for corresponding story steps to be generated.
+NOTE: Only slots whose values alter story paths (e.g. `task_activated`) are used in story matching. If more such slots are introduced, their names must be added to the storyAlteringSlots array in `logFormatter.js` for corresponding story steps to be generated.
 
 The story matcher reads the log row by row and every time a story step tag is encountered, the following actions are taken:
 
@@ -123,6 +127,28 @@ The story matcher reads the log row by row and every time a story step tag is en
 
 3. The names of possible stories are written under the stories column next to the story step.
 
-## Updating the logFormatter
+## Updating and debugging the logger
 
-Correct formatting of new custom actions and slots may require manually updating the `logFormatter.js` located in the `backend/services/eventLogger` folder.
+Future changes in the Rasa training files and Trollbot backend may require updating the log formatting and story matching functionality to reflect them.
+
+Logger files can be found in the `backend/services/eventLogger/` folder and are as follows:
+
+`logWriterService.js` - Handles the tracker store database operations and the writing of csv files.
+`logFormatter.js` - Turns the tracker store events into a human readable format, assigns event source and story step tags.
+`storyMatcher.js` - Matches story steps with the ones found in the stories and rules files.
+`yamlReader.js` - Used by the story matcher to read stories.yml and rules.yml files.
+
+### logFormatter.js
+
+The functions housed in logFormatter.js determine how different types of events appear on the csv log.
+
+For csv log formatting and story matching to work correctly, the names of specific types of events need to be placed in the arrays found in this file.
+
+**backendEvents**: This array is used to differentiate events appended to the tracker by Trollbot backend from those generated by Rasa. On the backend side, this event appending is handled by `rasaService.js` found in the `backend/services` folder.
+
+**ignored events**: Events placed in this array are hidden from the csv log. 
+
+**storyAlteringSlots**: Some Rasa slots alter story paths, meaning that different stories will be followed based on the values of these slots. When new story altering slots are introduced in Rasa, their names must also be placed here for story matching to work correctly.
+
+For example, the slot `task_activated` is story altering. Its value is set to `true` after the task to select the best artist has been introduced. As a result, story paths requiring the `task_activated` slot to be set to `false` will no longer be followed.
+

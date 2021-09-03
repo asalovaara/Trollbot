@@ -64,6 +64,29 @@ The "build" field links to the folder the Dockerfile associated with this servic
 
 The "hostname" field defines the name of the service's network. Changing this means changing the relevant fields in Dockerfiles. 
 
+A field for the .env files should also be added to both trollbot-rasa and trollbot services. This is done by adding the field "env_file: ENV_FILE" with ENV_FILE being the filename of the .env file.
+If the .env file is not located in the same directory as docker-compose.yml, it should contain the relative path to the .env file.
+The contents of this .env file are detailed in the deployment guide. The .env files used by the main application and the one used by rasa should be different files.
+
+### .env-file contents
+
+For the main application, the following environment variables should be defined.
+
+ - MONGODB_URI: MONGODB_URI defines the location of the MongoDB database. As this has connected to a database in a cloud server, it contains the username and password of the account used. Please consult MongoDB-documentation on the exact content for this field.
+
+ - CLIENT_ID and CLIENT_SECRET: These variables are for using Spotify's API. To set these values, a Spotify account is needed. This account is then linked to Spotify for Developers, where the values of these variables are generated. 
+ 
+
+Rasa's .env file needs to contain the following environment variables:
+
+ - MONGODB_URI: MONGODB_URI here should have the same content as in the other .env file.
+
+ - MONGODB_DB_NAME: the name of the database used
+
+ - MONGODB_USERNAME: Mongodb username
+
+ - MONGODB_PASSWORD: Mongodb password
+
 ### Adding files to .dockerignore
 
 .dockerignore files are in the same directory as the dockerfile associated with it.

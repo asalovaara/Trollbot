@@ -62,7 +62,7 @@ const setRasaUsersSlot = async (channel_id, users) => {
   for (const user of humanUsers) {
     rasa_users[user.senderId] = user
   }
-  logger.info('Entered rasaController:setRasaUsersSlot().', users)
+  logger.info('Entered rasaService:setRasaUsersSlot().', users)
   try {
     logger.info('setRasaUsersSlot:rasa_users', rasa_users)
     let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`, {
@@ -87,7 +87,7 @@ const setRasaUsersSlot = async (channel_id, users) => {
  * @returns 
  */
 const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
-  logger.info(`Entered rasaController:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).`)
+  logger.info(`Entered rasaService:setRasaLastMessageSenderSlot(${channel_id}, ${user_id}).`)
   try {
     logger.info('setRasaLastMessageSenderSlot', channel_id)
     let tracker = await axios.get(RASA_ENDPOINT + `/conversations/${channel_id}/tracker`)
@@ -128,8 +128,26 @@ const setRasaLastMessageSenderSlot = async (channel_id, user_id) => {
 
 }
 
-exports.sendMessageToRasa = sendMessageToRasa
-exports.setRasaUsersSlot = setRasaUsersSlot
-exports.setRasaLastMessageSenderSlot = setRasaLastMessageSenderSlot
-exports.saveBotMessage = saveBotMessage
-exports.getBotMessage = getBotMessage
+// Sets the bot_type slot for Rasa conversation (room). Used for associating logs with stories files.
+
+const setBotType = async (channel_id, botType) => {
+  logger.info(`Entered rasaService:setBotType(${channel_id}, ${botType}).`)
+
+  try {
+    let response = await axios.post(RASA_ENDPOINT + `/conversations/${channel_id}/tracker/events`,
+      {
+        'event': 'slot',
+        'name': 'bot_type',
+        'value': botType
+      })
+    if (response) {
+      logger.info(`Set bot_type slot to ${botType} for room ${channel_id}.`)
+      return true
+    }
+
+  } catch (e) {
+    logger.error(e)
+  }
+}
+
+module.exports = { sendMessageToRasa, setRasaUsersSlot, setRasaLastMessageSenderSlot, saveBotMessage, getBotMessage, setBotType }

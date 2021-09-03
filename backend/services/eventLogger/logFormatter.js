@@ -5,7 +5,7 @@ const diff = require('deep-diff').diff
 // Rasa default actions (see https://rasa.com/docs/rasa/default-actions/)
 const defaultActions = ['action_listen', 'action_restart', 'action_session_start', 'action_default_fallback', 'action_deactivate_loop', 'action_revert_fall', 'action_two_stage_fallback', 'action_default_ask_affirmation', 'action_default_ask_rephrase', 'action_back', 'action_unlikely_intent']
 // Events appended to the conversation tracker by Trollbot backend
-const backendEvents = ['users', 'last_message_sender']
+const backendEvents = ['users', 'last_message_sender', 'bot_type']
 // Events hidden from the log
 const ignoredEvents = ['user_featurization']
 // Slots whose values affect story paths
@@ -89,7 +89,7 @@ const formatSlotSet = (obj) => {
     const temp = obj.value
     obj.value = formatObjectSlotValue(artists, obj.value)
     artists = temp
-  } 
+  }
 
   obj.name = 'slot: ' + obj.name + ' | ' + obj.value
 
@@ -165,6 +165,7 @@ const formatEvent = (obj) => {
 
 // fetches rasa's stories from stories.yml and starts story matching with given event log
 const formatStories = (logArray, dataFolder) => {
+  
   const storyFile = '../../rasa/' + dataFolder + '/stories.yml'
   const ruleFile = '../../rasa/' + dataFolder + '/rules.yml'
   const stories = readFile(storyFile).stories

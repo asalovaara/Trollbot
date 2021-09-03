@@ -16,7 +16,6 @@ describe('Room Service tests', () => {
 
   it('Finds user by name in room', () => {
     const user = roomService.getUserInRoom('Jest', 'Testuser')
-    console.log(user)
     expect(user.name).toBe('Testuser')
   })
 

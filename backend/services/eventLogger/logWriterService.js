@@ -2,7 +2,16 @@ const { MongoClient } = require('mongodb')
 const createWriter = require('csv-writer').createObjectCsvWriter
 const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormatter')
 const path = require('path')
+const fs = require('fs')
 const logger = require('../../utils/logger')
+const { MONGODB_URI } = require('../../utils/config')
+const moment = require('moment')
+
+const botTypeDataFolders =
+{
+  Normal: 'data_nice',
+  Troll: 'data_troll'
+}
 
 /**
  * Runs the log writer with given options
@@ -17,13 +26,13 @@ const runLogger = async (options) => {
   let mongoUrl
 
   if (options.source === 'ATLAS') {
-    mongoUrl = 'mongodb+srv://trollbot:1234567890@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority'
+    mongoUrl = MONGODB_URI
   } else {
     mongoUrl = 'mongodb://localhost:27017'
   }
 
   const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-
+  let success = false
   try {
     await client.connect()
     if (options.list) {
@@ -34,14 +43,15 @@ const runLogger = async (options) => {
     } else {
       await findEvents(client, options.room, options.source, options.dataFolder)
     }
+    success = true
   } catch (e) {
     logger.error(e)
+    
   } finally {
     await client.close()
   }
+  return success
 }
-
-
 
 // query the db
 const findEvents = async (client, room, source, folder) => {
@@ -66,6 +76,9 @@ const findEvents = async (client, room, source, folder) => {
     const trimmedArr = removeIgnoredEvents(arr)
 
     arr.forEach(event => {
+      if (event.name === 'bot_type' && folder === null) {
+        folder = botTypeDataFolders[event.value]
+      }
       formatEvent(event)
     })
 
@@ -119,7 +132,13 @@ const deleteItems = async (client, room, source) => {
 // write stuff into the csv file
 const logMessage = async (message, roomName) => {
 
-  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName)
+  const logFolder = path.resolve(__dirname, '../../../logs')
+  if (!fs.existsSync(logFolder)) {
+    fs.mkdirSync(logFolder)
+  }
+
+  const dateTime = moment().local().format('DDMMYYYY_HHmmss')
+  const logPath = path.resolve(__dirname, '../../../logs/log_room.csv').replace(/room/g, roomName + '_' + dateTime)
   const writer = createWriter({
     path: logPath,
     header: [
@@ -146,4 +165,4 @@ const logMessage = async (message, roomName) => {
   }
 }
 
-module.exports = {runLogger}
+module.exports = { runLogger }

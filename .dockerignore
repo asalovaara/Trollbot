@@ -4,9 +4,12 @@ README.md
 .git
 /documentation
 Dockerfile
+Dockerfile.local
 /frontend/node_modules
 /backend/node_modules
 /frontend/build
 /backend/build
 /backend/rasa
+!/backend/rasa/data_nice
+!/backend/rasa/data_troll
 docker-compose.yml

@@ -2,16 +2,27 @@ services:
   trollbot:
     ports:
       - 3001:3001
-    build: ./
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: vornsami/trollbot
     hostname: trollbot
+    env_file: .env
+    volumes:
+      - ./backend/logs:/app/backend/logs
     depends_on:
       - trollbot-rasa
-    
+
   trollbot-rasa:
     ports:
       - 5055:5055
       - 5005:5005
+    restart: unless-stopped
     build: ./backend/rasa
     image: vornsami/trollbot-rasa
     hostname: trollbot-rasa
+    env_file: .env.rasa
+
+volumes:
+  logs:
