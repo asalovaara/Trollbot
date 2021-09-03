@@ -92,3 +92,7 @@ Rasa's .env file needs to contain the following environment variables:
 .dockerignore files are in the same directory as the dockerfile associated with it.
 Any files or directories you do not wish to be part of the docker image the said dockerfile defines should be added into this file.
 Each line in this file should be a path to a file or a directory. Paths to directories should start with a "/".
+
+### Docker volumes
+
+Docker volumes are used to extract files from a docker container into a local filesystem. In this project's docker-compose, there has been set up a docker volume "logs". It extracts the logs generated in the docker container, and saves them in directory "logs". This directory is located in the same directory the docker-compose.yml-file is in.

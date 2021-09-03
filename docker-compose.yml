@@ -5,12 +5,12 @@ services:
     restart: unless-stopped
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     image: vornsami/trollbot
     hostname: trollbot
     env_file: .env
     volumes:
-      - ./backend/logs:/app/backend/logs
+      - ./logs:/app/logs
     depends_on:
       - trollbot-rasa
 

@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "log": "node runLogger",
+    "add-artists": "node aritstAddition",
     "rasa": "cd rasa/ && rasa run",
     "all": "npm-run-all --parallel dev rasa",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --testPathPattern=/tests",
