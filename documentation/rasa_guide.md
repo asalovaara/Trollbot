@@ -44,9 +44,14 @@ The rules files (named rules.yml) specify rules: actions to always take when cer
 
 #### Stories
 
-(TODO)
+As the conversation is divided into phases: introduction phase, task phase and decision phase. The conversation is assumed to automatically start in introduction phase, so it is not checked, but stories do check if task phase or decision phase is on. The slot_was_set key in stories lists all slots that need to have given values in order for the story to progress, so Rasa will know which story to choose if all possibilities are accounted for. A story may have any number of actions, and when the story does not specify any more actions, the action action_listen is performed, but it is also listed in some stories to clarify that the bot does not do anything.
 
-For more information on training data, see [Rasa docs: Training Data Format](https://rasa.com/docs/rasa/training-data-format#conversation-training-data)
+Some stories are currently removed from use (but in comments), as they contain currently problematic features. All active_user checks are in comments, as the active user is currently set every time a user message is sent.
+
+Checkpoints are used in decision phase stories to ensure that the conversation flow is clear to the bot. For more information on checkpoints and more, see [Rasa docs: Stories](https://rasa.com/docs/rasa/stories)
+
+
+For more information on all training data, see [Rasa docs: Training Data Format](https://rasa.com/docs/rasa/training-data-format#conversation-training-data)
 
 ## Domain
 
@@ -71,6 +76,8 @@ List used intents' names under "intents". If an intent contains an entity, speci
       - artist
 ```
 
+In some cases, Rasa might extract an entity from an intent that should not have one or not recognise entities from intents that do have them. In these cases, the problem is likely in the lookup tables or other entity examples in the training data.
+
 #### Entities
 
 List names of entities found in intents under "entities".
@@ -89,11 +96,25 @@ Responses are actions that only consist of the bot saying something defined in t
 
 More on domain in [Rasa docs: Domain](https://rasa.com/docs/rasa/domain)
 
-## Actions
+## Actions and special slots
 
 Rasa has some default actions that do not need custom defining. The most important one of these is `action_listen`, which is used whenever the bot needs to do nothing but wait for the next message, and Rasa calls this action whenever there are no further actions called in a story. More on default actions in [Rasa docs: Default Actions](https://rasa.com/docs/rasa/default-actions)
 
-Rasa custom actions run python code and are used in most runtime interactions to set slots independently of the users or retrieve information from the backend. (TODO)
+Rasa custom actions run python code and are used in most runtime interactions to set slots independently of the users or retrieve information from the backend.
+
+Many custom actions are used to set slots that are not entities from user messages, such as task_activated or genre. Action action_set_task_slot returns a Rasa action SlotSet, where parameters given are the slot and the value it should have. In stories, this action is called when introduction phase is over and task phase begins, and the slot's value is checked when determining the stories the bot should follow; stories that have task_activated as True. The slot decision_phase is treated similarly.
+
+Action action_set_genre_slot is also an action that sets slot values, but in this case the value is retrieved from the backend. Additionally, this action also creates the artist objects and adds them to the bot's list. The action first tries to retrieve genre information for the artist entity extracted by DIETClassifier (see backend/controllers/botRouter.js for how the genre is fetched). Then it checks if the artist already exists in the bot's list. If not, the artist object is created by fetching the artist from the database (also sent via botRouter) and parsing its information into an object in Rasa. Fields in the fetched artist object can be checked or changed in backend/models/artist.js. If no errors occur, the action returns three SlotSet actions. 
+
+Reminders in Rasa are actions that schedule a certain intent to be signaled after a certain time. In action action_delayed_positive_evaluation, a reminder is scheduled to signal the EXTERNAL_positive_evaluation_timer intent after five seconds, but the reminder is cancelled if any user sends a message within those five seconds (kill_on_user_message=True). In practice, this is used with the idea that NiceBot only says something nice about the user's suggested artist if the other user does not comment on it immediately.
+
+The opinion slot is set according to what sentiment the user's message has, and is meant to help checking the sentiment of the latest artist discussion. This slot is set as good during stories where the user praises an artist, and as bad when the user says something negative about an artist.
+
+Some actions can be used to make the bot respond with certain responses depending on the action's result; for example, action action_deflect_opinion_question is used by TrollBot to determine how it should respond to a question of its likes. If no opinions have been expressed by the users yet, it will send the response utter_idk, and if opinions have been expressed, insult the previous opinion. This action does not have to return a Rasa action, as responses are delivered by `dispatcher.utter_message()` instead.
+
+The actions action_post_decision and action_end_conversation are placeholders for future actions, that most likely would have to connect to the backend. 
+
+Some actions are not in use (such as validate_introduction_form and action_increment_counter), but were meant to ensure that all users have said their introductions no matter how many users the conversation has. If the amount of users is changed later and the story structure changes so that the task phase is not entered before everyone has introduced themselves, these could prove useful.
 
 ## Pipeline configuration and policies
 
