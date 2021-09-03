@@ -131,7 +131,7 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
       }]
     )
     if (response) {
-      logger.info(`Set users slot value in Rasa server for channel ${channel_id}`)
+      logger.info(`Set users slot value in Rasa server for channel ${roomId}`)
       return true
     }
   } catch (e) {
