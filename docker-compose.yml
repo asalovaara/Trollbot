@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     build:
       context: .
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     image: vornsami/trollbot
     hostname: trollbot
     env_file: .env
