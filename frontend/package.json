@@ -1,6 +1,7 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "React single page application",
   "private": true,
   "proxy": "http://localhost:3001",
   "scripts": {

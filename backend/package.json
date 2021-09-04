@@ -1,7 +1,7 @@
 {
   "name": "backend",
-  "version": "1.0.0",
-  "description": "Node express backend",
+  "version": "2.0.0",
+  "description": "Node. express backend",
   "main": "backend/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
