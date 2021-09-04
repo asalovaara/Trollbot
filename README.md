@@ -54,7 +54,7 @@ In backend/rasa folder:
 
 - Run `rasa run -m models_nice --enable-api --cors "*"` for Nicebot model server.
 
-- Run `rasa run -m models_troll --enable-api --cors "*" -p 5006` for Trollbot model server (using different port with the `-p 5000` argument).
+- Run `rasa run -m models_troll --enable-api --cors "*" -p 5006` for Trollbot model server (using different port with the `-p 5006` argument).
 
 (The `-m` argument chooses the latest model in the specified directory.)
 
