@@ -80,7 +80,6 @@ const formatSlotSet = (obj) => {
   if (obj.name === 'last_message_sender') {
     lastMessageSenderId = obj.value
   } else if (obj.name === 'users') {
-    // console.log(obj.value)
     formatUserJoiningOrLeaving(obj)
     const temp = obj.value
     obj.value = formatObjectSlotValue(users, obj.value)

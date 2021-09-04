@@ -3,7 +3,6 @@ const Artist = require('../models/artist')
 
 const getUsers = async () => {
   const users = await User.find()
-  console.log(users.toJSON())
   return users
 }
 

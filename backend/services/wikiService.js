@@ -19,8 +19,6 @@ const logger = require('../utils/logger')
 //             genres.indexOf('[') + 2, genres.indexOf(']')
 //         ).toLowerCase().split('|')[0]
 
-//         console.log('WikiMedia Action API (only first genre):\n\tArtist:', artist, '\n\tGenre: ',genre,'\n')
-
 //     })
 
 //Alternative approach: Fetches artist's genre(s) from Wikidata

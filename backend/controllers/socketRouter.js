@@ -12,20 +12,20 @@ module.exports = {
       logger.info(`Socket.io: ${name} joined ${roomId}.`)
       socket.join(roomId)
 
-      // Set Rasa Bot
+      // Get room data
       const bot = getBot(roomId)
-      setBotType(roomId, bot.type)
-
-      // Set rasa users
       const user = addUserIntoRoom(socket.id, roomId, name)
       const users = getUsersInRoom(roomId)
-      setRasaUsersSlot(roomId, users)
+
+      // Set Rasa users and bot type
+      if (bot.type !== undefined) setBotType(roomId, bot.type)
+      if (users !== undefined) setRasaUsersSlot(roomId, users)
 
       // Emit user joined
       io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
       setInterval(() => {
-        const botMessage = getBotMessage()
+        const botMessage = getBotMessage(roomId)
 
         if (typeof botMessage !== 'undefined') {
 
@@ -46,7 +46,7 @@ module.exports = {
 
       // Listen for new messages
       socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
-        console.log('Socket router message', data)
+        logger.info('Socket router message', data)
         const message = addMessage(roomId, data)
         io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
       })
