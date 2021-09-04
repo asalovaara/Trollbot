@@ -1,6 +1,6 @@
 const roomService = require('../services/roomService')
 
-describe('Room Service tests', () => {
+describe('Room Service unit tests', () => {
   const room = { name: 'Jest' }
 
   beforeAll(() => {
