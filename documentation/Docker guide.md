@@ -29,7 +29,7 @@ REACT_APP_SOCKET_SERVER_URL=/trollbot
 
 REACT_APP_SOCKET_ENDPOINT=https<nolink>://ohtup-staging.cs.helsinki.fi
 
-RASA_ENDPOINT=http<nolink>://trollbot-rasa:5005
+RASA_NETWORK=http<nolink>://trollbot-rasa
 
 
 These define various addressess the app uses. 
@@ -42,10 +42,10 @@ REACT_APP_SOCKET_SERVER_URL defines where the socket connects. The value should 
 
 REACT_APP_SOCKET_ENDPOINT defines the domain from which the backend is called. It should contain the entire domain without the subfolder.
 
-Finally, RASA_ENDPOINT has the location of the main rasa server. If rasa is run in a docker container the value should be the hostname of the rasa service.
-If the rasa server not run through a docker container, it should be "localhost". Otherwise its value should be the hostname of the rassa service. If the port the rasa server is located is somehow changed, the port should be changed here too.
+Finally, RASA_NETWORK has the rasa servers' network. If rasa is run in a docker container the value should always be the hostname of the rasa service.
+If the rasa server is being run locally, it should be "localhost".
 
-If the app is run locally, with rasa running in a container, every environment variable other than RASA_ENDPOINT can be left unset, as the values default to localhost.
+If any of these variables is not set, they default to values for running on localhost. 
 
 After making changes running the command "docker-compose build" builds the project. The application can now be run with the command "docker-compose up". If you want to update the docker images in docker hub, run "docker-compose push".
 Please note that if the application is configured to run in a subfolder, it will not work locally.

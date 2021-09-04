@@ -19,11 +19,17 @@ If building through the backend fails, the command can be run in the frontend di
 
 ### Setting up the rasa servers
 
-The actual chatbot is based on rasa. Rasa runs a server separate from the main application, so you need to open more terminals for it. Rasa has two servers. The main server and an action server. 
+The actual chatbot is based on rasa. Rasa runs a server separate from the main application, so you need to open more terminals for it. Rasa has three servers. A nice bot server, a troll bot server and an action server. 
 
-Rasa's directory can be found in the "backend" directory. First rasa needs a trained AI model. This can be done by running the command "rasa train". After the model has been trained, it appears in the "models" directory.
+Rasa's directory can be found in the "backend" directory. First rasa needs a trained AI models. 
+Both bots need seperate models. The nice bot model is trained with the command "rasa train --data data_nice --out models_nice". The troll bot model is trained with the command "rasa train --data data_troll --out models_troll"
 
-Next the main rasa server can be started with the command "rasa run --enable-api --cors "*"", and the action server can be started in a separate terminal with the command "rasa run actions".
+After the models have been trained, they appear in their respective "models" directories.
+
+Next the rasa servers can be started. 
+The nice bot server can be started with the command "rasa run -p 5005 -m models_nice --enable-api --cors "*"". 
+The troll bot server can be started with the command "rasa run -p 5006 -m models_troll --enable-api --cors "*"". 
+The action server can be started in a separate terminal with the command "rasa run actions".
 
 If there are any need for making any changes to rasa deployment, please consult the rasa guide.
 
