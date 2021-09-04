@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "private": true,
   "version": "2.0.0",
   "description": "Node. express backend",
   "main": "backend/index.js",
@@ -18,7 +19,15 @@
     "build": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend && cd ../frontend && rm -rf build",
     "clean": "rm -rf build"
   },
-  "author": "Helsingin Yliopisto",
+  "contributors ": [
+    "kafenoir (https://github.com/kafenoir)",
+    "luuranko (https://github.com/luuranko)",
+    "Macville (https://github.com/macwille)",
+    "samilait (https://github.com/samilait)",
+    "sumuh (https://github.com/sumuh)",
+    "vornsami (https://github.com/vornsami)",
+    "WitCanStain (https://github.com/WitCanStain)"
+  ],
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.2",
