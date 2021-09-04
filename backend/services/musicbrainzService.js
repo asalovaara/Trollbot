@@ -7,9 +7,9 @@ const headers = {
 
 const url = 'http://musicbrainz.org/ws/2/artist/?query=artist:'
 
-const getArtist = async (artistName) => {
+const getArtist = async artistName => {
   return axios
-    .get(url+artistName,
+    .get(url + artistName,
       {
         headers: headers
       }
@@ -25,7 +25,7 @@ const getArtist = async (artistName) => {
       let firstName = getFirstName(fullName)
       let lastName = getLastName(fullName)
 
-      const artistObj = {
+      return {
         'professionalName': firstResult.name,
         'firstname': firstName,
         'lastname': lastName,
@@ -35,7 +35,6 @@ const getArtist = async (artistName) => {
         'begin': firstResult['life-span'].begin,
         'end': firstResult['life-span'].end
       }
-      return artistObj
     })
     .catch((error) => {
       logger.error('Error:', error)
@@ -56,20 +55,7 @@ const getBestTag = (tags) => {
   }
   return best.name
 }
-/*
-const getFullLegalName = (aliases) => {
-  if (aliases === undefined) {
-    return 'None'
-  }
-  for (let i = 0; i < aliases.length; i++) {
-    if (aliases[i].type === 'Legal name') {
-      return aliases[i].name
-    }
-  }
 
-  return 'None'
-}
-*/
 const getFirstName = (fullName) => {
   const arr = fullName.split(',')
   if (arr.length == 1) {
