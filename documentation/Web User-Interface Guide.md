@@ -46,15 +46,13 @@ When ”CREATE”-button is pressed list of existing rooms is updated.
 
 ![](images/roomlist.png)
 
-Web GUI logger functionality
-
-The Web User Interface features a limited version of the command line logger functionality. Working requires TRACKER_STORE_URL .env variable value to match the tracker store url used in the Rasa `endpoints.yml` file.
+The Web User Interface features a limited version of the command line logger functionality. Working requires TRACKER_STORE_URL environment variable value to match the tracker store url used in the Rasa `endpoints.yml` file.
 
 ![Web GUI log buttons](images/gui_log_buttons.png)
 
-**GENERATE LOG** button fetches the corresponding conversation history from Rasa's tracker store database and creates a csv log of it in the `logs` folder.
+**GENERATE LOG**: Fetches the corresponding conversation history from Rasa's tracker store database and creates a csv log of it in the `logs` folder.
 
-**DELETE FROM TRACKER STORE** deletes the corresponding conversation history from Rasa's tracker store database. 
+**DELETE FROM TRACKER STORE**: Deletes the corresponding conversation history from Rasa's tracker store database. 
 
 Note: Joining a room after conversation history deletion starts a new conversation which is saved in the tracker store under the same name. The old chat messages are still displayed in the room until Trollbot server is restarted, but have no effect on the bot's behavior.
 
@@ -66,6 +64,6 @@ or
 
 b) A backup has been made of the MongoDB tracker store conversation document.
 
-**GENERATE LOGS FOR ALL CURRENT ROOM** same as **GENERATE LOG** but for all rooms on the list.
+**GENERATE LOGS FOR ALL CURRENT ROOM**: Same as **GENERATE LOG** but for all rooms on the list.
 
-**GENERATE LOGS FOR ALL TRACKER STORE CONVERSATIONS** Same as the above but includes conversation histories for the rooms used during previous server runs. 
+**GENERATE LOGS FOR ALL TRACKER STORE CONVERSATIONS**: Same as the above but includes conversation histories for the rooms used during previous server runs. 
