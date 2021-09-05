@@ -31,7 +31,7 @@ tracker_store:
   db: Trollbot
   username:
   password:
-
+  
 # stuff to add to readme if needed
 
 # to run mongo database:

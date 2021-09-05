@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as ReactLink } from 'react-router-dom'
+import { Link as ReactLink, useHistory } from 'react-router-dom'
 import { TITLE } from '../../config'
 import loginService from '../../services/login'
 
@@ -10,11 +10,14 @@ import Button from '@material-ui/core/Button'
 
 const Navigation = ({ user, setUser }) => {
 
+  const history = useHistory()
+
   const handleLogout = (event) => {
     event.preventDefault()
     loginService.logout(user)
     setUser(null)
     window.localStorage.clear()
+    history.push('/')
   }
 
   return (

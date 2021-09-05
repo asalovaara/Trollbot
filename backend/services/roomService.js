@@ -2,22 +2,37 @@ const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { createBot } = require('./botFactory')
 
-const testBot = {
-  id: 'bot',
-  senderId: 'bot',
-  name: 'Test Bot',
+const testBotNormal = {
+  id: 'nbot',
+  senderId: 'nbot',
+  name: 'Normalbot',
+  type: 'Normal',
+}
+
+const testBotTroll = {
+  id: 'tbot',
+  senderId: 'tbot',
+  name: 'Trollbot',
   type: 'Troll',
 }
 
-let users = [testBot,]
+let users = [testBotNormal, testBotTroll]
 
 let rooms = [{
   id: 1,
-  name: 'Test',
-  bot: testBot,
-  users: [testBot],
+  name: 'Test_Normal',
+  bot: testBotNormal,
+  users: [testBotNormal],
   messages: []
-},]
+},
+{
+  id: 2,
+  name: 'Test_Troll',
+  bot: testBotTroll,
+  users: [testBotTroll],
+  messages: []
+}
+]
 
 const getUsers = () => users
 

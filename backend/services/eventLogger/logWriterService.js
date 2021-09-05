@@ -4,7 +4,7 @@ const { formatEvent, formatStories, removeIgnoredEvents } = require('./logFormat
 const path = require('path')
 const fs = require('fs')
 const logger = require('../../utils/logger')
-const { MONGODB_URI } = require('../../utils/config')
+const { MONGODB_URI, TRACKER_STORE_URL } = require('../../utils/config')
 const moment = require('moment')
 
 const botTypeDataFolders =
@@ -27,8 +27,10 @@ const runLogger = async (options) => {
 
   if (options.source === 'ATLAS') {
     mongoUrl = MONGODB_URI
-  } else {
+  } else if (options.source === 'LOCAL'){
     mongoUrl = 'mongodb://localhost:27017'
+  } else {
+    mongoUrl = TRACKER_STORE_URL
   }
 
   const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -46,7 +48,7 @@ const runLogger = async (options) => {
     success = true
   } catch (e) {
     logger.error(e)
-    
+
   } finally {
     await client.close()
   }
