@@ -11,7 +11,7 @@
 # https://rasa.com/docs/rasa/custom-actions
 
 action_endpoint:
- url: http://localhost:5055/webhook
+  url: http://localhost:5055/webhook
 
 # Tracker store which is used to store the conversations.
 # By default the conversations are stored in memory.
@@ -27,10 +27,10 @@ action_endpoint:
 
 tracker_store:
   type: mongod
-  url: mongodb://localhost:27017
+  url: mongodb+srv://trollbot:Zzr78yHxPx32Ivc6@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority
   db: Trollbot
-  username:
-  password:
+  username: trollbot
+  password: Zzr78yHxPx32Ivc6
   
 # stuff to add to readme if needed
 

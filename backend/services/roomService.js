@@ -48,7 +48,7 @@ const getMessagesInRoom = roomName => rooms.find(r => r.name === roomName).messa
 
 const getUsersInRoom = roomName => rooms.find(r => r.name === roomName).users
 
-const getBot = (roomName) => {
+const getBot = roomName => {
   const foundRoom = getRoom(roomName)
   if (foundRoom === undefined) return
   return foundRoom.bot
@@ -126,7 +126,7 @@ const addUser = (senderId, name, room) => {
   return user
 }
 
-// Will create new user if none if found with username
+// Will create a new user if none is found with username.
 const login = username => {
   const user = users.find(u => u.name.toLowerCase() == username.toLowerCase())
 

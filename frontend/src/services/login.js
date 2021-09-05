@@ -14,8 +14,9 @@ const logout = async (user) => {
   return response.data
 }
 
-const getUsers = () => {
-  return axios.get(baseUrl).then(res => res.data)
+const getUsers = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
 }
 
 export default { login, getUsers, logout }

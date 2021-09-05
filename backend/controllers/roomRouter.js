@@ -1,5 +1,5 @@
 const roomRouter = require('express').Router()
-const { getRooms, addRoom, getMessagesInRoom, getUsersInRoom, getBot } = require('../services/roomService')
+const { getRooms, getRoom, addRoom, getMessagesInRoom, getUsersInRoom, getBot } = require('../services/roomService')
 
 roomRouter.get('/', (req, res) => {
   res.json(getRooms())
@@ -9,6 +9,11 @@ roomRouter.post('/', (req, res) => {
   const body = req.body
   const addedRoom = addRoom(body)
   return res.status(200).send(addedRoom)
+})
+
+roomRouter.get('/:roomId', (req, res) => {
+  const room = getRoom(req.params.roomId)
+  return res.json({ room })
 })
 
 roomRouter.get('/:roomId/users', (req, res) => {
