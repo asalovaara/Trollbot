@@ -15,7 +15,8 @@ const RoomForm = ({ rooms, setRooms }) => {
   const roomName = useField('text')
   const botType = useField('number', 10)
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    console.log('Create room')
     event.preventDefault()
     const bot = botType.value < 20 ? 'Normal' : 'Troll'
     console.log(`Create room named '${roomName.value}' with bot '${bot}'`)
@@ -23,15 +24,12 @@ const RoomForm = ({ rooms, setRooms }) => {
       name: roomName.value,
       botType: bot,
     }
-    roomService.addRoom(room)
-      .then(returnedRooms => {
-        setRooms(rooms.concat(returnedRooms.data))
-        roomName.clear()
-      })
+    const addedRoom = await roomService.addRoom(room)
+    setRooms(rooms.concat(addedRoom))
   }
 
   return (
-    <Box>
+    <Box marginBottom={3}>
       <Typography variant="h4" paragraph>Create Room</Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
