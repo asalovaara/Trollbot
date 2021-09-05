@@ -8,8 +8,12 @@ import { useTextInputStyles } from '../../styles/TextInputStyles.js'
 import Grid from '@material-ui/core/Grid'
 
 
-const TextInput = (props) => {
-  const { messages, setMessages, botReply, setBotReply } = props
+const TextInput = ({
+  messages,
+  setMessages,
+  botReply,
+  setBotReply }) => {
+
   const message = useField('text')
   const classes = useTextInputStyles()
 

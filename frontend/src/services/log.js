@@ -3,8 +3,7 @@ import { API_URL } from '../config'
 
 const baseUrl = `${API_URL}/log`
 
-const logGen = async (roomId) => {
-  console.log(roomId)
+const logGen = async roomId => {
   try {
     await axios.post(`${baseUrl}/${roomId}`)
   } catch (e) {
@@ -13,8 +12,7 @@ const logGen = async (roomId) => {
   }
 }
 
-const deleteConv = async (roomId) => {
-  console.log(roomId)
+const deleteConv = async roomId => {
   try {
     await axios.post(`${baseUrl}/${roomId}/delete`)
   } catch (e) {

@@ -47,10 +47,6 @@ app.get('/*', (request, response) => {
   })
 })
 
-if (process.env.NODE_ENV === 'test') {
-  logger.info('Testing mode detected')
-}
-
 // Errors and Unknown endpoints
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -10,7 +10,6 @@ const main = async () => {
   const filepath = path.resolve(__dirname, '../data/artists.txt')
 
   try {
-
     mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => {
         console.log('connected to MongoDB')
