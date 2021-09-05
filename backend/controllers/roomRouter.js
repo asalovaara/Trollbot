@@ -1,5 +1,6 @@
 const roomRouter = require('express').Router()
 const { getRooms, getRoom, addRoom, getMessagesInRoom, getUsersInRoom, getBot } = require('../services/roomService')
+const logger = require('../utils/logger')
 
 roomRouter.get('/', (req, res) => {
   res.json(getRooms())
