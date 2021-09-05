@@ -12,15 +12,15 @@ const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
 const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
 
-const useChat = (roomId) => {
+const useChat = roomId => {
 
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
-  const [botType, setBot] = useState(null)
   const [typingUsers, setTypingUsers] = useState([])
   const [user, setUser] = useState(null)
   const socketRef = useRef()
 
+  // Check localstorage for logged user
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
@@ -39,15 +39,7 @@ const useChat = (roomId) => {
     }
   }, [])
 
-  useEffect(() => {
-    const fetchBotType = async () => {
-      const bot = roomService.getBot(roomId)
-      console.log('Bot type:', bot)
-      setBot(botType)
-    }
-    fetchBotType()
-  }, [roomId])
-
+  // Set initial users.
   useEffect(() => {
     const fetchUsers = async () => {
       const initialUsers = await roomService.getUsersInRoom(roomId)
@@ -57,6 +49,7 @@ const useChat = (roomId) => {
     fetchUsers()
   }, [roomId])
 
+  // Set initial messages
   useEffect(() => {
     const fetchMessages = async () => {
       const initialMessages = await roomService.getRoomMessages(roomId)
@@ -65,6 +58,7 @@ const useChat = (roomId) => {
     fetchMessages()
   }, [roomId])
 
+  // Socket events
   useEffect(() => {
     if (!user) {
       return

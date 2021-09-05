@@ -21,7 +21,7 @@ const Navigation = ({ user, setUser }) => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Toolbar>
         <Button color="inherit" component={ReactLink} to="/">{TITLE}</Button>
         {user && user.name === 'Admin' && <Button id="admin" color="inherit" component={ReactLink} to="/admin/main">Admin</Button>}
