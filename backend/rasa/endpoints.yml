@@ -27,10 +27,10 @@ action_endpoint:
 
 tracker_store:
   type: mongod
-  url: mongodb+srv://trollbot:Zzr78yHxPx32Ivc6@trollbot.hsb0q.mongodb.net/Trollbot?retryWrites=true&w=majority
+  url: mongodb://localhost:27017
   db: Trollbot
-  username: trollbot
-  password: Zzr78yHxPx32Ivc6
+  username: 
+  password: 
   
 # stuff to add to readme if needed
 
