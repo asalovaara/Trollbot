@@ -1,6 +1,6 @@
 const roomService = require('../services/roomService')
 
-describe('Room Service tests', () => {
+describe('Room service unit tests', () => {
   const room = { name: 'Jest' }
 
   beforeAll(() => {
@@ -38,4 +38,10 @@ describe('Room Service tests', () => {
     expect(users.find(u => u.name === 'Testuser')).toBe(undefined)
   })
 
+  it('Removes room ', () => {
+    roomService.deleteRoom('Jest')
+    const foundRoom = roomService.getRoom('Jest')
+    expect(foundRoom).toBe(undefined)
+  })
+  
 })

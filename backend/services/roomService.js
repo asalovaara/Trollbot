@@ -2,41 +2,56 @@ const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { createBot } = require('./botFactory')
 
-const testBot = {
-  id: 'bot',
-  senderId: 'bot',
-  name: 'Test Bot',
+const testBotNormal = {
+  id: 'nbot',
+  senderId: 'nbot',
+  name: 'Normalbot',
+  type: 'Normal',
+}
+
+const testBotTroll = {
+  id: 'tbot',
+  senderId: 'tbot',
+  name: 'Trollbot',
   type: 'Troll',
 }
 
-let users = [testBot,]
+let users = [testBotNormal, testBotTroll]
 
 let rooms = [{
   id: 1,
-  name: 'Test',
-  bot: testBot,
-  users: [testBot],
+  name: 'Test_Normal',
+  bot: testBotNormal,
+  users: [testBotNormal],
   messages: []
-},]
+},
+{
+  id: 2,
+  name: 'Test_Troll',
+  bot: testBotTroll,
+  users: [testBotTroll],
+  messages: []
+}
+]
 
 const getUsers = () => users
 
 const getRooms = () => rooms
 
-const getRoom = (roomName) => rooms.find(r => r.name === roomName)
+const getRoom = roomName => rooms.find(r => r.name === roomName)
 
-const getBot = (roomName) => {
+const deleteRoom = roomName => {
+  rooms = rooms.filter(r => r.name !== roomName)
+  return rooms
+}
+const getMessagesInRoom = roomName => rooms.find(r => r.name === roomName).messages
+
+const getUsersInRoom = roomName => rooms.find(r => r.name === roomName).users
+
+const getBot = roomName => {
   const foundRoom = getRoom(roomName)
   if (foundRoom === undefined) return
   return foundRoom.bot
-}
-
-const getMessagesInRoom = (roomName) => {
-  return rooms.find(r => r.name === roomName).messages
-}
-
-const getUsersInRoom = (roomName) => {
-  return rooms.find(r => r.name === roomName).users
 }
 
 const addUserIntoRoom = (senderId, roomName, name) => {
@@ -85,7 +100,7 @@ const addMessage = (roomName, message) => {
   return msg
 }
 
-const addRoom = (room) => {
+const addRoom = room => {
   const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [] }
 
   const bot = createBot(room.botType)
@@ -102,7 +117,7 @@ const addRoom = (room) => {
 const addUser = (senderId, name, room) => {
   if (!name) return { error: 'Username and room are required.' }
 
-  const existingUser = users.find((u) => u.name === name)
+  const existingUser = users.find(u => u.name === name)
   if (existingUser) return existingUser
 
   const user = { id: users.length + 1, senderId, name, room }
@@ -111,10 +126,11 @@ const addUser = (senderId, name, room) => {
   return user
 }
 
-const login = (username) => {
+// Will create a new user if none is found with username.
+const login = username => {
   const user = users.find(u => u.name.toLowerCase() == username.toLowerCase())
 
-  if (user == undefined) {
+  if (user === undefined) {
     const newUser = {
       id: users.length + 1,
       name: username,
@@ -129,6 +145,7 @@ module.exports = {
   login,
   addUser,
   addRoom,
+  deleteRoom,
   getBot,
   getUsers,
   getRooms,

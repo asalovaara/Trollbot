@@ -28,7 +28,7 @@ const Login = ({ user, setUser }) => {
     }
   }
 
-  if (user) return (<div><h2>Youa are logged in</h2></div>)
+  if (user) return <div>You are logged in</div>
 
   return (
     <Container>

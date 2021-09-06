@@ -4,7 +4,7 @@ const path = require('path')
 
 const readFile = (file) => {
 
-  const filePath = path.resolve(__dirname, file) //'../../rasa/data/stories.yml'
+  const filePath = path.resolve(__dirname, file)
 
   try {
     let fileContents = fs.readFileSync(filePath, 'utf8')

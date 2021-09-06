@@ -6,6 +6,7 @@ const socketRouter = require('./controllers/socketRouter')
 const { PORT } = require('./utils/config')
 
 const server = http.createServer(app)
+
 const io = socketIo(server, {
   cors: {
     origin: '*',

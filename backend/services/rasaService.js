@@ -4,15 +4,15 @@ const logger = require('../utils/logger')
 const { RASA_NETWORK } = require('../utils/config')
 const { getBot } = require('./roomService')
 
-// List of all messages sent by Rasa
+// Contains all messages sent by Rasa.
 let botMessages = []
 
-const saveBotMessage = (message) => {
+const saveBotMessage = message => {
   botMessages.push(message)
 }
 
-// Returns the oldest message for given room and removes it from botMessages
-const getBotMessage = (roomId) => {
+// Returns the oldest message for a given room and removes it from botMessages.
+const getBotMessage = roomId => {
   const roomMessages = botMessages.filter(m => m.recipient_id === roomId)
 
   if (roomMessages.length != 0) {
@@ -30,7 +30,7 @@ const getBotMessage = (roomId) => {
   }
 }
 
-const buildRasaEndpoint = (roomId) => `${RASA_NETWORK}:${getBot(roomId).type === 'Troll' ? 5006 : 5005}`
+const buildRasaEndpoint = roomId => `${RASA_NETWORK}:${getBot(roomId).type === 'Troll' ? 5006 : 5005}`
 
 /**
  * Sends a user message to the Rasa HTTP server.

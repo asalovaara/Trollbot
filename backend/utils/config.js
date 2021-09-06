@@ -6,6 +6,7 @@ let CLIENT_SECRET = process.env.CLIENT_SECRET
 let API_URL = process.env.API_URL || '/api'
 let MONGODB_URI = process.env.MONGODB_URI
 let RASA_NETWORK = process.env.RASA_NETWORK || 'http://localhost'
+let TRACKER_STORE_URL = process.env.TRACKER_STORE_URL
 
 module.exports = {
   PORT,
@@ -13,5 +14,6 @@ module.exports = {
   CLIENT_SECRET,
   API_URL,
   MONGODB_URI,
-  RASA_NETWORK
+  RASA_NETWORK,
+  TRACKER_STORE_URL
 }

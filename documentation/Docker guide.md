@@ -74,6 +74,8 @@ For the main application, the following environment variables should be defined.
 
  - MONGODB_URI: MONGODB_URI defines the location of the MongoDB database. As this has connected to a database in a cloud server, it contains the username and password of the account used. Please consult MongoDB-documentation on the exact content for this field.
 
+ - TRACKER_STORE_URL: Used by the Log Writer to fetch conversation histories from the correct tracker store when used via Web GUI. This value must be the same as the tracker store url used in the Rasa endpoints file.
+
  - CLIENT_ID and CLIENT_SECRET: These variables are for using Spotify's API. To set these values, a Spotify account is needed. This account is then linked to Spotify for Developers, where the values of these variables are generated. 
  
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Helmet } from 'react-helmet'
+import { useField } from '../../hooks/inputFields'
 
 import useChat from '../../services/chat'
 import ChatMessage from './ChatMessage'
@@ -32,19 +33,15 @@ const ChatRoom = (props) => {
     stopTypingMessage,
   } = useChat(roomId)
   const [loggedUser, setLoggedUser] = useState(null)
-  const [newMessage, setNewMessage] = useState('')
+  const message = useField('text')
   const { isTyping, startTyping, stopTyping, cancelTyping } = useTyping()
-
-  const handleNewMessageChange = (event) => {
-    setNewMessage(event.target.value)
-  }
 
   const handleSendMessage = (event) => {
     event.preventDefault()
     cancelTyping()
-    sendMessage(newMessage)
-    sendMessageToBot(newMessage)
-    setNewMessage('')
+    sendMessage(message.value)
+    sendMessageToBot(message.value)
+    message.clear()
   }
 
   // Check localstore for saved user
@@ -69,7 +66,7 @@ const ChatRoom = (props) => {
     }
   }, [messages])
 
-  // Filter unnamed and Admin users
+  // Get unique users and filter unnamed and Admin
   const uniqueUsers = [...new Set(users)].filter(u => u.name !== undefined && u.name !== 'Admin')
   const uniqueTyping = [...new Set(typingUsers)].filter(u => u.name !== undefined && u.name !== 'Admin')
 
@@ -90,10 +87,10 @@ const ChatRoom = (props) => {
         <Grid item xs={12}>
           <List className={classes.messageArea} >
             <Grid container>
-              {messages.map((message, i) => (
+              {messages.map((m, i) => (
                 <Grid item xs={12} key={i} style={{ padding: '8px' }}>
                   <ListItem ref={messageRef}>
-                    <ChatMessage message={message} user={loggedUser} />
+                    <ChatMessage message={m} user={loggedUser} />
                   </ListItem>
                 </Grid>
               ))}
@@ -113,8 +110,7 @@ const ChatRoom = (props) => {
         </Grid>
         <Grid item xs={12}>
           <NewMessageForm
-            newMessage={newMessage}
-            handleNewMessageChange={handleNewMessageChange}
+            message={message}
             handleStartTyping={startTyping}
             handleStopTyping={stopTyping}
             handleSendMessage={handleSendMessage}

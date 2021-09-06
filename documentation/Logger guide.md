@@ -21,19 +21,19 @@ tracker_store:
   username:
   password:
   ```
-3. Use the `--endpoints` flag when starting the Rasa server (recommended commands: `rasa run -m models_nice --enable-api --cors "*" --endpoints endpoints.yml --debug` for the normal bot and `rasa run -m models_troll --enable-api --cors "*" --endpoints endpoints.yml --debug` for the troll bot).
+3. Use the `--endpoints` flag when starting the Rasa server (recommended commands: `rasa run -m models_nice --enable-api --cors "*" --endpoints endpoints.yml --debug` for the normal bot and `rasa run -m models_troll --enable-api --cors "*" --endpoints endpoints.yml -p 5006 --debug` for the troll bot).
 
 ### Using the tracker store in MongoDB Atlas cloud service
 
 1. Already up and running. For more information on MongoDB Atlas, see our [MongoDB Atlas guide](MongoDB%20Atlas%20guide.md) and the [MongoDB Atlas documentation](https://docs.atlas.mongodb.com/) at mongodb.com.
 2. Config provided separately.
-3. Use the `--endpoints` flag when starting the Rasa server (recommended commans: `rasa run -m models_nice --enable-api --cors "*" --endpoints endpoints.yml --debug` for the normal bot and `rasa run -m models_troll --enable-api --cors "*" --endpoints endpoints.yml --debug` for the troll bot).
+3. Use the `--endpoints` flag when starting the Rasa server (recommended commands: `rasa run -m models_nice --enable-api --cors "*" --endpoints endpoints.yml --debug` for the normal bot and `rasa run -m models_troll --enable-api --cors "*" --endpoints endpoints.yml -p 5006 --debug` for the troll bot).
 
 ## Logger
 
 Create log files by running the command `npm run log` in the backend folder. This generates CSV-format log files in the `logs` folder. Log files use the following name format:
 
-`log_[room]_[file creation time (HHmmssDDMMYYYY)]`
+`log_[room]_[file creation time (DDMMYYYY_HHmmss)]`
 
 ### Parameters
 
@@ -63,13 +63,43 @@ When using the `--delete` parameter, instead of writing csv files, the applicati
 
 Example: To delete the tracker store conversation history for room *Testroom*, run `npm run log -- --room Testroom --delete`.
 
-*WARNING!* Tracker store conversation histories contain all of the raw conversation data saved by Rasa and deletion is not advised unless backups have been made. This option was mainly added for removing test room conversation histories from the tracker store.
+*WARNING!* Tracker store conversation histories contain all of the raw conversation data saved by Rasa and deletion is not advised unless backups have been made. Only use if:
+
+a) The room is used for testing where storing the history is irrelevant.
+
+or
+
+b) A backup has been made of the MongoDB tracker store conversation document.
 
 **-\-list**
 
 Using the parameter `--list` will print a list of the conversation histories stored in the tracker store. **No csv files are written and** `--delete` **and** `--room` **parameters are ignored**. 
 
 Example: To list conversation histories in the MongoDB Atlas cloud tracker store, run `npm run log -- --atlas --list`.
+
+### Web GUI logger functionality
+
+The Web User Interface features a limited version of the command line logger functionality. Working requires TRACKER_STORE_URL environment variable value to match the tracker store url used in the Rasa `endpoints.yml` file.
+
+![Rooms list with log buttons](images/gui_log_gen.png)
+
+**GENERATE LOG**: Fetches the corresponding conversation history from Rasa's tracker store database and creates a csv log of it in the `logs` folder.
+
+**DELETE FROM TRACKER STORE**: Deletes the corresponding conversation history from Rasa's tracker store database. 
+
+Note: Joining a room after conversation history deletion starts a new conversation which is saved in the tracker store under the same name. The old chat messages are still displayed in the room until Trollbot server is restarted, but have no effect on the bot's behavior.
+
+*WARNING!* Once deleted from the tracker store, the conversation history cannot be recovered. Only click if:
+
+a) The room is used for testing where storing the history is irrelevant.
+
+or
+
+b) A backup has been made of the MongoDB tracker store conversation document.
+
+**GENERATE LOGS FOR ALL CURRENT ROOM**: Same as **GENERATE LOG** but for all rooms on the list.
+
+**GENERATE LOGS FOR ALL TRACKER STORE CONVERSATIONS**: Same as the above but includes conversation histories for the rooms used during previous server runs. 
 
 ## Log contents
 
