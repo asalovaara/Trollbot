@@ -18,6 +18,8 @@ React single page web application with a Node.js backend.
 
 For the application to run correctly you need to install on your machine:
 
+- nvm (https://github.com/nvm-sh/nvm)
+
 - Node.js libary
 
 - Rasa 
