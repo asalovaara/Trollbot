@@ -1,40 +1,33 @@
-FROM node:14-slim
+FROM node:14-slim  as frontend
+
 ENV SKIP_PREFLIGHT_CHECK=true
-
-# Environment Variables
-
-ENV PUBLIC_URL=/trollbot
-ENV API_URL=/api
-ENV REACT_APP_API_URL=https://ohtup-staging.cs.helsinki.fi/trollbot/api
-ENV REACT_APP_SOCKET_SERVER_URL=/trollbot
-ENV REACT_APP_SOCKET_ENDPOINT=https://ohtup-staging.cs.helsinki.fi
-ENV RASA_NETWORK=http://trollbot-rasa
 
 # Install app dependencies
 
-WORKDIR /app
-COPY . ./
-
-RUN apt-get update || : && apt-get install python -y
+WORKDIR /usr/src/app/frontend
+COPY ./frontend/ ./
 
 # Build frontend
 
-WORKDIR /app/frontend
 RUN npm install \
-  && npm install react-scripts@3.4.1 -g \
-  && npm run build \
-  && cp -r build/ ../backend/build \
-  && rm -r ../frontend
+ && npm install react-scripts@3.4.1 -g \
+ && npm run build 
 
 # - Backend
 
-WORKDIR /app/backend
-RUN npm install
+FROM node:14-alpine3.15
+WORKDIR /usr/src/app
+COPY ./backend/ ./
+COPY --from=frontend /usr/src/app/frontend/build/ ./build/
+RUN  apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python \
+  && npm install \
+  && mkdir /usr/src/logs \
+  && adduser -D appuser
+
+USER appuser
 
 # Start app 
 
-WORKDIR /app
-
 EXPOSE 3001
 
-CMD npm start --prefix backend
+CMD npm run dev
