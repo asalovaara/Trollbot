@@ -6,23 +6,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: vornsami/trollbot
+    image: trollbotproject/trollbot
     hostname: trollbot
     env_file: .env
+    environment:
+      - RASA_NETWORK=http://trollbot-rasa
     volumes:
-      - ./logs:/app/logs
+      - ./logs:/usr/src/logs
     depends_on:
       - trollbot-rasa
 
   trollbot-rasa:
-    ports:
-      - 5055:5055
-      - 5005:5005
     restart: unless-stopped
     build: ./backend/rasa
-    image: vornsami/trollbot-rasa
+    image: trollbotproject/trollbot-rasa
     hostname: trollbot-rasa
     env_file: .env.rasa
+    environment:
+      - BACKEND_API_LOCATION=trollbot:3001
+      - ACTION_ENDPOINT_URL=http://trollbot-rasa:5055/webhook
 
 volumes:
   logs:
