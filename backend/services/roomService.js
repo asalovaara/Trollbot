@@ -1,6 +1,8 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { createBot } = require('./botFactory')
+const addressGen = require('../utils/addressGen')
+const crypto = require('crypto')
 
 const testBotNormal = {
   id: 'nbot',
@@ -21,16 +23,24 @@ let users = [testBotNormal, testBotTroll]
 let rooms = [{
   id: 1,
   name: 'Test_Normal',
+  roomLinkBase: 'aaaaaa',
+  acceptedEnds: [ 'aaa', 'aab' ],
   bot: testBotNormal,
   users: [testBotNormal],
-  messages: []
+  messages: [],
+  active: true,
+  in_use: false
 },
 {
   id: 2,
   name: 'Test_Troll',
+  roomLinkBase: 'bbbbbb',
+  acceptedEnds: [ 'bbb', 'bba' ],
   bot: testBotTroll,
   users: [testBotTroll],
-  messages: []
+  messages: [],
+  active: true,
+  in_use: false
 }
 ]
 
@@ -38,15 +48,55 @@ const getUsers = () => users
 
 const getRooms = () => rooms
 
-const getRoom = roomName => rooms.find(r => r.name === roomName)
+const getRoom = roomName => {
+	if (roomName.length != 9) {
+		logger.error('Roomname length error')
+		return undefined
+	}
+
+	roomCode = roomName.substring(0, 6)
+	userCode = roomName.substring(6)
+	room = rooms.find(r => r.roomLinkBase === roomCode)
+
+	if(room === undefined || !room.acceptedEnds.includes(userCode)) {
+		logger.error('Invalid address in getRoom')
+		return undefined
+	}
+
+	return room
+}
+
+const getRoomName = roomCode => {
+  const foundRoom = getRoom(roomCode)
+  if(foundRoom === undefined) return ''
+  return foundRoom.name
+}
+
+const getRoomLinkBase = roomCode => {
+  const foundRoom = getRoom(roomCode)
+  if(foundRoom === undefined) return ''
+  return foundRoom.roomLinkBase
+}
 
 const deleteRoom = roomName => {
   rooms = rooms.filter(r => r.name !== roomName)
   return rooms
 }
-const getMessagesInRoom = roomName => rooms.find(r => r.name === roomName).messages
+const getMessagesInRoom = roomName => {
+   const foundRoom = getRoom(roomName)
 
-const getUsersInRoom = roomName => rooms.find(r => r.name === roomName).users
+	if(foundRoom === undefined) return undefined
+
+	return foundRoom.messages
+}
+
+const getUsersInRoom = roomName => {
+    const foundRoom = getRoom(roomName)
+
+    if(foundRoom === undefined) return undefined
+
+	return foundRoom.users
+}
 
 const getBot = roomName => {
   const foundRoom = getRoom(roomName)
@@ -54,19 +104,25 @@ const getBot = roomName => {
   return foundRoom.bot
 }
 
+const isRoomActive = roomId => {
+  foundRoom = getRoom(roomId)
+  if (foundRoom === undefined || foundRoom.active === undefined) return false
+  return foundRoom.active
+}
+
 const addUserIntoRoom = (senderId, roomName, name) => {
   const existingUser = getUserInRoom(roomName, name)
   const existingRoom = getRoom(roomName)
 
   if (!name || !roomName) return { error: 'Username and room are required.' }
-  if (!existingRoom) return { error: 'Room not found.' }
+  if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
   const user = { id: uuid.v4(), senderId, name }
 
   existingRoom.users.push(user)
 
-  logger.info(`Adding user: '${user.name}' into room: '${roomName}'`)
+  logger.info(`Adding user: '${user.name}' into room: '${getRoomName(roomName)}'`)
 
   return user
 }
@@ -85,7 +141,7 @@ const removeUserFromRoom = (roomName, name) => {
 
 const getUserInRoom = (roomName, name) => {
   const existingRoom = getRoom(roomName)
-  if (!existingRoom) return
+  if (!existingRoom || !existingRoom.users) return
   return existingRoom.users.find(u => u.name === name)
 }
 
@@ -101,10 +157,17 @@ const addMessage = (roomName, message) => {
 }
 
 const addRoom = room => {
-  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [] }
+  let roomCode = addressGen.generate(6)
+
+  // In case generates an existing room code
+  while (rooms.find(r => r.roomLinkBase === roomCode) !== undefined) {
+	roomCode = addressGen.generate(6)
+  }
+	
+  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], roomLinkBase: roomCode , acceptedEnds: [addressGen.generate(3)], active: false, in_use: true }
 
   const bot = createBot(room.botType)
-
+  
   newRoom.bot = bot
   newRoom.users.push(bot)
   users.push(bot)
@@ -114,6 +177,72 @@ const addRoom = room => {
   return newRoom
 }
 
+const autoCreateRoom = () => {
+  const randomInt = crypto.randomInt(2)
+  const newBotType = (randomInt === 0)? 'Normal' : 'Troll'
+  const newRoom = { name:  `Room ${rooms.length + 1}`, botType: newBotType }
+  
+  return addRoom(newRoom)
+}
+
+const getActiveRoom = () => {
+
+  const getSelectedRoomLink = (selectedRoom) => {
+    const roomLinks = getValidLinks(selectedRoom.roomLinkBase)
+
+    return roomLinks[0]
+  }
+
+  let roomCandidates = rooms.filter(r => r.users.length === 2 && r.in_use === true)
+  if (roomCandidates.length > 0) return getSelectedRoomLink(roomCandidates[0])
+
+  roomCandidates = rooms.filter(r => r.users.length === 1 && r.in_use === true)
+  if (roomCandidates.length > 0) return getSelectedRoomLink(roomCandidates[0])
+  
+  return getSelectedRoomLink(autoCreateRoom())
+
+}
+
+
+
+const addRoomEnd = roomCode => {
+
+	existingRoom = rooms.find(r => r.roomLinkBase === roomCode)
+	logger.info("Adding a new room ending")
+	let userCode = addressGen.generate(3)
+
+	// In case generates an existing user code
+    while (existingRoom.acceptedEnds.includes(userCode)) {
+		userCode = addressGen.generate(3)
+	}
+	logger.info("Added " + userCode)
+	existingRoom.acceptedEnds.push(userCode)
+	
+	return existingRoom.roomLinkBase + userCode
+}
+
+const getValidLinks = roomCode => {
+	logger.info("Getting links for code " + roomCode)
+	const existingRoom = rooms.find(r => r.roomLinkBase === roomCode)
+    if(existingRoom === undefined) return undefined
+    
+    const linkList = [...existingRoom.acceptedEnds]
+
+	for (let i = 0; i < linkList.length; i++) {
+		linkList[i] = existingRoom.roomLinkBase + linkList[i];
+	}
+
+    logger.info(linkList)
+	return linkList
+}
+
+const activateRoom = roomCode => {
+  const foundRoom = getRoom(roomCode)
+
+  if (foundRoom === undefined || foundRoom.users.length < 3) return false
+  foundRoom.active = true
+  return true
+}
 const addUser = (senderId, name, room) => {
   if (!name) return { error: 'Username and room are required.' }
 
@@ -141,6 +270,8 @@ const login = username => {
   return user
 }
 
+
+
 module.exports = {
   login,
   addUser,
@@ -155,5 +286,13 @@ module.exports = {
   getMessagesInRoom,
   removeUserFromRoom,
   getUserInRoom,
-  getUsersInRoom
+  getUsersInRoom,
+  addRoomEnd,
+  getValidLinks,
+  getRoomName,
+  getRoomLinkBase,
+  isRoomActive,
+  autoCreateRoom,
+  getActiveRoom,
+  activateRoom
 }

@@ -1,4 +1,4 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom } = require('../services/roomService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
@@ -8,9 +8,17 @@ const start = (io) => {
   
   io.on('connection', (socket) => {
 
-    // Join a conversation
     const { roomId, name } = socket.handshake.query
-    logger.info(`Socket.io: ${name} joined ${roomId}.`)
+    logger.error('Connecting user...')
+    // Check that room exists
+
+    if (getRoom(roomId) === undefined) {
+      logger.error('No such room')
+      socket.disconnect()
+    }
+    // Join a conversation
+    const roomName = getRoomName(roomId)
+    logger.info(`Socket.io: ${name} joined ${roomName}.`)
     socket.join(roomId)
 
     // Get room data
@@ -19,13 +27,14 @@ const start = (io) => {
     const users = getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
-    if (bot.type !== undefined) setBotType(roomId, bot.type)
-    if (users !== undefined) setRasaUsersSlot(roomId, users)
+    if (bot !== undefined && bot.type !== undefined) setBotType(roomId, bot.type)
+    if (bot !== undefined && users !== undefined) setRasaUsersSlot(roomId, users)
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
     setInterval(() => {
+      if(bot === undefined) return
       const botMessage = getBotMessage(roomId)
       if (typeof botMessage !== 'undefined') {
 

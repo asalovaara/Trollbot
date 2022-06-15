@@ -20,7 +20,7 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup'
 
 
 const ChatRoom = (props) => {
-  const { roomId } = props.match.params
+  const roomId = props.roomId
   const messageRef = useRef()
   const classes = useChatRoomStyles()
   const {
