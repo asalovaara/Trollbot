@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link as ReactLink } from 'react-router-dom'
 import logService from '../../services/log'
-import RoomLinks from './RoomLinks'
 
 import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
@@ -28,13 +27,12 @@ const RoomList = ({ rooms }) => {
                 <div>
                   <ListItem id={`list-item-${r.name}`} key={r.id}>
                     <ListItemText primary={r.name} />
-                    <p>{`Bot Type: ${r.bot.type}`}</p>
+                    <b>{`Link: ${r.roomLink}`}</b>
+                    <p style={{ marginLeft: '1rem' }}>{`Bot Type: ${r.bot.type}`}</p>
                     <ReactLink to={`/${r.name}`}><Button id='join' variant="contained" color='primary' type='submit' style={{ marginLeft: '1rem' }}>Join</Button></ReactLink>
                     <Button onClick={async () => logService.logGen(r.name)} variant="contained" color='primary' style={{ marginLeft: '.5rem' }} id='generate_log'> Generate Log</Button>
                     <Button onClick={async () => logService.deleteConv(r.name)} variant="contained" color='secondary' style={{ marginLeft: '.5rem' }} id='generate_log'> Delete From Tracker Store</Button>
                   </ListItem>
-
-                  <RoomLinks roomLinkBase={r.roomLinkBase}/>
                 </div>
 
               )

@@ -11,8 +11,8 @@ const start = (io) => {
     const { roomId, name } = socket.handshake.query
     logger.error('Connecting user...')
     // Check that room exists
-
-    if (getRoom(roomId) === undefined) {
+    const room = getRoom(roomId)
+    if (room === undefined) {
       logger.error('No such room')
       socket.disconnect()
     }
@@ -27,14 +27,14 @@ const start = (io) => {
     const users = getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
-    if (bot !== undefined && bot.type !== undefined) setBotType(roomId, bot.type)
-    if (bot !== undefined && users !== undefined) setRasaUsersSlot(roomId, users)
+    if (bot !== undefined && bot.type !== undefined && room.active && room.in_use) setBotType(roomId, bot.type)
+    if (bot !== undefined && users !== undefined && room.active && room.in_use) setRasaUsersSlot(roomId, users)
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
     setInterval(() => {
-      if(bot === undefined) return
+      if(bot === undefined || room === undefined || !room.active || !room.in_use) return
       const botMessage = getBotMessage(roomId)
       if (typeof botMessage !== 'undefined') {
 

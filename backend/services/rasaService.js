@@ -22,7 +22,6 @@ const getBotMessage = roomId => {
     if (index > -1) {
       botMessages.splice(index, 1)
     }
-    const room = reply.recipient_id
 
     return {
       room: roomId,

@@ -11,7 +11,7 @@ const WaitPage = props => {
       if(users.length >= 3 && await roomService.activateRoom(roomId)) {
         var url = window.location.href
         if(url.search('.*[?]room=.*')) window.location.href = url
-        else if (url.search('.*[?].*')){
+        else if (url.search('.*=.*')){
           url += `&room=${roomId}`
         } else {
           url += `?room=${roomId}`

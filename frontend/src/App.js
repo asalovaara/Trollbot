@@ -39,10 +39,10 @@ const App = () => {
           <Route exact path='/admin/main'>
             <AdminPage user={user} />
           </Route>}
-        <Route exact path='/redirect' component={RedirectPage} />
+        <Route exact path='/chat' component={RedirectPage} />
         <Route exact path='/:roomId' component={WaitingRoom} />
         {prolific_pid !== null &&
-          <Redirect from='/' to='/redirect'/>}
+          <Redirect from='/' to='/chat'/>}
         <Route exact path='/' component={Home} />
       </Switch>
     )
