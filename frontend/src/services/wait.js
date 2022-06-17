@@ -36,7 +36,7 @@ const waitingUsers = roomId => {
   useEffect(() => {
     const fetchUsers = async () => {
       const initialUsers = await roomService.getUsersInRoom(roomId)
-      console.log('Users in room', initialUsers.users.map(u => u.name))
+      if(initialUsers.users !== undefined) console.log('Users in room', initialUsers.users.map(u => u.name))
       setUsers(initialUsers.users)
     }
     fetchUsers()

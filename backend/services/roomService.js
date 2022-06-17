@@ -158,10 +158,10 @@ const autoCreateRoom = () => {
 }
 
 const getActiveRoom = () => {
-  let roomCandidates = rooms.filter(r => r.users.length === 2 && r.in_use === true)
+  let roomCandidates = rooms.filter(r => r.users.length === 2 && r.in_use)
   if (roomCandidates.length > 0) return roomCandidates[0].roomLink
 
-  roomCandidates = rooms.filter(r => r.users.length === 1 && r.in_use === true)
+  roomCandidates = rooms.filter(r => r.users.length === 1 && r.in_use)
   if (roomCandidates.length > 0) return roomCandidates[0].roomLink
   
   return autoCreateRoom().roomLink
@@ -171,6 +171,7 @@ const activateRoom = roomCode => {
   const foundRoom = getRoom(roomCode)
 
   if (foundRoom === undefined || foundRoom.users.length < 3) return false
+  foundRoom.in_use = false
   foundRoom.active = true
   return true
 }
