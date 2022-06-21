@@ -8,7 +8,6 @@ const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 
 const waitingUsers = roomId => {
-
   const [users, setUsers] = useState([])
   const [user, setUser] = useState(null)
   const socketRef = useRef()
@@ -25,7 +24,7 @@ const waitingUsers = roomId => {
         })
         setUser({
           id: userObject.id,
-          name: userObject.name
+          name: userObject.name,
         })
       }
       fetchUser()
@@ -44,7 +43,7 @@ const waitingUsers = roomId => {
 
   // Socket events
   useEffect(() => {
-    if (!user) {
+    if (!user || !roomId) {
       return
     }
     socketRef.current = socketIOClient(SOCKET_ENDPOINT, {

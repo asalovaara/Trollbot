@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Helmet } from 'react-helmet'
 import { useField } from '../../hooks/inputFields'
+import toast, { Toaster } from 'react-hot-toast'
 
 import useChat from '../../services/chat'
 import ChatMessage from './ChatMessage'
@@ -8,6 +9,7 @@ import useTyping from './useTyping'
 import NewMessageForm from './MessageForm'
 import TypingMessage from './TypingMessage'
 import Users from './Users'
+import CompleteButton from './CompleteButton'
 import { TITLE } from '../../config'
 
 import { useChatRoomStyles } from '../../styles/ChatRoomStyles'
@@ -20,9 +22,15 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup'
 
 
 const ChatRoom = (props) => {
-  const roomId = props.roomId
+  const { roomId } = props.match.params
   const messageRef = useRef()
   const classes = useChatRoomStyles()
+
+  const giveComleteHeadsUp = () => {
+    event.preventDefault()
+    toast('A user is ready to complete the task.')
+  }
+
   const {
     messages,
     users,
@@ -31,7 +39,8 @@ const ChatRoom = (props) => {
     sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
-  } = useChat(roomId)
+    completeTask,
+  } = useChat(roomId, giveComleteHeadsUp)
   const [loggedUser, setLoggedUser] = useState(null)
   const message = useField('text')
   const { isTyping, startTyping, stopTyping, cancelTyping } = useTyping()
@@ -43,7 +52,10 @@ const ChatRoom = (props) => {
     sendMessageToBot(message.value)
     message.clear()
   }
-
+  const handleComplete = (event) => {
+    event.preventDefault()
+    completeTask()
+  }
   // Check localstore for saved user
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -72,12 +84,13 @@ const ChatRoom = (props) => {
 
   return (
     <div>
+      <Toaster position="bottom-center"/>
       <Helmet>
         <title>{`Room: ${roomId} - ${TITLE}`}</title>
       </Helmet>
       <Grid container>
         <Grid item xs={9}>
-          <Typography variant='h2'>Room: {roomId}</Typography>
+          <Typography variant='h3'>You are now chatting</Typography>
         </Grid>
       </Grid>
       <Grid container component={Paper} className={classes.chatSection}>
@@ -117,6 +130,11 @@ const ChatRoom = (props) => {
           />
         </Grid>
       </Grid >
+      <Grid container>
+        <Grid item xs={9}>
+          <CompleteButton handleComplete={handleComplete}/>
+        </Grid>
+      </Grid>
     </div >
   )
 }

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import waitingUsers from '../../services/wait'
 import roomService from '../../services/room'
 
@@ -9,13 +10,7 @@ const WaitPage = props => {
   useEffect(async () => {
     try {
       if(users.length >= 3 && await roomService.activateRoom(roomId)) {
-        var url = window.location.href
-        if(url.search('.*[?]room=.*')) window.location.href = url
-        else if (url.search('.*=.*')){
-          url += `&room=${roomId}`
-        } else {
-          url += `?room=${roomId}`
-        }
+        var url = `/${roomId}`
         window.location.href = url
       }
     } catch (e) {
@@ -23,7 +18,15 @@ const WaitPage = props => {
     }
   }, [users])
 
-  return <b>{roomId}</b>
+  return (
+    <div>
+      <Helmet>
+        <title>Waiting for users...</title>
+      </Helmet>
+      <p>Waiting for other users to connect, please wait.</p>
+    </div>
+  )
+
 }
 
 export default WaitPage

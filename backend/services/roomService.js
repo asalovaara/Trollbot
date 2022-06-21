@@ -26,6 +26,7 @@ let rooms = [{
   roomLink: 'aaaaaaaaa',
   bot: testBotNormal,
   users: [testBotNormal],
+  completed_users: [],
   messages: [],
   active: true,
   in_use: false
@@ -36,6 +37,7 @@ let rooms = [{
   roomLink: 'bbbbbbbbb',
   bot: testBotTroll,
   users: [testBotTroll],
+  completed_users: [],
   messages: [],
   active: true,
   in_use: false
@@ -136,7 +138,7 @@ const addRoom = room => {
 	roomCode = addressGen.generate(9)
   }
 	
-  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], roomLink: roomCode , active: false, in_use: true }
+  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
 
   const bot = createBot(room.botType)
   
@@ -175,6 +177,21 @@ const activateRoom = roomCode => {
   foundRoom.active = true
   return true
 }
+
+const manageComplete = (value, roomId) => {
+  logger.info(`Task completion requested by ${value}`)
+  const foundRoom = getRoom(roomId)
+  const completedUsers = foundRoom.completed_users
+  logger.info(`${completedUsers.length} vs ${foundRoom.users.length}`)
+  if (completedUsers.length === foundRoom.users.length) return true
+  if (!value || completedUsers.includes(value)) return false
+
+  completedUsers.push(value)
+  logger.info(completedUsers.length)
+
+  return completedUsers.length === foundRoom.users.length
+}
+
 const addUser = (senderId, name, room) => {
   if (!name) return { error: 'Username and room are required.' }
 
@@ -224,5 +241,6 @@ module.exports = {
   isRoomActive,
   autoCreateRoom,
   getActiveRoom,
-  activateRoom
+  activateRoom,
+  manageComplete
 }

@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import './index.css'
 import Navigation from './components/groupchat/Navigation'
 import Home from './components/groupchat/RoomSelect'
-import WaitingRoom from './components/groupchat/WaitingRoom'
+import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/groupchat/Login'
 import RedirectPage from './components/groupchat/Redirect'
 import loginService from './services/login'
@@ -20,7 +20,8 @@ const App = () => {
       const tryLogin = async () => {
         const loggedUser = JSON.parse(loggedUserJSON)
         const userObject = await loginService.login({
-          name: loggedUser.name
+          name: loggedUser.name,
+          prolific_id: loggedUser.prolific_id
         })
         setUser(userObject)
       }
@@ -31,18 +32,23 @@ const App = () => {
   const conditionalRender = () => {
     const queryParams = new URLSearchParams(window.location.search)
     const prolific_pid = queryParams.get('PROLIFIC_PID')
-    if (!user) return <Login user={user} setUser={setUser} />
+
+    if(window.localStorage.getItem('prolific_pid') !== prolific_pid && prolific_pid !== null) {
+      window.localStorage.setItem('prolific_pid', prolific_pid)
+      console.log(`localstorage value set ${window.localStorage.getItem('prolific_pid')}`)
+    }
     console.log(prolific_pid)
+    if (!user) return <Login user={user} setUser={setUser} />
     return (
       <Switch>
         {user.name === 'Admin' &&
           <Route exact path='/admin/main'>
             <AdminPage user={user} />
           </Route>}
-        <Route exact path='/chat' component={RedirectPage} />
-        <Route exact path='/:roomId' component={WaitingRoom} />
+        <Route exact path='/wait' component={RedirectPage} />
+        <Route exact path='/:roomId' component={ChatRoom} />
         {prolific_pid !== null &&
-          <Redirect from='/' to='/chat'/>}
+          <Redirect from='/' to='/wait'/>}
         <Route exact path='/' component={Home} />
       </Switch>
     )

@@ -21,13 +21,15 @@ const Login = ({ user, setUser }) => {
       const userObject = await loginService.login({
         name: username.value
       })
+      console.log(JSON.stringify(userObject))
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
       setUser(userObject)
     } catch (error) {
       console.log('Error when logging in', error)
     }
   }
-
+  const prolific_pid = window.localStorage.getItem('prolific_pid')
+  if (!prolific_pid) return <div>There was a problem with your login. Please check you used the correct link.</div>
   if (user) return <div>You are logged in</div>
 
   return (
@@ -42,6 +44,7 @@ const Login = ({ user, setUser }) => {
           id='username'
           label='Username'
           className={classes.wrapText}
+          clear=''
           {...username}
         />
         <Button id='login' variant='contained' color='primary' type='submit'>Login</Button>

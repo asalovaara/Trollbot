@@ -11,8 +11,9 @@ const SEND_MESSAGE_TO_BOT_EVENT = 'SEND_MESSAGE_TO_BOT_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
 const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
+const COMPLETE_TASK_EVENT = 'COMPLETE_TASK_EVENT'
 
-const useChat = roomId => {
+const useChat = (roomId, giveComleteHeadsUp) => {
 
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
@@ -32,7 +33,7 @@ const useChat = roomId => {
         })
         setUser({
           id: userObject.id,
-          name: userObject.name
+          name: userObject.name,
         })
       }
       fetchUser()
@@ -113,6 +114,13 @@ const useChat = roomId => {
         setTypingUsers((users) => users.filter((u) => u.name !== typingUser.name))
       }
     })
+    socketRef.current.on(COMPLETE_TASK_EVENT, (data) => {
+      giveComleteHeadsUp()
+      if(data) {
+        console.log('Task Complete!')
+        window.location.href = data
+      }
+    })
 
     return () => {
       socketRef.current.disconnect()
@@ -154,6 +162,15 @@ const useChat = roomId => {
     })
   }
 
+  const completeTask = () => {
+    const prolific_pid = `${window.localStorage.getItem('prolific_pid')}`
+    if (!socketRef.current || prolific_pid === null) return
+    socketRef.current.emit(COMPLETE_TASK_EVENT, {
+      senderId: socketRef.current.id,
+      prolific_id: prolific_pid
+    })
+  }
+
   return {
     messages,
     user,
@@ -163,6 +180,7 @@ const useChat = roomId => {
     sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
+    completeTask,
   }
 }
 

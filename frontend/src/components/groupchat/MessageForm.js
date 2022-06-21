@@ -24,6 +24,7 @@ const NewMessageForm = ({
             placeholder='Message'
             onKeyPress={handleStartTyping}
             onKeyUp={handleStopTyping}
+            clear=''
             fullWidth
             required
           />

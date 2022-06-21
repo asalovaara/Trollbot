@@ -1,8 +1,9 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom } = require('../services/roomService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
+const { TASK_COMPLETE_REDIRECT_TARGET } = require('../utils/config')
 
 const start = (io) => {
   
@@ -75,6 +76,11 @@ const start = (io) => {
     socket.on(events.STOP_TYPING_MESSAGE_EVENT, (data) => {
       logger.info('Stop typing data:', data)
       io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
+    })
+    socket.on(events.COMPLETE_TASK_EVENT, (data) => {
+      const compCode = (manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
+      logger.info(TASK_COMPLETE_REDIRECT_TARGET)
+      io.in(roomId).emit(events.COMPLETE_TASK_EVENT, compCode)
     })
 
     // Leave the room if the user closes the socket
