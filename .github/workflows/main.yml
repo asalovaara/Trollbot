@@ -48,7 +48,8 @@ jobs:
           build: npm run build
           start: npm start
           working-directory: backend
-          command: npm run cy:test
+          # Github cannot run concurrent tests, so the test requiring them won't be run here.
+          # command: npm run cy:test
   rasa:
     runs-on: ubuntu-latest
     steps:
