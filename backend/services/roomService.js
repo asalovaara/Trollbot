@@ -80,8 +80,8 @@ const isRoomActive = roomId => {
   if (foundRoom === undefined) return false 
   return foundRoom.active
 }
-const deleteRoom = roomName => {
-  rooms = rooms.filter(r => r.name !== roomName)
+const deleteRoom = roomId => {
+  rooms = rooms.filter(r => r.roomLink !== roomId)
   return rooms
 }
 const addUserIntoRoom = (senderId, roomName, name) => {
@@ -131,7 +131,7 @@ const addMessage = (roomName, message) => {
 }
 
 const addRoom = room => {
-  let roomCode = addressGen.generate(9)
+  let roomCode = (room.roomLink !== undefined)? room.roomLink : addressGen.generate(9)
 
   // In case generates an existing room code
   while (rooms.find(r => r.roomLink === roomCode) !== undefined) {
