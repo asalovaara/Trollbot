@@ -135,7 +135,7 @@ const addRoom = room => {
 
   // In case generates an existing room code
   while (rooms.find(r => r.roomLink === roomCode) !== undefined) {
-	roomCode = addressGen.generate(9)
+    roomCode = addressGen.generate(9)
   }
 	
   const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
