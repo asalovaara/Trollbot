@@ -20,8 +20,7 @@ const App = () => {
       const tryLogin = async () => {
         const loggedUser = JSON.parse(loggedUserJSON)
         const userObject = await loginService.login({
-          name: loggedUser.name,
-          prolific_id: loggedUser.prolific_id
+          name: loggedUser.name
         })
         setUser(userObject)
       }

@@ -44,7 +44,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
   useEffect(() => {
     const fetchUsers = async () => {
       const initialUsers = await roomService.getUsersInRoom(roomId)
-      console.log('Users in room', initialUsers.users.map(u => u.name))
+      if (initialUsers.users !== undefined)console.log('Users in room', initialUsers.users.map(u => u.name))
       setUsers(initialUsers.users)
     }
     fetchUsers()
@@ -64,6 +64,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     if (!user) {
       return
     }
+
     socketRef.current = socketIOClient(SOCKET_ENDPOINT, {
       query: { roomId, name: user.name },
       path: SOCKET_SERVER_URL + '/socket.io/'
@@ -71,6 +72,10 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
     socketRef.current.on('connect', () => {
       console.log(socketRef.current.id)
+    })
+
+    socketRef.current.on('disconnect', () => {
+      window.location.href = '/'
     })
 
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {

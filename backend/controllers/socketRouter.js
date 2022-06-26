@@ -11,17 +11,18 @@ const start = (io) => {
 
     const { roomId, name } = socket.handshake.query
     logger.error('Connecting user...')
+
+    // Join a conversation
+    const roomName = getRoomName(roomId)
+    logger.info(`Socket.io: ${name} joined ${roomName}.`)
+    socket.join(roomId)
+
     // Check that room exists
     const room = getRoom(roomId)
     if (room === undefined) {
       logger.error('No such room')
       socket.disconnect()
     }
-    // Join a conversation
-    const roomName = getRoomName(roomId)
-    logger.info(`Socket.io: ${name} joined ${roomName}.`)
-    socket.join(roomId)
-
     // Get room data
     const bot = getBot(roomId)
     const user = addUserIntoRoom(socket.id, roomId, name)

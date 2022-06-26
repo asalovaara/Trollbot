@@ -100,7 +100,7 @@ const ChatRoom = (props) => {
         <Grid item xs={12}>
           <List className={classes.messageArea} >
             <Grid container>
-              {messages.map((m, i) => (
+              {messages !== undefined && messages.map((m, i) => (
                 <Grid item xs={12} key={i} style={{ padding: '8px' }}>
                   <ListItem ref={messageRef}>
                     <ChatMessage message={m} user={loggedUser} />
