@@ -44,7 +44,6 @@ const Login = ({ user, setUser }) => {
           id='username'
           label='Username'
           className={classes.wrapText}
-          clear=''
           {...username}
         />
         <Button id='login' variant='contained' color='primary' type='submit'>Login</Button>
