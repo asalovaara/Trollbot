@@ -44,7 +44,7 @@ const Login = ({ user, setUser }) => {
           id='username'
           label='Username'
           className={classes.wrapText}
-          {...username}
+          onChange={username.onChange}
         />
         <Button id='login' variant='contained' color='primary' type='submit'>Login</Button>
       </form>
