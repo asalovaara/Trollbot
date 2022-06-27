@@ -99,7 +99,7 @@ const formatSlotSet = (obj) => {
 const formatUserEvent = (obj) => {
   obj.event = 'user uttered'
   obj.userID = lastMessageSenderId
-  if (lastMessageSenderId !== undefined) {
+  if (lastMessageSenderId !== undefined && users[lastMessageSenderId] !== undefined) {
     obj.username = users[lastMessageSenderId].name
   }
   return obj
