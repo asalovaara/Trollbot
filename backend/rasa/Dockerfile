@@ -14,4 +14,8 @@ RUN pip install -U pip \
 
 USER appuser
 
+EXPOSE 5055
+EXPOSE 5005
+EXPOSE 5006
+
 CMD bash rasa_start.sh

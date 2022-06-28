@@ -1,6 +1,8 @@
 const logger = require('../utils/logger')
 var uuid = require('uuid')
 const { createBot } = require('./botFactory')
+const addressGen = require('../utils/addressGen')
+const crypto = require('crypto')
 
 const testBotNormal = {
   id: 'nbot',
@@ -21,16 +23,24 @@ let users = [testBotNormal, testBotTroll]
 let rooms = [{
   id: 1,
   name: 'Test_Normal',
+  roomLink: 'aaaaaaaaa',
   bot: testBotNormal,
   users: [testBotNormal],
-  messages: []
+  completed_users: [],
+  messages: [],
+  active: true,
+  in_use: false
 },
 {
   id: 2,
   name: 'Test_Troll',
+  roomLink: 'bbbbbbbbb',
   bot: testBotTroll,
   users: [testBotTroll],
-  messages: []
+  completed_users: [],
+  messages: [],
+  active: true,
+  in_use: false
 }
 ]
 
@@ -38,35 +48,55 @@ const getUsers = () => users
 
 const getRooms = () => rooms
 
-const getRoom = roomName => rooms.find(r => r.name === roomName)
+const getRoom = roomId => rooms.find(r => r.roomLink === roomId)
 
-const deleteRoom = roomName => {
-  rooms = rooms.filter(r => r.name !== roomName)
-  return rooms
+const getRoomName = roomId => {
+  const foundRoom = getRoom(roomId)
+  if (foundRoom === undefined) return undefined 
+  return foundRoom.name
 }
-const getMessagesInRoom = roomName => rooms.find(r => r.name === roomName).messages
-
-const getUsersInRoom = roomName => rooms.find(r => r.name === roomName).users
-
-const getBot = roomName => {
-  const foundRoom = getRoom(roomName)
-  if (foundRoom === undefined) return
+const getRoomLink = roomId => {
+  const foundRoom = getRoom(roomId)
+  if (foundRoom === undefined) return undefined 
+  return foundRoom.roomLinkBase
+}
+const getMessagesInRoom = roomId => {
+  const foundRoom = getRoom(roomId)
+  if (foundRoom === undefined) return undefined 
+  return foundRoom.messages
+}
+const getUsersInRoom = roomId => {
+  const foundRoom = getRoom(roomId)
+  if (foundRoom === undefined) return undefined 
+  return foundRoom.users
+}
+const getBot = roomId => {
+  const foundRoom = getRoom(roomId)
+  if (foundRoom === undefined) return undefined 
   return foundRoom.bot
 }
-
+const isRoomActive = roomId => {
+  const foundRoom = getRoom(roomId)
+  if (foundRoom === undefined) return false 
+  return foundRoom.active
+}
+const deleteRoom = roomId => {
+  rooms = rooms.filter(r => r.roomLink !== roomId)
+  return rooms
+}
 const addUserIntoRoom = (senderId, roomName, name) => {
   const existingUser = getUserInRoom(roomName, name)
   const existingRoom = getRoom(roomName)
 
   if (!name || !roomName) return { error: 'Username and room are required.' }
-  if (!existingRoom) return { error: 'Room not found.' }
+  if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
   const user = { id: uuid.v4(), senderId, name }
 
   existingRoom.users.push(user)
 
-  logger.info(`Adding user: '${user.name}' into room: '${roomName}'`)
+  logger.info(`Adding user: '${user.name}' into room: '${getRoomName(roomName)}'`)
 
   return user
 }
@@ -85,7 +115,7 @@ const removeUserFromRoom = (roomName, name) => {
 
 const getUserInRoom = (roomName, name) => {
   const existingRoom = getRoom(roomName)
-  if (!existingRoom) return
+  if (!existingRoom || !existingRoom.users) return
   return existingRoom.users.find(u => u.name === name)
 }
 
@@ -101,10 +131,17 @@ const addMessage = (roomName, message) => {
 }
 
 const addRoom = room => {
-  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [] }
+  let roomCode = (room.roomLink !== undefined)? room.roomLink : addressGen.generate(9)
+
+  // In case generates an existing room code
+  while (rooms.find(r => r.roomLink === roomCode) !== undefined) {
+    roomCode = addressGen.generate(9)
+  }
+	
+  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
 
   const bot = createBot(room.botType)
-
+  
   newRoom.bot = bot
   newRoom.users.push(bot)
   users.push(bot)
@@ -112,6 +149,47 @@ const addRoom = room => {
   logger.info('Added room:', newRoom)
   rooms.push(newRoom)
   return newRoom
+}
+
+const autoCreateRoom = () => {
+  const randomInt = crypto.randomInt(2)
+  const newBotType = (randomInt === 0)? 'Normal' : 'Troll'
+  const newRoom = { name:  `Room ${rooms.length + 1}`, botType: newBotType }
+  
+  return addRoom(newRoom)
+}
+
+const getActiveRoom = () => {
+  let roomCandidates = rooms.filter(r => r.users.length === 2 && r.in_use)
+  if (roomCandidates.length > 0) return roomCandidates[0].roomLink
+
+  roomCandidates = rooms.filter(r => r.users.length === 1 && r.in_use)
+  if (roomCandidates.length > 0) return roomCandidates[0].roomLink
+  
+  return autoCreateRoom().roomLink
+}
+
+const activateRoom = roomCode => {
+  const foundRoom = getRoom(roomCode)
+
+  if (foundRoom === undefined || foundRoom.users.length < 3) return false
+  foundRoom.in_use = false
+  foundRoom.active = true
+  return true
+}
+
+const manageComplete = (value, roomId) => {
+  logger.info(`Task completion requested by ${value}`)
+  const foundRoom = getRoom(roomId)
+  const completedUsers = foundRoom.completed_users
+  logger.info(`${completedUsers.length} vs ${foundRoom.users.length}`)
+  if (completedUsers.length === foundRoom.users.length) return true
+  if (!value || completedUsers.includes(value)) return false
+
+  completedUsers.push(value)
+  logger.info(completedUsers.length)
+
+  return completedUsers.length === foundRoom.users.length
 }
 
 const addUser = (senderId, name, room) => {
@@ -141,6 +219,8 @@ const login = username => {
   return user
 }
 
+
+
 module.exports = {
   login,
   addUser,
@@ -155,5 +235,12 @@ module.exports = {
   getMessagesInRoom,
   removeUserFromRoom,
   getUserInRoom,
-  getUsersInRoom
+  getUsersInRoom,
+  getRoomName,
+  getRoomLink,
+  isRoomActive,
+  autoCreateRoom,
+  getActiveRoom,
+  activateRoom,
+  manageComplete
 }

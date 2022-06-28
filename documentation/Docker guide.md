@@ -16,36 +16,43 @@ In this project, we have used Docker as part of our staging configuration.
 In our staging environment, Docker was used to help us maintain an up-to-date version of our program at all times.
 Because of this, the current Docker configuration is for the specific needs of that staging server. As such, the main dockerfile has to be tailored to the intended use environment.
 
-On the staging server, our application was running in a subfolder \/trollbot. If the final URL the app is intended to run in is not DOMAINNAME/trollbot, the environment variables defined in the main dockerfile have to be changed. 
-In the Dockerfile found in the root of the project there are four environment variables which need to be changed:
+The following environment variables are used by the application:
 
-PUBLIC_URL=/trollbot
+PUBLIC_URL
 
-API_URL=/api
+API_URL
 
-REACT_APP_API_URL=https<nolink>://ohtup-staging.cs.helsinki.fi/trollbot/api
+REACT_APP_API_URL
 
-REACT_APP_SOCKET_SERVER_URL=/trollbot
+REACT_APP_SOCKET_SERVER_URL
 
-REACT_APP_SOCKET_ENDPOINT=https<nolink>://ohtup-staging.cs.helsinki.fi
+REACT_APP_SOCKET_ENDPOINT
 
-RASA_NETWORK=http<nolink>://trollbot-rasa
+RASA_NETWORK
+
+MONGODB_URI
+ 
+TASK_COMPLETE_REDIRECT_TARGET 
+
+Of these REACT_APP_API_URL, REACT_APP_SOCKET_SERVER_URL and REACT_APP_SOCKET_ENDPOINT have to be in the Dockerfile. The rest can either be in the dockerfile, docker-compose.yml file or .env file.
 
 
-These define various addressess the app uses. 
+PUBLIC_URL defines the location of the app in relation to the domain. This value can contain either the entire URL of just the subfolder. If the application isn't deployed in a subfolder, it can be left out.
 
-PUBLIC_URL defines the location of the app in relation to the domain. As stated previously, our staging environment ran in subfolder  \/trollbot, so right now it has the value \/trollbot. This value can contain the entire address, if needed. 
+API_URL defines the server's api address, and REACT_APP_API_URL defines the api address that the client uses to connect to it. As such, they may have different content. If the application is not deployed in a subfolder, API_URL can be left out.
 
-API_URL defines the server's api address, and REACT_APP_API_URL defines the api address that the client uses to connect to it. As such, they may have different content.
-
-REACT_APP_SOCKET_SERVER_URL defines where the socket connects. The value should be the subfolder the app runs in. Unlike PUBLIC_URL, this cannot contain the entire URL. If the application is not deployed into a subfolder, this line can be removed.
+REACT_APP_SOCKET_SERVER_URL defines where the socket connects. The value should be the subfolder the app runs in. Unlike PUBLIC_URL, this cannot contain the entire URL. If the application is not deployed into a subfolder, this variable is not needed.
 
 REACT_APP_SOCKET_ENDPOINT defines the domain from which the backend is called. It should contain the entire domain without the subfolder.
 
-Finally, RASA_NETWORK has the rasa servers' network. If rasa is run in a docker container the value should always be the hostname of the rasa service.
+RASA_NETWORK has the rasa servers' network. If rasa is run in a docker container the value should always be the hostname of the rasa service.
 If the rasa server is being run locally, it should be "localhost".
 
-If any of these variables is not set, they default to values for running on localhost. 
+MONGODB_URI is the location of the MongoDB database. When using MongoDB atlas the value should be the database location in atlas.
+
+TASK_COMPLETE_REDIRECT_TARGET defines where the users are sent after they have completed the task.
+
+If any of these variables is not set, they default to values for running on the application locally. 
 
 After making changes running the command "docker-compose build" builds the project. The application can now be run with the command "docker-compose up". If you want to update the docker images in docker hub, run "docker-compose push".
 Please note that if the application is configured to run in a subfolder, it will not work locally.
