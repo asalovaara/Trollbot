@@ -14,7 +14,10 @@
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --testPathPattern=/tests",
     "start:test": "cross-env NODE_ENV=test node index.js",
     "cy:open": "cypress open",
-    "cy:test": "cypress run",
+    "cy:chat1": "cypress run --config-file cypress-chat-1.json",
+    "cy:chat2": "cypress run --config-file cypress-chat-2.json",
+    "cy:main": "cypress run --config-file cypress.json",
+    "cy:test": "concurrently npm:cy:chat1 npm:cy:chat2 npm:cy:main",
     "lint": "eslint .",
     "build": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend && cd ../frontend && rm -rf build",
     "clean": "rm -rf build"
@@ -66,7 +69,8 @@
     "jest": "^27.1.0",
     "json2csv": "^5.0.6",
     "nodemon": "^2.0.12",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "concurrently": "^6.2.0"
   },
   "jest": {
     "testEnvironment": "node",

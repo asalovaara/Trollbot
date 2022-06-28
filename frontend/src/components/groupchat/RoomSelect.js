@@ -37,7 +37,7 @@ const RoomSelect = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <InputLabel id="room-label">Room</InputLabel>
-            <Select id="select-room" labelId="room-label" {...roomName} style={{ minWidth: 150 }}>
+            <Select id="select-room" labelId="room-label" {...roomName} style={{ minWidth: 150 }} clear=''>
               {rooms.map(room =>
                 <MenuItem id={`select-${room.name}`} key={room.id} value={room.name}>{room.name}</MenuItem>
               )}

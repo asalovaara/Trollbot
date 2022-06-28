@@ -1,6 +1,7 @@
 describe('Trollbot app E2E testing', () => {
 
   beforeEach(() => {
+    localStorage.setItem('prolific_pid', 'TestDummyValue')
     cy.visit('http://localhost:3001')
     loginHelper('cypress')
   })
@@ -39,22 +40,5 @@ describe('Trollbot app E2E testing', () => {
     cy.get('#room-field').type('Cypress')
     cy.get('#create-room-button').click()
     cy.get('#room-list').contains('Cypres')
-    logoutHelper()
-  })
-
-  it('Can visit a room', () => {
-    cy.get('#select-room').click()
-    cy.get('#select-Cypress').click()
-    cy.get('#join').click()
-    cy.contains('Cypres')
-  })
-
-  it('Can send a message', () => {
-    cy.get('#select-room').click()
-    cy.get('ul li:first').click()
-    cy.get('#join').click()
-    cy.get('#message-field').type('Test message')
-    cy.get('#message-submit').click()
-    cy.contains('Test message')
   })
 })

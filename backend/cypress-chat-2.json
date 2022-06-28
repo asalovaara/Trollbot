@@ -1,0 +1,14 @@
+{
+  "fixturesFolder": false,
+  "supportFile": false,
+  "pluginsFile": false,
+  "baseUrl": "http://localhost:3001",
+  "integrationFolder": "cypress/chat-integration",
+  "testFiles": "**/chat-2.js",
+  "viewportWidth": 400,
+  "viewportHeight": 400,
+  "defaultCommandTimeout": 15000,
+  "videosFolder": "cypress/videos/chat/2",
+  "screenshotsFolder": "cypress/screenshots/chat/2",
+  "$schema": "https://on.cypress.io/cypress.schema.json"
+}

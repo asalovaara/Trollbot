@@ -1,31 +1,42 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom } = require('../services/roomService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
+const { TASK_COMPLETE_REDIRECT_TARGET } = require('../utils/config')
 
 const start = (io) => {
   
   io.on('connection', (socket) => {
 
-    // Join a conversation
     const { roomId, name } = socket.handshake.query
-    logger.info(`Socket.io: ${name} joined ${roomId}.`)
+    logger.error('Connecting user...')
+
+    // Join a conversation
+    const roomName = getRoomName(roomId)
+    logger.info(`Socket.io: ${name} joined ${roomName}.`)
     socket.join(roomId)
 
+    // Check that room exists
+    const room = getRoom(roomId)
+    if (room === undefined) {
+      logger.error('No such room')
+      socket.disconnect()
+    }
     // Get room data
     const bot = getBot(roomId)
     const user = addUserIntoRoom(socket.id, roomId, name)
     const users = getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
-    if (bot.type !== undefined) setBotType(roomId, bot.type)
-    if (users !== undefined) setRasaUsersSlot(roomId, users)
+    if (bot !== undefined && bot.type !== undefined && room.active) setBotType(roomId, bot.type)
+    if (bot !== undefined && users !== undefined && room.active) setRasaUsersSlot(roomId, users)
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
     setInterval(() => {
+      if(bot === undefined || room === undefined || !room.active) return
       const botMessage = getBotMessage(roomId)
       if (typeof botMessage !== 'undefined') {
 
@@ -66,6 +77,11 @@ const start = (io) => {
     socket.on(events.STOP_TYPING_MESSAGE_EVENT, (data) => {
       logger.info('Stop typing data:', data)
       io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
+    })
+    socket.on(events.COMPLETE_TASK_EVENT, (data) => {
+      const compCode = (manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
+      logger.info(TASK_COMPLETE_REDIRECT_TARGET)
+      io.in(roomId).emit(events.COMPLETE_TASK_EVENT, compCode)
     })
 
     // Leave the room if the user closes the socket

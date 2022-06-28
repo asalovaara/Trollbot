@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import './index.css'
 import Navigation from './components/groupchat/Navigation'
 import Home from './components/groupchat/RoomSelect'
 import ChatRoom from './components/groupchat/ChatRoom'
 import Login from './components/groupchat/Login'
+import RedirectPage from './components/groupchat/Redirect'
 import loginService from './services/login'
 import { Container, Box } from '@material-ui/core'
 import AdminPage from './components/admin/AdminPage'
@@ -28,16 +29,26 @@ const App = () => {
   }, [])
 
   const conditionalRender = () => {
-    if (!user) return <Login user={user} setUser={setUser} />
+    const queryParams = new URLSearchParams(window.location.search)
+    const prolific_pid = queryParams.get('PROLIFIC_PID')
 
+    if(window.localStorage.getItem('prolific_pid') !== prolific_pid && prolific_pid !== null) {
+      window.localStorage.setItem('prolific_pid', prolific_pid)
+      console.log(`localstorage value set ${window.localStorage.getItem('prolific_pid')}`)
+    }
+    console.log(prolific_pid)
+    if (!user) return <Login user={user} setUser={setUser} />
     return (
       <Switch>
-        <Route exact path='/' component={Home} />
         {user.name === 'Admin' &&
           <Route exact path='/admin/main'>
             <AdminPage user={user} />
           </Route>}
+        <Route exact path='/wait' component={RedirectPage} />
         <Route exact path='/:roomId' component={ChatRoom} />
+        {prolific_pid !== null &&
+          <Redirect from='/' to='/wait'/>}
+        <Route exact path='/' component={Home} />
       </Switch>
     )
   }

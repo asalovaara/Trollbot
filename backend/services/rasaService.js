@@ -2,7 +2,7 @@ const axios = require('axios')
 const { inspect } = require('util')
 const logger = require('../utils/logger')
 const { RASA_NETWORK } = require('../utils/config')
-const { getBot } = require('./roomService')
+const { getBot, getRoomName } = require('./roomService')
 
 // Contains all messages sent by Rasa.
 let botMessages = []
@@ -13,7 +13,8 @@ const saveBotMessage = message => {
 
 // Returns the oldest message for a given room and removes it from botMessages.
 const getBotMessage = roomId => {
-  const roomMessages = botMessages.filter(m => m.recipient_id === roomId)
+  const roomName = getRoomName(roomId)
+  const roomMessages = botMessages.filter(m => m.recipient_id === roomName)
 
   if (roomMessages.length != 0) {
     const reply = roomMessages.shift()
@@ -21,10 +22,9 @@ const getBotMessage = roomId => {
     if (index > -1) {
       botMessages.splice(index, 1)
     }
-    const room = reply.recipient_id
 
     return {
-      room: room,
+      room: roomId,
       body: reply.text,
     }
   }
@@ -40,11 +40,12 @@ const buildRasaEndpoint = roomId => `${RASA_NETWORK}:${getBot(roomId).type === '
  */
 const sendMessageToRasa = async (roomId, { body, user }) => {
   logger.info('Entered rasaService:sendMessageToRasa(): ', body, user.name)
-  logger.info('sendMessageToRasa:roomId', roomId)
+  const roomName = getRoomName(roomId)
+  logger.info('sendMessageToRasa:roomName: ', roomName)
   try {
     logger.info(inspect(body))
     const response = await axios.post(`${buildRasaEndpoint(roomId)}/webhooks/callback/webhook`, {
-      'sender': roomId,
+      'sender': roomName,
       'message': body
     })
 
@@ -63,6 +64,7 @@ const sendMessageToRasa = async (roomId, { body, user }) => {
  * @returns 
  */
 const setRasaUsersSlot = async (roomId, users) => {
+  const roomName = getRoomName(roomId)
   const humanUsers = users.slice(1)
   let rasa_users = {}
   for (const user of humanUsers) {
@@ -71,13 +73,13 @@ const setRasaUsersSlot = async (roomId, users) => {
   logger.info('Entered rasaService:setRasaUsersSlot().', users)
   try {
     logger.info('setRasaUsersSlot:rasa_users', rasa_users)
-    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomId}/tracker/events`, {
+    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
       'value': rasa_users
     })
     if (response) {
-      logger.info(`Set users slot value in Rasa server for channel ${roomId}`)
+      logger.info(`Set users slot value in Rasa server for channel ${roomName}`)
       return true
     }
 
@@ -93,10 +95,11 @@ const setRasaUsersSlot = async (roomId, users) => {
  * @returns 
  */
 const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
-  logger.info(`Entered rasaService:setRasaLastMessageSenderSlot(${roomId}, ${user_id}).`)
+  const roomName = getRoomName(roomId)
+  logger.info(`Entered rasaService:setRasaLastMessageSenderSlot(${roomName}, ${user_id}).`)
   try {
-    logger.info('setRasaLastMessageSenderSlot', roomId)
-    let tracker = await axios.get(`${buildRasaEndpoint(roomId)}/conversations/${roomId}/tracker`)
+    logger.info('setRasaLastMessageSenderSlot', roomName)
+    let tracker = await axios.get(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker`)
     let users = tracker.data.slots.users
 
     logger.info('setRasaLastMessageSenderSlot:users', users)
@@ -107,7 +110,7 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
     }
     users[user_id].active = true
 
-    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomId}/tracker/events`, [
+    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker/events`, [
       {
         'event': 'slot',
         'name': 'users',
@@ -125,7 +128,8 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
       }]
     )
     if (response) {
-      logger.info(`Set users slot value in Rasa server for channel ${roomId}`)
+      logger.info(`Set users slot value in Rasa server for channel ${roomName}`)
+      logger.info(`Set users slot value in Rasa server for channel ${roomName}`)
       return true
     }
   } catch (e) {
@@ -137,17 +141,18 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
 // Sets the bot_type slot for Rasa conversation (room). Used for associating logs with stories files.
 
 const setBotType = async (roomId, botType) => {
-  logger.info(`Entered rasaService:setBotType(${roomId}, ${botType}).`)
+  const roomName = getRoomName(roomId)
+  logger.info(`Entered rasaService:setBotType(${roomName}, ${botType}).`)
 
   try {
-    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomId}/tracker/events`,
+    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker/events`,
       {
         'event': 'slot',
         'name': 'bot_type',
         'value': botType
       })
     if (response) {
-      logger.info(`Set bot_type slot to ${botType} for room ${roomId}.`)
+      logger.info(`Set bot_type slot to ${botType} for room ${roomName}.`)
       return true
     }
 

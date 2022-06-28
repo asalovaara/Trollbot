@@ -17,7 +17,7 @@ const NewMessageForm = ({
       <Grid container m={3} spacing={3}>
         <Grid item xs={10}>
           <TextField
-            {...message}
+            onChange={message.onChange}
             autoComplete='off'
             type='text'
             id='message-field'

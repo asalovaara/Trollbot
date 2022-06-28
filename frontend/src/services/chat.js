@@ -11,8 +11,9 @@ const SEND_MESSAGE_TO_BOT_EVENT = 'SEND_MESSAGE_TO_BOT_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
 const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
+const COMPLETE_TASK_EVENT = 'COMPLETE_TASK_EVENT'
 
-const useChat = roomId => {
+const useChat = (roomId, giveComleteHeadsUp) => {
 
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
@@ -32,7 +33,7 @@ const useChat = roomId => {
         })
         setUser({
           id: userObject.id,
-          name: userObject.name
+          name: userObject.name,
         })
       }
       fetchUser()
@@ -43,7 +44,7 @@ const useChat = roomId => {
   useEffect(() => {
     const fetchUsers = async () => {
       const initialUsers = await roomService.getUsersInRoom(roomId)
-      console.log('Users in room', initialUsers.users.map(u => u.name))
+      if (initialUsers.users !== undefined)console.log('Users in room', initialUsers.users.map(u => u.name))
       setUsers(initialUsers.users)
     }
     fetchUsers()
@@ -63,6 +64,7 @@ const useChat = roomId => {
     if (!user) {
       return
     }
+
     socketRef.current = socketIOClient(SOCKET_ENDPOINT, {
       query: { roomId, name: user.name },
       path: SOCKET_SERVER_URL + '/socket.io/'
@@ -70,6 +72,10 @@ const useChat = roomId => {
 
     socketRef.current.on('connect', () => {
       console.log(socketRef.current.id)
+    })
+
+    socketRef.current.on('disconnect', () => {
+      window.location.href = '/'
     })
 
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
@@ -113,6 +119,13 @@ const useChat = roomId => {
         setTypingUsers((users) => users.filter((u) => u.name !== typingUser.name))
       }
     })
+    socketRef.current.on(COMPLETE_TASK_EVENT, (data) => {
+      giveComleteHeadsUp()
+      if(data) {
+        console.log('Task Complete!')
+        window.location.href = data
+      }
+    })
 
     return () => {
       socketRef.current.disconnect()
@@ -154,6 +167,15 @@ const useChat = roomId => {
     })
   }
 
+  const completeTask = () => {
+    const prolific_pid = `${window.localStorage.getItem('prolific_pid')}`
+    if (!socketRef.current || prolific_pid === null) return
+    socketRef.current.emit(COMPLETE_TASK_EVENT, {
+      senderId: socketRef.current.id,
+      prolific_id: prolific_pid
+    })
+  }
+
   return {
     messages,
     user,
@@ -163,6 +185,7 @@ const useChat = roomId => {
     sendMessageToBot,
     startTypingMessage,
     stopTypingMessage,
+    completeTask,
   }
 }
 
