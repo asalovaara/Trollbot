@@ -1,4 +1,4 @@
---- FILE MANAGEMENT ---
+### File management
 
 The server has fairly strict limitations on file usage. Most commands have to be run using sudo, as the command files have limited execution right.
 When creating new files or directories, chmod-command should be used to make anything created readable and executable by the user. This is necessary with directories, since the ch-command cannot be used with sudo, so entering and using any files within new directories is impossible without expanding it's usage rights.
@@ -6,14 +6,16 @@ When creating new files or directories, chmod-command should be used to make any
 Here is a short guide for using chmod:
 
 sudo chmod a+r <target> gives reading rights to target.
+
 sudo chmod a+rx <target> gives read and execution rights to target.
+
 sudo chmod a+rwx <target> gives read, write and execution rights to target.
 
 r, w and x can be used in any combination to give any rights you need.
 
 As mentioned, when creating directories, it might be a good idea to always give read and execution rights to it. In general, I would limit the ability to write to files and directories to cases where it is absolutely necessary.
 
---- SERVER FILES ---
+### Server files
 
 All files related to running the server are located in the "/server"-directory. 
 These files include the .env-files, docker-compose, the certificates, watchtower and nginx.conf.
@@ -34,7 +36,7 @@ As such, there are not that many services installed directly on the server. It i
 In that case, everything nginx related should be removed from docker-compose.yml.
 
 
---- HOW TO OPERATE THE SERVER ---
+### How to operate the server
 
 The server starts with the command "sudo docker-compose up -d" and is shut down with the command "sudo docker-compose down".
 
@@ -42,11 +44,17 @@ You can generate logs with the command
 
   sudo docker exec -it server_trollbot_1 npm run log -- --atlas
 
-server_trollbot_1 is the default name for the application server's docker container. If there are issues, please check the name of the containers and use the appropriate one.
+The command sudo docker exec -it can be used to execute any command inside the container. In the above example, server_trollbot_1 is the default name for the application server's docker container. Logs can be generated from local installation too, as instructed in the logger guide. 
+Remember to check the name of the containers and use the appropriate one.
 Containers can be listed with the command "sudo docker container ls".
 
+If you need to see if the server has produced any errors or you want to see what is going on inside the container, you can use the command
 
---- ON CERTIFICATES ---
+  sudo docker logs <Container name>
+
+This command will print out any messages the application would have printed in terminal during it's execution.
+
+### On certificates
 
 The certificates have been issued through The University of Helsinki. The certificates in .pem-format. 
 
