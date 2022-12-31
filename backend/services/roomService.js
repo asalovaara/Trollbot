@@ -3,114 +3,85 @@ var uuid = require('uuid')
 const { createBot } = require('./botFactory')
 const addressGen = require('../utils/addressGen')
 const crypto = require('crypto')
+const dbService = require('../database/databaseService')
+const { login, addUser, getUsers, deleteUser, getSenderId, getUser } = require('./userService')
+const { db } = require('../models/user')
 
-const testBotNormal = {
-  id: 'nbot',
-  senderId: 'nbot',
-  name: 'Normalbot',
-  type: 'Normal',
-}
+// Callback functions should take the result as an argument
 
-const testBotTroll = {
-  id: 'tbot',
-  senderId: 'tbot',
-  name: 'Trollbot',
-  type: 'Troll',
-}
-
-let users = [testBotNormal, testBotTroll]
-
-let rooms = [{
-  id: 1,
-  name: 'Test_Normal',
-  roomLink: 'aaaaaaaaa',
-  bot: testBotNormal,
-  users: [testBotNormal],
-  completed_users: [],
-  messages: [],
-  active: true,
-  in_use: false
-},
-{
-  id: 2,
-  name: 'Test_Troll',
-  roomLink: 'bbbbbbbbb',
-  bot: testBotTroll,
-  users: [testBotTroll],
-  completed_users: [],
-  messages: [],
-  active: true,
-  in_use: false
-}
-]
-
-const getUsers = () => users
-
-const getRooms = () => rooms
-
-const getRoom = roomId => rooms.find(r => r.roomLink === roomId)
-
-const getRoomName = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.name
-}
-const getRoomLink = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.roomLinkBase
-}
-const getMessagesInRoom = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.messages
-}
-const getUsersInRoom = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.users
-}
-const getBot = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.bot
-}
-const isRoomActive = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return false 
-  return foundRoom.active
-}
-const deleteRoom = roomId => {
-  rooms = rooms.filter(r => r.roomLink !== roomId)
+const getRooms = async (callback) => {
+  const rooms = await dbService.getRooms()
+  if(callback) callback(rooms)
   return rooms
 }
-const addUserIntoRoom = (senderId, roomName, name) => {
-  const existingUser = getUserInRoom(roomName, name)
-  const existingRoom = getRoom(roomName)
 
-  if (!name || !roomName) return { error: 'Username and room are required.' }
-  if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
-  if (existingUser) return { error: 'User is already in this room.' }
+// adds testrooms to database if there are no rooms, as the frontend will not work with an empty room array
 
-  const user = { id: uuid.v4(), senderId, name }
-
-  existingRoom.users.push(user)
-
-  logger.info(`Adding user: '${user.name}' into room: '${getRoomName(roomName)}'`)
-
-  return user
+const test = (rooms) => {
+  logger.info(rooms)
+  logger.info(rooms.length)
+  if(rooms.length < 2) {
+    logger.info('Adding test rooms')
+    dbService.saveRoomToDatabase({
+      name: 'Test_Normal',
+      roomLink: 'aaaaaaaaa',
+      bot: testBotNormal,
+      users: [],
+      completed_users: [],
+      messages: [],
+      active: true,
+      in_use: false
+    })
+    dbService.saveRoomToDatabase({
+      name: 'Test_Troll',
+      roomLink: 'bbbbbbbbb',
+      bot: testBotTroll,
+      users: [],
+      completed_users: [],
+      messages: [],
+      active: true,
+      in_use: false
+    })
+  }
 }
+getRooms(test)
 
-const removeUserFromRoom = (roomName, name) => {
-  const existingRoom = getRoom(roomName)
-  if (!existingRoom) return
 
-  logger.info(`Removing ${name} from ${existingRoom}`)
+const getRoom = roomId => dbService.getRoomByLink(roomId)
 
-  const roomUsers = existingRoom.users
-  const index = roomUsers.findIndex((user) => user.name === name)
-
-  if (index !== -1) return roomUsers.splice(index, 1)[0]
+const getRoomName = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.name
+}
+const getRoomLink = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.roomLinkBase
+}
+const getMessagesInRoom = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.messages
+}
+const getUsersInRoom = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.users
+}
+const getBot = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.bot
+}
+const isRoomActive = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return false 
+  return foundRoom.active
+}
+const deleteRoom = async roomId => {
+  await dbService.deleteRoom(roomId)
+  return getRooms()
 }
 
 const getUserInRoom = (roomName, name) => {
@@ -119,14 +90,47 @@ const getUserInRoom = (roomName, name) => {
   return existingRoom.users.find(u => u.name === name)
 }
 
-const addMessage = (roomName, message) => {
+
+const addUserIntoRoom = async (senderId, roomName, name) => {
+  logger.info(`User '${name}' is trying to enter room '${roomName}`)
+  const existingUser = getUserInRoom(roomName, name)
   const existingRoom = getRoom(roomName)
+  const user = await getUser(name)
+  if (!name || !roomName) return { error: 'Username and room are required.' }
+  if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
+  if (existingUser) return { error: 'User is already in this room.' }
+
+  await dbService.addUserToRoom(roomName, name)
+  
+  logger.info(`'users in room: '${await getUsersInRoom(roomName)}`)
+
+  logger.info(`Adding user: '${user.username}' into room: '${await getRoomName(roomName)}'`)
+
+  return user
+}
+
+const removeUserFromRoom = async (roomName, name) => {
+  const existingRoom = await getRoom(roomName)
   if (!existingRoom) return
 
-  const msg = { id: uuid.v4(), room: roomName, ...message }
+  logger.info(`Removing ${name} from ${existingRoom}`)
+
+  dbService.removeUserFromRoom(roomName, name)
+}
+
+
+
+const addMessage = async (roomName, message) => {
+  const existingRoom = await getRoom(roomName)
+  if (!existingRoom) return
+
+  const msg = { room: roomName, ...message }
+  logger.info('id?:', message.user.id)
+  if(!message.user.id || message.user.id === undefined) return
+  msg.user = message.user.id
   logger.info('Add message:', msg)
 
-  existingRoom.messages.push(msg)
+  await dbService.addMessage(roomName, msg)
   return msg
 }
 
@@ -178,12 +182,15 @@ const activateRoom = roomCode => {
   return true
 }
 
-const manageComplete = (value, roomId) => {
+const manageComplete = async (value, roomId) => {
   logger.info(`Task completion requested by ${value}`)
-  const foundRoom = getRoom(roomId)
+  const foundRoom = await getRoom(roomId)
   const completedUsers = foundRoom.completed_users
   logger.info(`${completedUsers.length} vs ${foundRoom.users.length}`)
+
+  // returns true if the room has already completed its assignment
   if (completedUsers.length === foundRoom.users.length) return true
+  // returns false if the user requesting has already requested completion
   if (!value || completedUsers.includes(value)) return false
 
   completedUsers.push(value)
@@ -192,42 +199,13 @@ const manageComplete = (value, roomId) => {
   return completedUsers.length === foundRoom.users.length
 }
 
-const addUser = (senderId, name, room) => {
-  if (!name) return { error: 'Username and room are required.' }
-
-  const existingUser = users.find(u => u.name === name)
-  if (existingUser) return existingUser
-
-  const user = { id: users.length + 1, senderId, name, room }
-  users = users.concat(user)
-
-  return user
-}
-
-// Will create a new user if none is found with username.
-const login = username => {
-  const user = users.find(u => u.name.toLowerCase() == username.toLowerCase())
-
-  if (user === undefined) {
-    const newUser = {
-      id: users.length + 1,
-      name: username,
-    }
-    users = users.concat(newUser)
-    return newUser
-  }
-  return user
-}
 
 
 
 module.exports = {
-  login,
-  addUser,
   addRoom,
   deleteRoom,
   getBot,
-  getUsers,
   getRooms,
   getRoom,
   addMessage,

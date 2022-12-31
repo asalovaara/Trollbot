@@ -35,6 +35,10 @@ const useChat = (roomId, giveComleteHeadsUp) => {
           id: userObject.id,
           name: userObject.name,
         })
+        console.log(`logged in as '${{
+          id: userObject.id,
+          name: userObject.name,
+        }}'`)
       }
       fetchUser()
     }

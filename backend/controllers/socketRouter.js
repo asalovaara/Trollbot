@@ -7,30 +7,29 @@ const { TASK_COMPLETE_REDIRECT_TARGET } = require('../utils/config')
 
 const start = (io) => {
   
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
 
     const { roomId, name } = socket.handshake.query
-    logger.error('Connecting user...')
-
+    logger.info('Connecting user...')
     // Join a conversation
-    const roomName = getRoomName(roomId)
+    const roomName = await getRoomName(roomId)
     logger.info(`Socket.io: ${name} joined ${roomName}.`)
     socket.join(roomId)
 
     // Check that room exists
-    const room = getRoom(roomId)
-    if (room === undefined) {
+    const room = await getRoom(roomId)
+    if (!room || room === undefined) {
       logger.error('No such room')
       socket.disconnect()
     }
     // Get room data
     const bot = getBot(roomId)
-    const user = addUserIntoRoom(socket.id, roomId, name)
-    const users = getUsersInRoom(roomId)
+    const user = await addUserIntoRoom(socket.id, roomId, name)
+    const users = await getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
-    if (bot !== undefined && bot.type !== undefined && room.active) setBotType(roomId, bot.type)
-    if (bot !== undefined && users !== undefined && room.active) setRasaUsersSlot(roomId, users)
+    if (bot !== undefined && bot.type !== undefined && room && room.active) setBotType(roomId, bot.type)
+    if (bot !== undefined && users !== undefined && room && room.active) setRasaUsersSlot(roomId, users)
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)

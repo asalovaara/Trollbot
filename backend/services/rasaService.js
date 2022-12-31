@@ -5,15 +5,15 @@ const { RASA_NETWORK } = require('../utils/config')
 const { getBot, getRoomName } = require('./roomService')
 
 // Contains all messages sent by Rasa.
-let botMessages = []
+let botMessages = [] // move to database?
 
 const saveBotMessage = message => {
   botMessages.push(message)
 }
 
 // Returns the oldest message for a given room and removes it from botMessages.
-const getBotMessage = roomId => {
-  const roomName = getRoomName(roomId)
+const getBotMessage = async roomId => {
+  const roomName = await getRoomName(roomId)
   const roomMessages = botMessages.filter(m => m.recipient_id === roomName)
 
   if (roomMessages.length != 0) {
@@ -40,7 +40,7 @@ const buildRasaEndpoint = roomId => `${RASA_NETWORK}:${getBot(roomId).type === '
  */
 const sendMessageToRasa = async (roomId, { body, user }) => {
   logger.info('Entered rasaService:sendMessageToRasa(): ', body, user.name)
-  const roomName = getRoomName(roomId)
+  const roomName = await getRoomName(roomId)
   logger.info('sendMessageToRasa:roomName: ', roomName)
   try {
     logger.info(inspect(body))
@@ -55,6 +55,7 @@ const sendMessageToRasa = async (roomId, { body, user }) => {
   } catch (error) {
     logger.error(`An error occurred while sending message to Rasa: ${error}`)
   }
+  return false
 }
 
 /**
@@ -64,8 +65,8 @@ const sendMessageToRasa = async (roomId, { body, user }) => {
  * @returns 
  */
 const setRasaUsersSlot = async (roomId, users) => {
-  const roomName = getRoomName(roomId)
-  const humanUsers = users.slice(1)
+  const roomName = await getRoomName(roomId)
+  const humanUsers = users.slice(1) // Assumes that the bot is in slot 1
   let rasa_users = {}
   for (const user of humanUsers) {
     rasa_users[user.senderId] = user
@@ -95,7 +96,7 @@ const setRasaUsersSlot = async (roomId, users) => {
  * @returns 
  */
 const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
-  const roomName = getRoomName(roomId)
+  const roomName = await getRoomName(roomId)
   logger.info(`Entered rasaService:setRasaLastMessageSenderSlot(${roomName}, ${user_id}).`)
   try {
     logger.info('setRasaLastMessageSenderSlot', roomName)
@@ -141,7 +142,7 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
 // Sets the bot_type slot for Rasa conversation (room). Used for associating logs with stories files.
 
 const setBotType = async (roomId, botType) => {
-  const roomName = getRoomName(roomId)
+  const roomName = await getRoomName(roomId)
   logger.info(`Entered rasaService:setBotType(${roomName}, ${botType}).`)
 
   try {

@@ -20,6 +20,7 @@ const getLinks = async roomId => {
 
 const getRooms = async () => {
   const response = await axios.get(baseUrl)
+  console.log(response.data)
   return response.data
 }
 

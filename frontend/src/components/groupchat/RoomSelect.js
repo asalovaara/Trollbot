@@ -24,6 +24,7 @@ const RoomSelect = () => {
     roomService.getRooms()
       .then(roomList => {
         setRooms(roomList)
+        console.log(rooms)
       })
   }, [])
 

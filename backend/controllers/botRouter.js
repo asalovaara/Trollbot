@@ -1,3 +1,5 @@
+// Check if this class is still used
+
 const botRouter = require('express').Router()
 // const { rasaAnswer, getMessages, clearMessages, genreToRasa } = require('../services/trollbot')
 const { getArtistByName } = require('../database/databaseService')
