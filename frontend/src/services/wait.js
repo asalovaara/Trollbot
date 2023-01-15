@@ -14,21 +14,7 @@ const waitingUsers = roomId => {
 
   // Check localstorage for logged user
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      console.log('Found user in localstorage')
-      const fetchUser = async () => {
-        const loggedUser = JSON.parse(loggedUserJSON)
-        const userObject = await loginService.login({
-          name: loggedUser.name
-        })
-        setUser({
-          id: userObject.id,
-          name: userObject.name,
-        })
-      }
-      fetchUser()
-    }
+    loginService.handleLogin(setUser)
   }, [])
 
   // Set initial users.

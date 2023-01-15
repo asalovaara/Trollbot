@@ -91,16 +91,16 @@ const getUserInRoom = (roomName, name) => {
 }
 
 
-const addUserIntoRoom = async (senderId, roomName, name) => {
-  logger.info(`User '${name}' is trying to enter room '${roomName}`)
-  const existingUser = getUserInRoom(roomName, name)
+const addUserIntoRoom = async (roomName, username) => {
+  logger.info(`User '${username}' is trying to enter room '${roomName}`)
+  const existingUser = getUserInRoom(roomName, username)
   const existingRoom = getRoom(roomName)
-  const user = await getUser(name)
-  if (!name || !roomName) return { error: 'Username and room are required.' }
+  const user = await getUser(username)
+  if (!username || !roomName) return { error: 'Username and room are required.' }
   if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
-  await dbService.addUserToRoom(roomName, name)
+  await dbService.addUserToRoom(roomName, username)
   
   logger.info(`'users in room: '${await getUsersInRoom(roomName)}`)
 
@@ -134,42 +134,53 @@ const addMessage = async (roomName, message) => {
   return msg
 }
 
-const addRoom = room => {
+const addRoom = async room => {
   let roomCode = (room.roomLink !== undefined)? room.roomLink : addressGen.generate(9)
-
+  let existingRoom = await dbService.findOneRoom({roomLink: roomCode})
   // In case generates an existing room code
-  while (rooms.find(r => r.roomLink === roomCode) !== undefined) {
+  while (existingRoom) {
     roomCode = addressGen.generate(9)
+    existingRoom = await dbService.findOneRoom({roomLink: roomCode})
   }
-	
-  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
+
+  const newRoom = { ...room, completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
 
   const bot = createBot(room.botType)
   
+  // newroom.bot not used right now, only the botType is saved. Leaving it for now, check if fixing needed
   newRoom.bot = bot
   newRoom.users.push(bot)
-  users.push(bot)
+  users.push(bot) // Change to use database (decide on implementation, 1 bot user used in all rooms or multiple bot users, one for each room)
 
+  dbService.addRoom(newRoom)
   logger.info('Added room:', newRoom)
-  rooms.push(newRoom)
   return newRoom
 }
 
 const autoCreateRoom = () => {
   const randomInt = crypto.randomInt(2)
   const newBotType = (randomInt === 0)? 'Normal' : 'Troll'
-  const newRoom = { name:  `Room ${rooms.length + 1}`, botType: newBotType }
+  const roomCount = dbService.roomCount()
+
+  const newRoom = { name:  `Room ${roomCount + 1}`, botType: newBotType }
   
   return addRoom(newRoom)
 }
 
-const getActiveRoom = () => {
-  let roomCandidates = rooms.filter(r => r.users.length === 2 && r.in_use)
+const getActiveRoom = async () => {
+  // Check if there are active rooms with 2 people 
+  let condition = {$and: [ {$eq:[{$size:'users'}, 2]}, {in_use: true}] }
+  let roomCandidates = await dbService.findRooms(condition)
+  
   if (roomCandidates.length > 0) return roomCandidates[0].roomLink
 
-  roomCandidates = rooms.filter(r => r.users.length === 1 && r.in_use)
+  // Check if there are active rooms with 1 person
+  condition = {$and: [ {$eq:[{$size:'users'}, 1]}, {in_use: true}] }
+  roomCandidates = await dbService.findRooms(condition)
+
   if (roomCandidates.length > 0) return roomCandidates[0].roomLink
   
+  // else create new room
   return autoCreateRoom().roomLink
 }
 

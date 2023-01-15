@@ -15,6 +15,14 @@ const WaitPage = props => {
       }
     } catch (e) {
       console.error(e)
+      return (
+        <div>
+          <Helmet>
+            <title>Room search error</title>
+          </Helmet>
+          <p>Error occured while searching for rooms.</p>
+        </div>
+        )
     }
   }, [users])
 

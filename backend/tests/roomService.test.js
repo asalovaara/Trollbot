@@ -5,7 +5,7 @@ describe('Room service unit tests', () => {
 
   beforeAll(() => {
     roomService.addRoom(room)
-    roomService.addUserIntoRoom(123, 'JestLink', 'Testuser')
+    roomService.addUserIntoRoom('JestLink', 'Testuser')
     roomService.addMessage('JestLink', { user: 'Testuser', body: 'Testmessage' })
   })
 

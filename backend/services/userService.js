@@ -39,16 +39,22 @@ const addUser = (senderId, name, room) => {
 }
 
 // Will create a new user if none is found with username.
-const login = async username => {
-  const user = await dbService.getUserByName(username)
+const login = async loginInfo => {
+  logger.info('login info: ', loginInfo)
+  const username = loginInfo.name
+  const pid = loginInfo.pid
+
+  const condition = {username: username, pid: pid}
+  const user = await dbService.findOneUser(condition)
   if (!user || user === undefined) {
     const newUser = {
       name: username,
-      senderId: 'placeholder'
+      senderId: 'placeholder',
+      pid: pid
     }
-    logger.info(newUser)
+    logger.info('User set to log in: ', newUser)
     await dbService.saveUserToDatabase(newUser)
-    return await dbService.getUserByName(username)
+    return await dbService.findOneUser(condition)
   }
   return user
 }

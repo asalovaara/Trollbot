@@ -4,7 +4,7 @@ const { login } = require('../services/userService')
 
 loginRouter.post('/', async (request, response) => {
   const body = request.body
-  const logginUser = await login(body.name)
+  const logginUser = await login(body)
   logger.info('Logged in as:', logginUser)
   response.status(200).send(logginUser)
 

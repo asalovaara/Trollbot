@@ -15,26 +15,16 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      const tryLogin = async () => {
-        const loggedUser = JSON.parse(loggedUserJSON)
-        const userObject = await loginService.login({
-          name: loggedUser.name
-        })
-        setUser(userObject)
-      }
-      tryLogin()
-    }
+    loginService.handleLogin(setUser)
   }, [])
 
   const conditionalRender = () => {
     const queryParams = new URLSearchParams(window.location.search)
     const prolific_pid = queryParams.get('PROLIFIC_PID')
-
-    if(window.localStorage.getItem('prolific_pid') !== prolific_pid && prolific_pid !== null) {
+    const set_pid = window.localStorage.getItem('prolific_pid')
+    if(set_pid !== prolific_pid && prolific_pid !== null) {
       window.localStorage.setItem('prolific_pid', prolific_pid)
-      console.log(`localstorage value set ${window.localStorage.getItem('prolific_pid')}`)
+      console.log(`localstorage value set ${prolific_pid}`)
     }
     console.log(prolific_pid)
     if (!user) return <Login user={user} setUser={setUser} />

@@ -15,11 +15,18 @@ const Login = ({ user, setUser }) => {
   const username = useField('text')
   const classes = useTextInputStyles()
 
+  const storage_pid = window.localStorage.getItem('prolific_pid')
+  const prolific_pid = (storage_pid)? storage_pid : useField('text')
+
+  // Exits if the user is already logged in
+  if (user) return <div>You are logged in</div>
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
       const userObject = await loginService.login({
-        name: username.value
+        name: username.value,
+        pid: prolific_pid
       })
       console.log(JSON.stringify(userObject))
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
@@ -28,9 +35,6 @@ const Login = ({ user, setUser }) => {
       console.log('Error when logging in', error)
     }
   }
-  const prolific_pid = window.localStorage.getItem('prolific_pid')
-  if (!prolific_pid) return <div>There was a problem with your login. Please check you used the correct link.</div>
-  if (user) return <div>You are logged in</div>
 
   return (
     <Container>
@@ -46,6 +50,15 @@ const Login = ({ user, setUser }) => {
           className={classes.wrapText}
           onChange={username.onChange}
         />
+        {!storage_pid && <TextField
+          required
+          id='prolific_pid'
+          label='prolific_pid'
+          className={classes.wrapText}
+          onChange={prolific_pid.onChange}
+        />
+
+        }
         <Button id='login' variant='contained' color='primary' type='submit'>Login</Button>
       </form>
     </Container>

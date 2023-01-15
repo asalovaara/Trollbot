@@ -8,26 +8,52 @@ const mongoose = require('mongoose')
 
 const getUsers = async () => {
   const users = await User.find()
-  return JSON.from(users)
+  return [...users]
+}
+
+const findOneUser = async condition => {
+  return await User.findOne(condition)
+}
+
+const findUsers = async condition => {
+  return await User.find(condition)
+}
+
+const userCount = async () => {
+  return await User.countDocuments({})
 }
 
 const saveUserToDatabase = async (user) => {
+
+  // Quick check that the user doesn't exist with a different pid (move elsewhere?) 
+  if(user.pid) {
+    const pidUser = await User.findOne({username: user.name, pid: user.pid})
+    const nameUser = await User.findOne({username: user.name})
+    logger.info('saveUsertodatabase:', pidUser, nameUser)
+    if (pidUser !== nameUser) {
+      logger.info('User by that name already exists')
+      return 
+    }
+  }
+
   const userModel = new User({
-    username: user.name,
+    username: `${(user.username)? user.username : user.name}`,
     name: user.name,
-    senderId: user.senderId
+    senderId: user.senderId,
+    pid: user.pid
   })
   return await userModel.save()
 }
 
 const getUserByName = async (username) => {
-  return await User.findOne({ username })
+  return await User.findOne({ username: username })
 }
 
 const deleteUser = async (username) => {
   return await User.deleteOne({ username: username })
 }
 // add update senderId to entering room
+// should senderId be in the database at all?
 
 // ROOM
 
@@ -41,8 +67,6 @@ const saveRoomToDatabase = async (room) => {
     name: room.name,
     roomLink: room.roomLink,
     botType: room.botType,
-    users: room.users,
-    messages: room.messages,
     completed_users: room.completed_users,
     active: room.active,
     in_use: room.in_use
@@ -56,6 +80,18 @@ const getRoomByName = async (roomName) => {
 
 const getRoomByLink = async (roomId) => {
   return await Room.findOne({ roomLink: roomId }).populate('users')
+}
+
+const findOneRoom = async condition => {
+  return await Room.findOne(condition)
+}
+
+const findRooms = async condition => {
+  return await Room.find(condition)
+}
+
+const roomCount = async () => {
+  return await Room.countDocuments({})
 }
 
 const deleteRoom = async (roomId) => {
@@ -148,5 +184,11 @@ module.exports = {
   removeUserFromRoom,
   addMessage,
   deleteUser,
-  deleteMessage
+  deleteMessage,
+  findOneUser,
+  findUsers,
+  findOneRoom,
+  findRooms,
+  userCount,
+  roomCount
 }

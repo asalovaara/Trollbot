@@ -23,25 +23,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
   // Check localstorage for logged user
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      console.log('Found user in localstorage')
-      const fetchUser = async () => {
-        const loggedUser = JSON.parse(loggedUserJSON)
-        const userObject = await loginService.login({
-          name: loggedUser.name
-        })
-        setUser({
-          id: userObject.id,
-          name: userObject.name,
-        })
-        console.log(`logged in as '${{
-          id: userObject.id,
-          name: userObject.name,
-        }}'`)
-      }
-      fetchUser()
-    }
+    loginService.handleLogin(setUser)
   }, [])
 
   // Set initial users.
@@ -77,11 +59,11 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     socketRef.current.on('connect', () => {
       console.log(socketRef.current.id)
     })
-
+    /*
     socketRef.current.on('disconnect', () => {
       window.location.href = '/'
     })
-
+    */
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
@@ -138,6 +120,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
   const sendMessage = (messageBody) => {
     if (!socketRef.current) return
+    console.log(user)
     socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
@@ -172,7 +155,8 @@ const useChat = (roomId, giveComleteHeadsUp) => {
   }
 
   const completeTask = () => {
-    const prolific_pid = `${window.localStorage.getItem('prolific_pid')}`
+    const prolific_pid = user.pid
+    console.log('make sure this has a value: ', prolific_pid)
     if (!socketRef.current || prolific_pid === null) return
     socketRef.current.emit(COMPLETE_TASK_EVENT, {
       senderId: socketRef.current.id,

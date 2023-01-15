@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
   },
   name: String,
   senderId: String,
-  passwordHash: String,
+  pid: String,
   
   likes: [
     {
@@ -28,7 +28,6 @@ userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject.__v
-    delete returnedObject.passwordHash
     delete returnedObject.likes
     delete returnedObject.dislikes
   }
@@ -38,7 +37,6 @@ userSchema.set('toObject', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject.__v
-    delete returnedObject.passwordHash
     delete returnedObject.likes
     delete returnedObject.dislikes
   }

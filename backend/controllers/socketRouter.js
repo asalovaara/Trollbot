@@ -24,7 +24,7 @@ const start = (io) => {
     }
     // Get room data
     const bot = getBot(roomId)
-    const user = await addUserIntoRoom(socket.id, roomId, name)
+    const user = await addUserIntoRoom(roomId, name)
     const users = await getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
@@ -55,9 +55,9 @@ const start = (io) => {
     }, 3000)
 
     // Listen for new messages
-    socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
+    socket.on(events.NEW_CHAT_MESSAGE_EVENT, async (data) => {
       logger.info('Socket router message', data)
-      const message = addMessage(roomId, data)
+      const message = await addMessage(roomId, data)
       io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
     })
 
@@ -77,8 +77,8 @@ const start = (io) => {
       logger.info('Stop typing data:', data)
       io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
     })
-    socket.on(events.COMPLETE_TASK_EVENT, (data) => {
-      const compCode = (manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
+    socket.on(events.COMPLETE_TASK_EVENT, async (data) => {
+      const compCode = (await manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
       logger.info(TASK_COMPLETE_REDIRECT_TARGET)
       io.in(roomId).emit(events.COMPLETE_TASK_EVENT, compCode)
     })
