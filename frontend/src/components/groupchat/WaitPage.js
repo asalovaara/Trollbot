@@ -22,7 +22,7 @@ const WaitPage = props => {
           </Helmet>
           <p>Error occured while searching for rooms.</p>
         </div>
-        )
+      )
     }
   }, [users])
 

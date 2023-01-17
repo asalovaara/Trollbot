@@ -1,4 +1,4 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete } = require('../services/roomService')
+const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete, addUserToAllowed } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
 
 const logger = require('../utils/logger')
@@ -12,18 +12,19 @@ const start = (io) => {
     const { roomId, name } = socket.handshake.query
     logger.info('Connecting user...')
     // Join a conversation
+    // Can this be moved so there is no extra database call? Investigate
     const roomName = await getRoomName(roomId)
     logger.info(`Socket.io: ${name} joined ${roomName}.`)
     socket.join(roomId)
 
     // Check that room exists
     const room = await getRoom(roomId)
-    if (!room || room === undefined) {
+    if (!room) { // This might be causing issues with disconnecting
       logger.error('No such room')
       socket.disconnect()
     }
     // Get room data
-    const bot = getBot(roomId)
+    const bot = await getBot(roomId)
     const user = await addUserIntoRoom(roomId, name)
     const users = await getUsersInRoom(roomId)
 
@@ -33,6 +34,9 @@ const start = (io) => {
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
+
+    // This should be called when the user is still waiting. When room is in use, this should no longer be called
+    if (room && room.active) await addUserToAllowed(roomId, user)
 
     setInterval(() => {
       if(bot === undefined || room === undefined || !room.active) return
@@ -53,6 +57,8 @@ const start = (io) => {
         }, 500)
       }
     }, 3000)
+
+    // REMINDER: Add user validation to all events
 
     // Listen for new messages
     socket.on(events.NEW_CHAT_MESSAGE_EVENT, async (data) => {

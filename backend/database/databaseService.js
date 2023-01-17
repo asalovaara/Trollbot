@@ -98,21 +98,31 @@ const deleteRoom = async (roomId) => {
   return await Room.deleteOne({ roomLink: roomId })
 }
 
-const addUserToRoom = async (roomId, username) => {
-  const user = await getUserByName(username)
-  logger.info(user._id)
+const addUserToRoom = async (roomId, user_Id) => {
   await Room.updateOne(
     {'roomLink': roomId},
-    {'$push': {'users': user._id}}
+    {'$push': {'users': user_Id}}
   )
 }
 
-const removeUserFromRoom = async (roomId, username) => {
-  const user = await getUserByName(username)
-  logger.info(user._id)
+const removeUserFromRoom = async (roomId, user_Id) => {
   await Room.updateOne(
     {'roomLink': roomId},
-    {'$pull': {'users': user._id}}
+    {'$pull': {'users': user_Id}}
+  )
+}
+
+const addUserToAllowed = async (roomId, user_Id) => {
+  await Room.updateOne(
+    {'roomLink': roomId},
+    {'$push': {'allowedUsers': user_Id}}
+  )
+}
+
+const removeUserFromAllowed = async (roomId, user_Id) => {
+  await Room.updateOne(
+    {'roomLink': roomId},
+    {'$pull': {'allowedUsers': user_Id}}
   )
 }
 
@@ -190,5 +200,7 @@ module.exports = {
   findOneRoom,
   findRooms,
   userCount,
-  roomCount
+  roomCount,
+  addUserToAllowed,
+  removeUserFromAllowed
 }

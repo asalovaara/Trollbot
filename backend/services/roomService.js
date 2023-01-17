@@ -100,7 +100,7 @@ const addUserIntoRoom = async (roomName, username) => {
   if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
-  await dbService.addUserToRoom(roomName, username)
+  await dbService.addUserToRoom(roomName, user._id)
   
   logger.info(`'users in room: '${await getUsersInRoom(roomName)}`)
 
@@ -118,7 +118,9 @@ const removeUserFromRoom = async (roomName, name) => {
   dbService.removeUserFromRoom(roomName, name)
 }
 
-
+const addUserToAllowed = async (roomId, user) => {
+  dbService.addUserToAllowed(roomId, user)
+}
 
 const addMessage = async (roomName, message) => {
   const existingRoom = await getRoom(roomName)
@@ -231,5 +233,6 @@ module.exports = {
   autoCreateRoom,
   getActiveRoom,
   activateRoom,
-  manageComplete
+  manageComplete,
+  addUserToAllowed
 }

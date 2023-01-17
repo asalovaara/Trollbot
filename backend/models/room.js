@@ -43,6 +43,12 @@ const roomSchema = mongoose.Schema({
       ref: 'User'
     },
   ],
+  allowedUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+  ],
   completed_users: [String],
   messages: [messageSchema],
   active: Boolean,
