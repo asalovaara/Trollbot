@@ -1,5 +1,6 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete, addUserToAllowed } = require('../services/roomService')
+const { userAllowedIn, addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete, addUserToAllowed } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
+const { getUser } = require('../services/userService')
 
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
@@ -17,15 +18,19 @@ const start = (io) => {
     logger.info(`Socket.io: ${name} joined ${roomName}.`)
     socket.join(roomId)
 
-    // Check that room exists
+    // Check that room and user exist
     const room = await getRoom(roomId)
-    if (!room) { // This might be causing issues with disconnecting
-      logger.error('No such room')
+    const user = await getUser(name)
+
+    if (!room || !user || (!room.active && !userAllowedIn(room._id, user._id))) { // This might be causing the random disconnection issues
+      logger.error('Cannot connect to this room')
       socket.disconnect()
     }
+    
+    await addUserIntoRoom(roomId, name)
+
     // Get room data
     const bot = await getBot(roomId)
-    const user = await addUserIntoRoom(roomId, name)
     const users = await getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
@@ -36,7 +41,7 @@ const start = (io) => {
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
     // This should be called when the user is still waiting. When room is in use, this should no longer be called
-    if (room && room.active) await addUserToAllowed(roomId, user)
+    if (room && room.active) await addUserToAllowed(roomId, user._id)
 
     setInterval(() => {
       if(bot === undefined || room === undefined || !room.active) return

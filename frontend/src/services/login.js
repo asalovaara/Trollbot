@@ -25,7 +25,7 @@ const handleLogin = async setUser => {
   const loggedUserJSON = window.localStorage.getItem('loggedUser')
   const loggedUser = JSON.parse(loggedUserJSON)
 
-  const pid = (loggedUser.pid)? loggedUser.pid : window.localStorage.getItem('prolific_pid')
+  const pid = (loggedUser && loggedUser.pid)? loggedUser.pid : window.localStorage.getItem('prolific_pid')
   if (loggedUserJSON && pid) {
     console.log('Found user in localstorage')
     const fetchUser = async () => {
@@ -39,7 +39,7 @@ const handleLogin = async setUser => {
       if(!userObject) {
         console.log('Localstorage login failed')
         setUser(null)
-        return
+        return false
       }
       window.localStorage.removeItem('prolific_pid')
 
@@ -49,8 +49,10 @@ const handleLogin = async setUser => {
         pid: userObject.pid
       })
     }
-    fetchUser()
+    await fetchUser()
+    return true
   }
+  return false
 }
 
 export default { login, getUsers, logout, handleLogin }

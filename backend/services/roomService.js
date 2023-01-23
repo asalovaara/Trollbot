@@ -118,8 +118,8 @@ const removeUserFromRoom = async (roomName, name) => {
   dbService.removeUserFromRoom(roomName, name)
 }
 
-const addUserToAllowed = async (roomId, user) => {
-  dbService.addUserToAllowed(roomId, user)
+const addUserToAllowed = async (roomId, user_id) => {
+  dbService.addUserToAllowed(roomId, user_id)
 }
 
 const addMessage = async (roomName, message) => {
@@ -212,6 +212,13 @@ const manageComplete = async (value, roomId) => {
   return completedUsers.length === foundRoom.users.length
 }
 
+const userAllowedIn = async (room_id, user_id) =>  {
+  const condition = {_id: room_id, allowedUsers: {$elemMatch: {_id: user_id}}}
+  
+  const rooms = dbService.findRooms(condition)
+  return rooms && rooms.length > 0
+}
+
 
 
 
@@ -234,5 +241,6 @@ module.exports = {
   getActiveRoom,
   activateRoom,
   manageComplete,
-  addUserToAllowed
+  addUserToAllowed,
+  userAllowedIn
 }

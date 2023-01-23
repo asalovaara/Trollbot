@@ -1,8 +1,4 @@
 const logger = require('../utils/logger')
-var uuid = require('uuid')
-const { createBot } = require('./botFactory')
-const addressGen = require('../utils/addressGen')
-const crypto = require('crypto')
 const dbService = require('../database/databaseService')
 
 // Callback functions should take the result as an argument
@@ -59,13 +55,11 @@ const login = async loginInfo => {
   return user
 }
 
-
-
 module.exports = {
   login,
   addUser,
   getUsers,
   deleteUser,
   getSenderId,
-  getUser
+  getUser,
 }
