@@ -67,6 +67,7 @@ const saveRoomToDatabase = async (room) => {
     name: room.name,
     roomLink: room.roomLink,
     botType: room.botType,
+    bot: room.bot,
     completed_users: room.completed_users,
     active: room.active,
     in_use: room.in_use
@@ -75,7 +76,7 @@ const saveRoomToDatabase = async (room) => {
 }
 
 const getRoomByName = async (roomName) => {
-  return await (await Room.findOne({ name: roomName })).populate('users')
+  return await (await Room.findOne({ name: roomName })).populate(['users', 'bot'])
 }
 
 const getRoomByLink = async (roomId) => {
@@ -96,6 +97,11 @@ const roomCount = async () => {
 
 const deleteRoom = async (roomId) => {
   return await Room.deleteOne({ roomLink: roomId })
+}
+
+// should not be used for arrays
+const updateRoomField = async (roomId, update) => {
+  return await Room.findOneAndUpdate({roomLink: roomId}, update, { new: true })
 }
 
 const addUserToRoom = async (roomId, user_Id) => {
@@ -202,5 +208,6 @@ module.exports = {
   userCount,
   roomCount,
   addUserToAllowed,
-  removeUserFromAllowed
+  removeUserFromAllowed,
+  updateRoomField
 }

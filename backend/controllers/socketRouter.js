@@ -34,8 +34,8 @@ const start = (io) => {
     const users = await getUsersInRoom(roomId)
 
     // Set Rasa users and bot type
-    if (bot !== undefined && bot.type !== undefined && room && room.active) setBotType(roomId, bot.type)
-    if (bot !== undefined && users !== undefined && room && room.active) setRasaUsersSlot(roomId, users)
+    if (bot && bot.type !== undefined && room && room.active) setBotType(roomId, bot.type)
+    if (bot && users && room && room.active) setRasaUsersSlot(roomId, users)
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
@@ -44,7 +44,7 @@ const start = (io) => {
     if (room && room.active) await addUserToAllowed(roomId, user._id)
 
     setInterval(() => {
-      if(bot === undefined || room === undefined || !room.active) return
+      if(!bot || !room || !room.active) return
       const botMessage = getBotMessage(roomId)
       if (typeof botMessage !== 'undefined') {
 

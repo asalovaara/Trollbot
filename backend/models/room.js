@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
+const User = require('./user')
 
 const messageSchema = new mongoose.Schema({
   body: String,
@@ -37,6 +38,10 @@ const roomSchema = mongoose.Schema({
     unique: true
   },
   botType: String,
+  bot: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   users: [
     {
       type: mongoose.Schema.Types.ObjectId,

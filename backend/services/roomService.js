@@ -93,8 +93,8 @@ const getUserInRoom = (roomName, name) => {
 
 const addUserIntoRoom = async (roomName, username) => {
   logger.info(`User '${username}' is trying to enter room '${roomName}`)
-  const existingUser = getUserInRoom(roomName, username)
-  const existingRoom = getRoom(roomName)
+  const existingUser = await getUserInRoom(roomName, username)
+  const existingRoom = await getRoom(roomName)
   const user = await getUser(username)
   if (!username || !roomName) return { error: 'Username and room are required.' }
   if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
@@ -103,19 +103,20 @@ const addUserIntoRoom = async (roomName, username) => {
   await dbService.addUserToRoom(roomName, user._id)
   
   logger.info(`'users in room: '${await getUsersInRoom(roomName)}`)
-
-  logger.info(`Adding user: '${user.username}' into room: '${await getRoomName(roomName)}'`)
+  
+  logger.info(`Adding user: '${user.username}' into room: '${existingRoom.name}'`)
 
   return user
 }
 
 const removeUserFromRoom = async (roomName, name) => {
   const existingRoom = await getRoom(roomName)
-  if (!existingRoom) return
+  const user = await getUser(name)
+  if (!existingRoom || !user) return
 
-  logger.info(`Removing ${name} from ${existingRoom}`)
+  logger.info(`Removing ${user.name} from ${existingRoom}`)
 
-  dbService.removeUserFromRoom(roomName, name)
+  return await dbService.removeUserFromRoom(roomName, user._id)
 }
 
 const addUserToAllowed = async (roomId, user_id) => {
@@ -148,25 +149,29 @@ const addRoom = async room => {
   const newRoom = { ...room, completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
 
   const bot = createBot(room.botType)
-  
-  // newroom.bot not used right now, only the botType is saved. Leaving it for now, check if fixing needed
-  newRoom.bot = bot
-  newRoom.users.push(bot)
-  users.push(bot) // Change to use database (decide on implementation, 1 bot user used in all rooms or multiple bot users, one for each room)
 
-  dbService.addRoom(newRoom)
+  // Saves the room and the generated bot as a new user
+  await dbService.saveUserToDatabase(bot)
+  const bot_id = await dbService.getUserByName(bot.username)
+  newRoom.bot = bot_id
+
+  await dbService.saveRoomToDatabase(newRoom)
+
+  await dbService.addUserToRoom(roomCode, bot.bot_id)
+
+
   logger.info('Added room:', newRoom)
   return newRoom
 }
 
-const autoCreateRoom = () => {
+const autoCreateRoom = async () => {
   const randomInt = crypto.randomInt(2)
   const newBotType = (randomInt === 0)? 'Normal' : 'Troll'
-  const roomCount = dbService.roomCount()
+  const roomCount = await dbService.roomCount()
 
   const newRoom = { name:  `Room ${roomCount + 1}`, botType: newBotType }
   
-  return addRoom(newRoom)
+  return await addRoom(newRoom)
 }
 
 const getActiveRoom = async () => {
@@ -183,15 +188,17 @@ const getActiveRoom = async () => {
   if (roomCandidates.length > 0) return roomCandidates[0].roomLink
   
   // else create new room
-  return autoCreateRoom().roomLink
+  return await autoCreateRoom().roomLink
 }
 
-const activateRoom = roomCode => {
-  const foundRoom = getRoom(roomCode)
+const activateRoom = async roomCode => {
+  const foundRoom = await getRoom(roomCode)
 
-  if (foundRoom === undefined || foundRoom.users.length < 3) return false
-  foundRoom.in_use = false
-  foundRoom.active = true
+  if (!foundRoom || foundRoom.users.length < 3) return false
+
+  await dbService.updateRoomField(roomCode, {in_use: false})
+  await dbService.updateRoomField(roomCode, {active: true})
+
   return true
 }
 
@@ -206,7 +213,7 @@ const manageComplete = async (value, roomId) => {
   // returns false if the user requesting has already requested completion
   if (!value || completedUsers.includes(value)) return false
 
-  completedUsers.push(value)
+  completedUsers.push(value) // I think this won't work
   logger.info(completedUsers.length)
 
   return completedUsers.length === foundRoom.users.length
@@ -215,7 +222,7 @@ const manageComplete = async (value, roomId) => {
 const userAllowedIn = async (room_id, user_id) =>  {
   const condition = {_id: room_id, allowedUsers: {$elemMatch: {_id: user_id}}}
   
-  const rooms = dbService.findRooms(condition)
+  const rooms = await dbService.findRooms(condition)
   return rooms && rooms.length > 0
 }
 
