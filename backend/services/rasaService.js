@@ -4,6 +4,8 @@ const logger = require('../utils/logger')
 const { RASA_NETWORK } = require('../utils/config')
 const { getBot, getRoomName } = require('./roomService')
 
+const { BOT_TYPES, BOT_PORTS } = require('../utils/config')
+
 // Contains all messages sent by Rasa.
 let botMessages = [] // move to database?
 
@@ -30,7 +32,14 @@ const getBotMessage = async roomId => {
   }
 }
 
-const buildRasaEndpoint = roomId => `${RASA_NETWORK}:${getBot(roomId).type === 'Troll' ? 5006 : 5005}`
+const buildRasaEndpoint = async roomId => {
+  const bot = await getBot(roomId)
+  
+  const typePos = BOT_TYPES.indexOf(bot.type)
+  const index = (typePos < 0)? 0 : typePos
+
+  return `${RASA_NETWORK}:${BOT_PORTS[index]}`
+}
 
 /**
  * Sends a user message to the Rasa HTTP server.
@@ -44,7 +53,8 @@ const sendMessageToRasa = async (roomId, { body, user }) => {
   logger.info('sendMessageToRasa:roomName: ', roomName)
   try {
     logger.info(inspect(body))
-    const response = await axios.post(`${buildRasaEndpoint(roomId)}/webhooks/callback/webhook`, {
+    const endPoint = await buildRasaEndpoint(roomId)
+    const response = await axios.post(`${endPoint}/webhooks/callback/webhook`, {
       'sender': roomName,
       'message': body
     })

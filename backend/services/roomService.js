@@ -1,11 +1,11 @@
 const logger = require('../utils/logger')
-var uuid = require('uuid')
 const { createBot } = require('./botFactory')
 const addressGen = require('../utils/addressGen')
 const crypto = require('crypto')
 const dbService = require('../database/databaseService')
-const { login, addUser, getUsers, deleteUser, getSenderId, getUser } = require('./userService')
-const { db } = require('../models/user')
+const { getUser } = require('./userService')
+
+const { BOT_TYPES } = require('../utils/config')
 
 // Callback functions should take the result as an argument
 
@@ -17,7 +17,7 @@ const getRooms = async (callback) => {
 
 // adds testrooms to database if there are no rooms, as the frontend will not work with an empty room array
 
-const test = (rooms) => {
+const createTestRooms = (rooms) => {
   logger.info(rooms)
   logger.info(rooms.length)
   if(rooms.length < 2) {
@@ -44,7 +44,7 @@ const test = (rooms) => {
     })
   }
 }
-getRooms(test)
+getRooms(createTestRooms)
 
 
 const getRoom = roomId => dbService.getRoomByLink(roomId)
@@ -165,8 +165,8 @@ const addRoom = async room => {
 }
 
 const autoCreateRoom = async () => {
-  const randomInt = crypto.randomInt(2)
-  const newBotType = (randomInt === 0)? 'Normal' : 'Troll'
+  const randomInt = crypto.randomInt(BOT_TYPES.length)
+  const newBotType = BOT_TYPES[randomInt]
   const roomCount = await dbService.roomCount()
 
   const newRoom = { name:  `Room ${roomCount + 1}`, botType: newBotType }
