@@ -43,8 +43,8 @@ const buildRasaEndpoint = async roomId => {
 
 /**
  * Sends a user message to the Rasa HTTP server.
- * @param {*} room 
- * @param {*} param1 
+ * @param {*} room room id
+ * @param {*} param1 Object with the message body and a user object
  * @returns 
  */
 const sendMessageToRasa = async (roomId, { body, user }) => {

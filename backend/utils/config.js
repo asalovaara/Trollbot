@@ -9,6 +9,13 @@ let APP_MONGODB_URI = process.env.APP_MONGODB_URI || MONGODB_URI
 let RASA_NETWORK = process.env.RASA_NETWORK || 'http://localhost'
 let TRACKER_STORE_URL = process.env.TRACKER_STORE_URL
 let TASK_COMPLETE_REDIRECT_TARGET = process.env.TASK_COMPLETE_REDIRECT_TARGET || '/'
+let ROOM_DESIRED_USERCOUNT = process.env.ROOM_DESIRED_USERCOUNT || 2
+
+// Make sure to match bot type position with the corresponding port position
+const BOT_TYPES = [  'Normal', 'Troll',   ]
+const BOT_PORTS = [   5005,     5006,     ]
+
+
 
 module.exports = {
   PORT,
@@ -18,5 +25,8 @@ module.exports = {
   MONGODB_URI,
   RASA_NETWORK,
   TRACKER_STORE_URL,
-  TASK_COMPLETE_REDIRECT_TARGET
+  TASK_COMPLETE_REDIRECT_TARGET,
+  BOT_TYPES,
+  BOT_PORTS,
+  ROOM_DESIRED_USERCOUNT
 }

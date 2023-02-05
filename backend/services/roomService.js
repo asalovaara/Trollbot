@@ -6,6 +6,7 @@ const dbService = require('../database/databaseService')
 const { getUser } = require('./userService')
 
 const { BOT_TYPES } = require('../utils/config')
+let { ROOM_DESIRED_USERCOUNT } = require('../utils/config')
 
 // Callback functions should take the result as an argument
 
@@ -175,6 +176,8 @@ const autoCreateRoom = async () => {
 }
 
 const getActiveRoom = async () => {
+  // This can be optimised by requesting active rooms sorted by number of users and then selecting the first one
+
   // Check if there are active rooms with 2 people 
   let condition = {$and: [ {$eq:[{$size:'users'}, 2]}, {in_use: true}] }
   let roomCandidates = await dbService.findRooms(condition)
@@ -193,8 +196,8 @@ const getActiveRoom = async () => {
 
 const activateRoom = async roomCode => {
   const foundRoom = await getRoom(roomCode)
-
-  if (!foundRoom || foundRoom.users.length < 3) return false
+  // usercount + 1 for the bot
+  if (!foundRoom || foundRoom.users.length < ROOM_DESIRED_USERCOUNT + 1) return false
 
   await dbService.updateRoomField(roomCode, {in_use: false})
   await dbService.updateRoomField(roomCode, {active: true})
