@@ -1,5 +1,5 @@
 const roomRouter = require('express').Router()
-const { getRooms, getRoom, addRoom, getActiveRoom, getMessagesInRoom, getUsersInRoom, getBot, isRoomActive, activateRoom } = require('../services/roomService')
+const { getRooms, getRoom, addRoom, getActiveRoom, getMessagesInRoom, getUsersInRoom, getBot, isRoomActive, activateRoom, getRoomSize, setRoomSize } = require('../services/roomService')
 const logger = require('../utils/logger')
 
 roomRouter.get('/', async (req, res) => {
@@ -9,13 +9,25 @@ roomRouter.get('/', async (req, res) => {
 
 roomRouter.post('/', async (req, res) => {
   const body = req.body
-  const addedRoom =  await addRoom(body)
+  const addedRoom = await addRoom(body)
   return res.status(200).send(addedRoom)
 })
 
 roomRouter.get('/activeRoom', async (req, res) => {
   const roomCode =  await getActiveRoom()
-  return res.send(roomCode)
+  return res.status(200).send(roomCode)
+})
+
+roomRouter.get('/roomSize', async (req, res) => {
+  const size = await getRoomSize()
+  logger.info("getRoomSize:", size)
+  return res.send(size + "")
+})
+
+roomRouter.post('/roomSize', async (req, res) => {
+  const body = req.body
+  const size = await setRoomSize(body.size)
+  return res.send(size + "")
 })
 
 roomRouter.get('/:roomId', async (req, res) => {
@@ -40,13 +52,15 @@ roomRouter.get('/:roomId/messages', async (req, res) => {
 })
 
 roomRouter.get('/:roomId/active', async (req, res) => {
-  const active =  await isRoomActive(req.params.roomId)
+  const active = await isRoomActive(req.params.roomId)
   return res.send(active)
 })
 
 roomRouter.get('/:roomId/activate', async (req, res) => {
-  const activated = activateRoom(req.params.roomId)
+  const activated = await activateRoom(req.params.roomId)
   return res.send(activated)
 })
+
+
 
 module.exports = roomRouter

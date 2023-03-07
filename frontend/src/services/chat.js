@@ -7,10 +7,10 @@ import { SOCKET_SERVER_URL, SOCKET_ENDPOINT } from '../config'
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
-const SEND_MESSAGE_TO_BOT_EVENT = 'SEND_MESSAGE_TO_BOT_EVENT'
+const SEND_MESSAGE_TO_BSERVER_EVENT = 'SEND_MESSAGE_TO_BSERVER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
-const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
+const BSERVER_SENDS_MESSAGE_EVENT = 'BSERVER_SENDS_MESSAGE_EVENT'
 const COMPLETE_TASK_EVENT = 'COMPLETE_TASK_EVENT'
 
 const useChat = (roomId, giveComleteHeadsUp) => {
@@ -80,7 +80,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
       setMessages((m) => [...m, incomingMessage])
     })
 
-    socketRef.current.on(BOT_SENDS_MESSAGE_EVENT, (message) => {
+    socketRef.current.on(BSERVER_SENDS_MESSAGE_EVENT, (message) => {
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
@@ -129,7 +129,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
   const sendMessageToBot = (messageBody) => {
     console.log('Send message to bot')
     if (!socketRef.current) return
-    socketRef.current.emit(SEND_MESSAGE_TO_BOT_EVENT, {
+    socketRef.current.emit(SEND_MESSAGE_TO_BSERVER_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
       user: user,

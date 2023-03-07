@@ -54,4 +54,15 @@ const activateRoom = async roomId => {
   return response.data
 }
 
-export default { addRoom, getRooms, getBot, getUsersInRoom, getRoomMessages, addLink, getLinks, isRoomActive, getActiveRoom, activateRoom }
+const getRoomSize = async () => {
+  const response = await axios.get(`${baseUrl}/roomSize`)
+  return response.data
+}
+
+const setRoomSize = async size => {
+  console.log('Sending setRoomSize...')
+  const response = await axios.post(`${baseUrl}/roomSize`, { size: size })
+  return response.data
+}
+
+export default { addRoom, getRooms, getBot, getUsersInRoom, getRoomMessages, addLink, getLinks, isRoomActive, getActiveRoom, activateRoom, getRoomSize, setRoomSize }

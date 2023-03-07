@@ -26,13 +26,13 @@ const userCount = async () => {
 const saveUserToDatabase = async (user) => {
 
   // Quick check that the user doesn't exist with a different pid (move elsewhere?) 
-  if(user.pid) {
-    const pidUser = await User.findOne({username: user.name, pid: user.pid})
+  if(user.pid && user.pid !== undefined) {
+    logger.info('pid:', user.pid)
     const nameUser = await User.findOne({username: user.name})
-    logger.info('saveUsertodatabase:', pidUser, nameUser)
-    if (pidUser !== nameUser) {
+    logger.info('saveUsertodatabase:', nameUser)
+    if (nameUser && nameUser.pid && user.pid !== nameUser.pid) {
       logger.info('User by that name already exists')
-      return 
+      return
     }
   }
 

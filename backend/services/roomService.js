@@ -6,37 +6,41 @@ const dbService = require('../database/databaseService')
 const { getUser } = require('./userService')
 
 const { BOT_TYPES } = require('../utils/config')
-let { ROOM_DESIRED_USERCOUNT } = require('../utils/config')
+const { ROOM_DESIRED_USERCOUNT } = require('../utils/config')
+
+let redirectPoint = ROOM_DESIRED_USERCOUNT
 
 // Callback functions should take the result as an argument
 
 const getRooms = async (callback) => {
   const rooms = await dbService.getRooms()
-  if(callback) callback(rooms)
+  if(callback) await callback(rooms)
   return rooms
 }
 
 // adds testrooms to database if there are no rooms, as the frontend will not work with an empty room array
 
-const createTestRooms = (rooms) => {
+const createTestRooms = async (rooms) => {
   logger.info(rooms)
   logger.info(rooms.length)
   if(rooms.length < 2) {
     logger.info('Adding test rooms')
-    dbService.saveRoomToDatabase({
+    await dbService.saveRoomToDatabase({
       name: 'Test_Normal',
       roomLink: 'aaaaaaaaa',
-      bot: testBotNormal,
+      botType: 'Normal',
+      //bot: testBotNormal,  Add later when autogenerating bot users
       users: [],
       completed_users: [],
       messages: [],
       active: true,
       in_use: false
     })
-    dbService.saveRoomToDatabase({
+    await dbService.saveRoomToDatabase({
       name: 'Test_Troll',
       roomLink: 'bbbbbbbbb',
-      bot: testBotTroll,
+      botType: 'Troll',
+      // bot: testBotTroll,  Add later when autogenerating bot users
       users: [],
       completed_users: [],
       messages: [],
@@ -229,7 +233,15 @@ const userAllowedIn = async (room_id, user_id) =>  {
   return rooms && rooms.length > 0
 }
 
+const getRoomSize = async () => {
+  return redirectPoint
+}
 
+const setRoomSize = async size => {
+  redirectPoint = size
+  logger.info("Redirection point changed:", redirectPoint)
+  return redirectPoint
+}
 
 
 module.exports = {
@@ -252,5 +264,7 @@ module.exports = {
   activateRoom,
   manageComplete,
   addUserToAllowed,
-  userAllowedIn
+  userAllowedIn,
+  getRoomSize,
+  setRoomSize
 }

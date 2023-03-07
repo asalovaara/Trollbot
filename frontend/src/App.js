@@ -58,6 +58,7 @@ const App = () => {
         {prolific_pid !== null &&
           <Redirect from='/' to='/wait'/>}
         <Route exact path='/' component={Home} />
+        <Redirect to='/'/>
       </Switch>
     )
   }

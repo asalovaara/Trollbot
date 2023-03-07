@@ -22,18 +22,6 @@ const deleteUser = userName => {
   return getUsers()
 }
 
-const addUser = (senderId, name, room) => {
-  if (!name) return { error: 'Username and room are required.' }
-
-  const existingUser = users.find(u => u.name === name)
-  if (existingUser) return existingUser
-
-  const user = { id: users.length + 1, senderId, name, room }
-  users = users.concat(user)
-
-  return user
-}
-
 // Will create a new user if none is found with username.
 const login = async loginInfo => {
   logger.info('login info: ', loginInfo)
@@ -57,7 +45,6 @@ const login = async loginInfo => {
 
 module.exports = {
   login,
-  addUser,
   getUsers,
   deleteUser,
   getSenderId,
