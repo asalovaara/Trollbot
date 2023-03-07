@@ -9,7 +9,7 @@ const WaitPage = props => {
 
   useEffect(async () => {
     try {
-      if(users.length >= 3 && await roomService.activateRoom(roomId)) {
+      if(await roomService.activateRoom(roomId)) {
         var url = `/${roomId}`
         window.location.href = url
       }

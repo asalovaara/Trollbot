@@ -159,7 +159,7 @@ const addRoom = async room => {
   await dbService.saveUserToDatabase(bot)
   const bot_id = await dbService.getUserByName(bot.username)
   newRoom.bot = bot_id
-
+  logger.info("addroom newRoom bot:", newRoom.bot)
   await dbService.saveRoomToDatabase(newRoom)
 
   await dbService.addUserToRoom(roomCode, bot.bot_id)
@@ -201,7 +201,8 @@ const getActiveRoom = async () => {
 const activateRoom = async roomCode => {
   const foundRoom = await getRoom(roomCode)
   // usercount + 1 for the bot
-  if (!foundRoom || foundRoom.users.length < ROOM_DESIRED_USERCOUNT + 1) return false
+  logger.info('users in room:', foundRoom.users.length, 'compared to', Number(redirectPoint) + 1)
+  if (!foundRoom || foundRoom.users.length < Number(redirectPoint) + 1) return false
 
   await dbService.updateRoomField(roomCode, {in_use: false})
   await dbService.updateRoomField(roomCode, {active: true})

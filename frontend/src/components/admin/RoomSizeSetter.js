@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import roomService from '../../services/room'
 
@@ -12,13 +12,15 @@ const RoomSizeSetter = () => {
 
   const [fieldValue, setfieldValue] = useState('2')
 
-  if(!fieldValue  || fieldValue === undefined) {
+  useEffect(() => {
     const setCurrentSize = async () => {
       const size = await roomService.getRoomSize()
       setfieldValue(size)
     }
     setCurrentSize()
-  }
+
+
+  },[])
 
   const handleSubmit = async (event) => {
     console.log(fieldValue)
@@ -40,10 +42,10 @@ const RoomSizeSetter = () => {
 
   return (
     <Box marginBottom={3}>
-      <Typography variant="h4" paragraph>Number of users in rooms</Typography>
+      <Typography variant="h5" paragraph>Number of users before redirection</Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               id='size-field'
               label="New room size"
@@ -56,7 +58,7 @@ const RoomSizeSetter = () => {
               required
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={5} sm={4}>
             <Button id="send-new-roomSize" variant="contained" color="primary" type="submit">Set Room Size</Button>
           </Grid>
         </Grid>

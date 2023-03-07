@@ -29,7 +29,7 @@ const RoomList = ({ rooms }) => {
                     <ListItemText primary={r.name}/>
                     <b>{`Link: ${r.roomLink}`}</b>
                     <p style={{ marginLeft: '1rem' }}>{`Bot Type: ${r.botType}`}</p>
-                    <ReactLink to={`/${r.name}`}><Button id='join' variant="contained" color='primary' type='submit' style={{ marginLeft: '1rem' }}>Join</Button></ReactLink>
+                    <ReactLink to={`/${r.roomLink}`}><Button id='join' variant="contained" color='primary' type='submit' style={{ marginLeft: '1rem' }}>Join</Button></ReactLink>
                     <Button onClick={async () => logService.logGen(r.name)} variant="contained" color='primary' style={{ marginLeft: '.5rem' }} id='generate_log'> Generate Log</Button>
                     <Button onClick={async () => logService.deleteConv(r.name)} variant="contained" color='secondary' style={{ marginLeft: '.5rem' }} id='generate_log'> Delete From Tracker Store</Button>
                   </ListItem>

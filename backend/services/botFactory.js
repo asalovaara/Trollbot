@@ -3,19 +3,19 @@ const dbService = require('../database/databaseService')
 
 const names = ['Bob', 'Alice', 'John', 'Dylan']
 
-const generateName = () => names[Math.floor(Math.random() * names.length)]
+const generateName = async () => names[Math.floor(Math.random() * names.length)]
 
-const generateUsername = () => {
-  const userCount = dbService.userCount()
+const generateUsername = async () => {
+  const userCount = await dbService.userCount()
 
   return `user${userCount+1}`
 }
 
-const createBot = (type) => {
+const createBot = async (type) => {
   if (!type) return { error: 'Type is required' }
 
-  const botName = generateName()
-  const botUsername = generateUsername()
+  const botName = await generateName()
+  const botUsername = await generateUsername()
   logger.info(`Created type: '${type}' Bot named '${botName}'.`)
 
   return {
