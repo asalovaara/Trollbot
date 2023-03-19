@@ -10,6 +10,7 @@ const RedirectPage = () => {
   // Request a room
   useEffect(async () => {
     const chosenRoom = await roomService.getActiveRoom()
+    console.log('waiting for page ', chosenRoom)
     setRedirectPage(<WaitPage roomId={chosenRoom}/>)
   }, [])
   return redirectPage
