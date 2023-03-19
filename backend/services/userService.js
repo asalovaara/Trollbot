@@ -1,6 +1,8 @@
 const logger = require('../utils/logger')
 const dbService = require('../database/databaseService')
 
+const config = require('config')
+
 // Callback functions should take the result as an argument
 
 const getUsers = async (callback) => {
@@ -10,6 +12,36 @@ const getUsers = async (callback) => {
 }
 
 const getUser = userName => dbService.getUserByName(userName)
+
+const autoCreateAdminUser = async () => {
+
+  if(!config.has('Admin')) {
+    logger.error('No admin define file found, please define the Admin user in a "local.yaml"-file in the "config"-directory.')
+    return
+  }
+
+  const defaultAdminUsername = 'Admin'
+  const adminUser = getUser(defaultAdminUsername)
+
+  if (!adminUser) {
+    logger.info('Admin user not found, generating...')
+
+    const adminInfo = config.get('Admin')
+
+    const newUser = {
+      name: 'Admin',
+      senderId: 'placeholder',
+      pid: adminInfo.password
+    }
+
+    await dbService.saveUserToDatabase(newUser)
+
+  }
+  
+  logger.info('Admin user confirmed with no issues')
+}
+
+autoCreateAdminUser()
 
 const getSenderId = userName => {
   const foundUser = getUser(userName)
