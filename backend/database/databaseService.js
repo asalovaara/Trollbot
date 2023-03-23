@@ -76,12 +76,17 @@ const saveRoomToDatabase = async (room) => {
 }
 
 const getRoomByName = async (roomName) => {
-  return await (await Room.findOne({ name: roomName })).populate(['users', 'bot'])
+  return await Room.findOne({ name: roomName }).populate(['users'])
 }
 
 const getRoomByLink = async (roomId) => {
-  return await Room.findOne({ roomLink: roomId }).populate('users')
+  return await Room.findOne({ roomLink: roomId }).populate(['users'])
 }
+
+const getRoomWithBot = async (roomId) => {
+  return await Room.findOne({ roomLink: roomId }).select('+bot +botType').populate(['users', 'bot'])
+}
+
 
 const findOneRoom = async condition => {
   return await Room.findOne(condition)
@@ -194,6 +199,7 @@ module.exports = {
   deleteAllArtists,
   getRoomByName,
   getRoomByLink,
+  getRoomWithBot,
   getRooms,
   deleteRoom,
   addUserToRoom,

@@ -72,7 +72,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     })
 
     socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
-      console.log('Incomming message', message)
+      console.log('Incoming message', message)
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: false,
@@ -118,21 +118,25 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
   const sendMessage = (messageBody) => {
     if (!socketRef.current) return
+    const { pid, ...userclone } = user
+    pid === pid
     console.log(user)
     socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
-      user: user,
+      user: userclone,
     })
   }
 
   const sendMessageToBot = (messageBody) => {
     console.log('Send message to bot')
     if (!socketRef.current) return
+    const { pid, ...userclone } = user
+    pid === pid
     socketRef.current.emit(SEND_MESSAGE_TO_BSERVER_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
-      user: user,
+      user: userclone,
     })
   }
 

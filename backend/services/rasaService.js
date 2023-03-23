@@ -83,8 +83,9 @@ const setRasaUsersSlot = async (roomId, users) => {
   }
   logger.info('Entered rasaService:setRasaUsersSlot().', users)
   try {
+    const endpoint = await buildRasaEndpoint(roomId)
     logger.info('setRasaUsersSlot:rasa_users', rasa_users)
-    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker/events`, {
+    let response = await axios.post(`${endpoint}/conversations/${roomId}/tracker/events`, {
       'event': 'slot',
       'name': 'users',
       'value': rasa_users
@@ -110,7 +111,8 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
   logger.info(`Entered rasaService:setRasaLastMessageSenderSlot(${roomName}, ${user_id}).`)
   try {
     logger.info('setRasaLastMessageSenderSlot', roomName)
-    let tracker = await axios.get(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker`)
+    const endpoint = await buildRasaEndpoint(roomId)
+    let tracker = await axios.get(`${endpoint}/conversations/${roomId}/tracker`)
     let users = tracker.data.slots.users
 
     logger.info('setRasaLastMessageSenderSlot:users', users)
@@ -121,7 +123,7 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
     }
     users[user_id].active = true
 
-    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker/events`, [
+    let response = await axios.post(`${endpoint}/conversations/${roomId}/tracker/events`, [
       {
         'event': 'slot',
         'name': 'users',
@@ -140,7 +142,6 @@ const setRasaLastMessageSenderSlot = async (roomId, user_id) => {
     )
     if (response) {
       logger.info(`Set users slot value in Rasa server for channel ${roomName}`)
-      logger.info(`Set users slot value in Rasa server for channel ${roomName}`)
       return true
     }
   } catch (e) {
@@ -156,7 +157,8 @@ const setBotType = async (roomId, botType) => {
   logger.info(`Entered rasaService:setBotType(${roomName}, ${botType}).`)
 
   try {
-    let response = await axios.post(`${buildRasaEndpoint(roomId)}/conversations/${roomName}/tracker/events`,
+    const endpoint = await buildRasaEndpoint(roomId)
+    let response = await axios.post(`${endpoint}/conversations/${roomId}/tracker/events`,
       {
         'event': 'slot',
         'name': 'bot_type',

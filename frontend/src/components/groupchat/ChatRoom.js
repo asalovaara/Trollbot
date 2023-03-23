@@ -27,7 +27,6 @@ const ChatRoom = (props) => {
   const classes = useChatRoomStyles()
 
   const giveComleteHeadsUp = () => {
-    event.preventDefault()
     toast('A user is ready to complete the task.')
   }
 

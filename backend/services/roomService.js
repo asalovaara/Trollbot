@@ -21,8 +21,7 @@ const getRooms = async (callback) => {
 // adds testrooms to database if there are no rooms, as the frontend will not work with an empty room array
 
 const createTestRooms = async (rooms) => {
-  logger.info(rooms)
-  logger.info(rooms.length)
+  logger.info('Current number of rooms:',rooms.length)
   if(rooms.length < 2) {
     logger.info('Adding test rooms')
     await dbService.saveRoomToDatabase({
@@ -54,6 +53,8 @@ getRooms(createTestRooms)
 
 const getRoom = roomId => dbService.getRoomByLink(roomId)
 
+const getRoomWithBot = roomId => dbService.getRoomWithBot(roomId)
+
 const getRoomName = async roomId => {
   const foundRoom = await getRoom(roomId)
   if (!foundRoom || foundRoom === undefined) return undefined 
@@ -75,7 +76,7 @@ const getUsersInRoom = async roomId => {
   return foundRoom.users
 }
 const getBot = async roomId => {
-  const foundRoom = await getRoom(roomId)
+  const foundRoom = await getRoomWithBot(roomId)
   if (!foundRoom || foundRoom === undefined) return undefined 
   return foundRoom.bot
 }
@@ -151,7 +152,7 @@ const addRoom = async room => {
     existingRoom = await dbService.findOneRoom({roomLink: roomCode})
   }
 
-  const newRoom = { ...room, completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
+  const newRoom = { ...room, completed_users: ['default'], roomLink: roomCode , active: false, in_use: true }
 
   const bot = await createBot(room.botType)
   logger.info('bot info:', bot)
@@ -160,10 +161,9 @@ const addRoom = async room => {
   const bot_id = await dbService.getUserByName(bot.username)
   newRoom.bot = bot_id
   logger.info("addroom newRoom bot:", newRoom.bot)
+  
   await dbService.saveRoomToDatabase(newRoom)
-
-  await dbService.addUserToRoom(roomCode, bot.bot_id)
-
+  await dbService.addUserToRoom(roomCode, bot_id)
 
   logger.info('Added room:', newRoom)
   return newRoom

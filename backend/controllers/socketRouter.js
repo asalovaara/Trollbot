@@ -32,7 +32,7 @@ const start = (io) => {
     // Get room data
     const bot = await getBot(roomId)
     const users = await getUsersInRoom(roomId)
-
+    logger.info('bot: ', bot)
     // Set Rasa users and bot type
     if (bot && bot.type !== undefined && room && room.active) setBotType(roomId, bot.type)
     if (bot && users && room && room.active) setRasaUsersSlot(roomId, users)

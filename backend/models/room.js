@@ -37,10 +37,14 @@ const roomSchema = mongoose.Schema({
     type: String,
     unique: true
   },
-  botType: String,
+  botType: {
+    type: String,
+    select: false
+  },
   bot: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    select: false
   },
   users: [
     {
