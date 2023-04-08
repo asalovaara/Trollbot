@@ -4,23 +4,27 @@ const Room = require('../models/room')
 const logger = require('../utils/logger')
 const mongoose = require('mongoose')
 
+/*
+ * This file contains all the database-access functions
+ */
+
 // USER
 
-const getUsers = async () => {
-  const users = await User.find()
+const getUsers = async (callback) => {
+  const users = await User.find().exec(callback)
   return [...users]
 }
 
-const findOneUser = async condition => {
-  return await User.findOne(condition)
+const findOneUser = async (condition, callback) => {
+  return await User.findOne(condition).exec(callback)
 }
 
-const findUsers = async condition => {
-  return await User.find(condition)
+const findUsers = async (condition, callback) => {
+  return await User.find(condition).exec(callback)
 }
 
-const userCount = async () => {
-  return await User.countDocuments({})
+const userCount = async (callback) => {
+  return await User.countDocuments({}).exec(callback)
 }
 
 const saveUserToDatabase = async (user) => {
@@ -45,20 +49,20 @@ const saveUserToDatabase = async (user) => {
   return await userModel.save()
 }
 
-const getUserByName = async (username) => {
-  return await User.findOne({ username: username })
+const getUserByName = async (username, callback) => {
+  return await User.findOne({ username: username }).exec(callback)
 }
 
-const deleteUser = async (username) => {
-  return await User.deleteOne({ username: username })
+const deleteUser = async (username, callback) => {
+  return await User.deleteOne({ username: username }).exec(callback)
 }
 // add update senderId to entering room
 // should senderId be in the database at all?
 
 // ROOM
 
-const getRooms = async () => {
-  const rooms = await Room.find().populate('users')
+const getRooms = async (callback) => {
+  const rooms = await Room.find().populate('users').exec(callback)
   return [...rooms]
 }
 
@@ -69,89 +73,89 @@ const saveRoomToDatabase = async (room) => {
     botType: room.botType,
     bot: room.bot,
     completed_users: room.completed_users,
+    userCount: 0,
     active: room.active,
     in_use: room.in_use
   })
   return await roomModel.save()
 }
 
-const getRoomByName = async (roomName) => {
-  return await Room.findOne({ name: roomName }).populate(['users'])
+const getRoomByName = async (roomName, callback) => {
+  return await Room.findOne({ name: roomName }).populate(['users']).exec(callback)
 }
 
-const getRoomByLink = async (roomId) => {
-  return await Room.findOne({ roomLink: roomId }).populate(['users'])
+const getRoomByLink = async (roomId, callback) => {
+  return await Room.findOne({ roomLink: roomId }).populate(['users']).exec(callback)
 }
 
-const getRoomWithBot = async (roomId) => {
-  return await Room.findOne({ roomLink: roomId }).select('+bot +botType').populate(['users', 'bot'])
+const getRoomWithBot = async (roomId, callback) => {
+  return await Room.findOne({ roomLink: roomId }).select('+bot +botType').populate(['users', 'bot']).exec(callback)
 }
 
-
-const findOneRoom = async condition => {
-  return await Room.findOne(condition)
+const getRoomWithMessageUsers = async (roomId, callback) => {
+  return await Room.findOne({ roomLink: roomId }).populate(['users', 'messages.user']).exec(callback)
 }
 
-const findRooms = async condition => {
-  return await Room.find(condition)
+const findOneRoom = async (condition, callback) => {
+  return await Room.findOne(condition).exec(callback)
 }
 
-const roomCount = async () => {
-  return await Room.countDocuments({})
+const findOneRoomWithHighestField = async (field, condition, callback) => {
+  return await Room.findOne(condition).sort('-' + field).populate(['users']).exec(callback)
 }
 
-const deleteRoom = async (roomId) => {
-  return await Room.deleteOne({ roomLink: roomId })
+const findRooms = async (condition, callback) => {
+  return await Room.find(condition).exec(callback)
+}
+
+const roomCount = async (callback) => {
+  return await Room.countDocuments({}).exec(callback)
+}
+
+const deleteRoom = async (roomId, callback) => {
+  return await Room.deleteOne({ roomLink: roomId }).exec(callback)
 }
 
 // should not be used for arrays
-const updateRoomField = async (roomId, update) => {
-  return await Room.findOneAndUpdate({roomLink: roomId}, update, { new: true })
+const updateRoomField = async (roomId, update, callback) => {
+  return await Room.findOneAndUpdate({roomLink: roomId}, update, { new: true }).exec(callback)
 }
 
-const addUserToRoom = async (roomId, user_Id) => {
-  await Room.updateOne(
+const addValueToArray = async (roomId, value, array, callback) => {
+  return await Room.updateOne(
     {'roomLink': roomId},
-    {'$push': {'users': user_Id}}
-  )
+    {'$push': {[array]: value}}
+  ).exec(callback)
 }
 
-const removeUserFromRoom = async (roomId, user_Id) => {
-  await Room.updateOne(
+const addValueToArrayIfMissing = async (roomId, value, array, callback) => {
+  return await Room.updateOne(
+    {'$and': [{'roomLink': roomId}, {[array]: {'$ne': value}}]},
+    {'$push': {[array]: value}}
+  ).exec(callback)
+}
+
+const removeValueFromArray = async (roomId, value, array, callback) => {
+  return await Room.updateOne(
     {'roomLink': roomId},
-    {'$pull': {'users': user_Id}}
-  )
+    {'$pull': {[array]: value}}
+  ).exec(callback)
 }
 
-const addUserToAllowed = async (roomId, user_Id) => {
-  await Room.updateOne(
-    {'roomLink': roomId},
-    {'$push': {'allowedUsers': user_Id}}
-  )
-}
-
-const removeUserFromAllowed = async (roomId, user_Id) => {
-  await Room.updateOne(
-    {'roomLink': roomId},
-    {'$pull': {'allowedUsers': user_Id}}
-  )
-}
-
-const addMessage = async (roomId, message) => {
+const addMessage = async (roomId, message, callback) => {
   message.user = mongoose.Types.ObjectId(message.user)
   logger.info('The add message message: ', message)
-  await Room.updateOne(
+  return await Room.updateOne(
     {'roomLink': roomId},
     {'$push': {'messages': message}}
-  )
-  logger.info(await getRoomByLink(roomId))
+  ).exec(callback)
 }
 
-const deleteMessage = async (roomId, message) => {
+const deleteMessage = async (roomId, message, callback) => {
   await Room.updateOne(
     {'roomLink': roomId},
     {'$pull': {'messages': message}}
-  )
+  ).exec(callback)
 }
 
 // ARTIST
@@ -202,8 +206,8 @@ module.exports = {
   getRoomWithBot,
   getRooms,
   deleteRoom,
-  addUserToRoom,
-  removeUserFromRoom,
+  addValueToArray,
+  removeValueFromArray,
   addMessage,
   deleteUser,
   deleteMessage,
@@ -213,7 +217,8 @@ module.exports = {
   findRooms,
   userCount,
   roomCount,
-  addUserToAllowed,
-  removeUserFromAllowed,
-  updateRoomField
+  updateRoomField,
+  findOneRoomWithHighestField,
+  getRoomWithMessageUsers,
+  addValueToArrayIfMissing
 }

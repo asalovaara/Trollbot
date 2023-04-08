@@ -1,5 +1,9 @@
 require('dotenv').config({ path: '../.env' })
 
+/*
+ * This is a config file. It reads environment variables and replaces any unused variable with default ones.
+ */
+
 let PORT = process.env.PORT || 3001
 let CLIENT_ID = process.env.CLIENT_ID
 let CLIENT_SECRET = process.env.CLIENT_SECRET

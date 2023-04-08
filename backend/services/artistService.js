@@ -8,6 +8,10 @@ const { saveArtistToDatabase, updateArtist } = require('../database/databaseServ
 const { getArtist } = require('./musicbrainzService')
 const path = require('path')
 
+/*
+ * This manages artist data.
+ */
+
 // run this file to add artists to the database
 
 const updateOneArtist = async (artist) => {

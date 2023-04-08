@@ -6,6 +6,11 @@ const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
 const { TASK_COMPLETE_REDIRECT_TARGET } = require('../utils/config')
 
+/*
+ * This function controls the socket connection.
+ */
+
+ // starts the socket
 const start = (io) => {
   
   io.on('connection', async (socket) => {
@@ -43,6 +48,7 @@ const start = (io) => {
     // This should be called when the user is still waiting. When room is in use, this should no longer be called
     if (room && room.active) await addUserToAllowed(roomId, user._id)
 
+    // Checks bot messages periodically
     setInterval(() => {
       if(!bot || !room || !room.active) return
       const botMessage = getBotMessage(roomId)
@@ -62,8 +68,6 @@ const start = (io) => {
         }, 500)
       }
     }, 3000)
-
-    // REMINDER: Add user validation to all events
 
     // Listen for new messages
     socket.on(events.NEW_CHAT_MESSAGE_EVENT, async (data) => {
@@ -88,6 +92,8 @@ const start = (io) => {
       logger.info('Stop typing data:', data)
       io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
     })
+
+    // Checks whether the task is complete
     socket.on(events.COMPLETE_TASK_EVENT, async (data) => {
       const compCode = (await manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
       logger.info(TASK_COMPLETE_REDIRECT_TARGET)

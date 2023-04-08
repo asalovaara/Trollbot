@@ -1,4 +1,8 @@
 
+/*
+ * This file contains all of the socket events in one place. If for some reason the event name needs to be changed, it can be done here. (without needing to change the name of the variable)
+ */
+
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'

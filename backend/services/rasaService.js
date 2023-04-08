@@ -6,6 +6,10 @@ const { getBot, getRoomName } = require('./roomService')
 
 const { BOT_TYPES, BOT_PORTS } = require('../utils/config')
 
+/*
+ * This file contains the functions related to managing messages and conversations with rasa
+ */
+
 // Contains all messages sent by Rasa.
 let botMessages = [] // move to database?
 
@@ -32,6 +36,12 @@ const getBotMessage = async roomId => {
   }
 }
 
+/**
+ * Sends a user message to the Rasa HTTP server.
+ * @param {*} room room id
+ * @param {*} param1 Object with the message body and a user object
+ * @returns 
+ */
 const buildRasaEndpoint = async roomId => {
   const bot = await getBot(roomId)
   
@@ -43,9 +53,9 @@ const buildRasaEndpoint = async roomId => {
 
 /**
  * Sends a user message to the Rasa HTTP server.
- * @param {*} room room id
+ * @param {*} roomId room id
  * @param {*} param1 Object with the message body and a user object
- * @returns 
+ * @returns boolean value depending on whether the request succeeded
  */
 const sendMessageToRasa = async (roomId, { body, user }) => {
   logger.info('Entered rasaService:sendMessageToRasa(): ', body, user.name)

@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 const User = require('./user')
 
+/*
+ * This file has the schemas for rooms and messages. Note that bot information is not returned by default. If bot data is needed, it needs to be specified in the request. 
+ */
+
 const messageSchema = new mongoose.Schema({
   body: String,
   senderId: String,
@@ -46,6 +50,7 @@ const roomSchema = mongoose.Schema({
     ref: 'User',
     select: false
   },
+  userCount: Number, 
   users: [
     {
       type: mongoose.Schema.Types.ObjectId,

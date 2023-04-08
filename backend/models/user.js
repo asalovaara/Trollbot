@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
+/*
+ * This file contains the user model. Note that an user can have a different username to their name. 
+ * Currently this is used by bots in order to not run into issues with bot generation (limited pool of bot names).
+ */
+
 const userSchema = mongoose.Schema({
   username: {
     type: String,

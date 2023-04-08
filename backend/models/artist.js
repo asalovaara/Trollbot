@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
+/*
+ * This is the schema for artist-information.
+ */
+
 const artistSchema = mongoose.Schema({
   professionalName: {
     type: String,

@@ -2,6 +2,11 @@ const logfileRouter = require('express').Router()
 const logger = require('../utils/logger')
 const { runLogger } = require('../services/eventLogger/logWriterService')
 
+/*
+ * This class is used to fetch log data from the database and create log files from the data rasa has uploaded.
+ */
+
+ // Handles logfile creation requests for a single room
 logfileRouter.post('/:roomId', async (request, response) => {
   const body = request.body
   logger.info('logfileRouter ', body)
@@ -28,6 +33,7 @@ logfileRouter.post('/:roomId', async (request, response) => {
   }
 })
 
+// deletes log data for a specific room
 logfileRouter.post('/:roomId/delete', async (request, response) => {
   const body = request.body
   logger.info('logfileRouter ', body)
@@ -54,6 +60,7 @@ logfileRouter.post('/:roomId/delete', async (request, response) => {
   }
 })
 
+// Handles get requests
 logfileRouter.get('/', (request, response) => {
   response.status(403).send()
 })

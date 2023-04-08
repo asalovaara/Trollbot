@@ -59,9 +59,9 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     socketRef.current.on('connect', () => {
       console.log(socketRef.current.id)
     })
-    /*socketRef.current.on('disconnect', () => {
+    socketRef.current.on('disconnect', () => {
       window.location.href = '/'
-    })*/
+    })
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
