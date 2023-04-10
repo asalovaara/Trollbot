@@ -30,6 +30,7 @@ const NewMessageForm = ({
             onKeyUp={handleStopTyping}
             fullWidth
             required
+            value={message.value}
           />
         </Grid>
         <Grid item xs={2}>

@@ -39,7 +39,8 @@ const getUsersInRoom = async roomName => {
 }
 
 const getRoomMessages = async roomName => {
-  const response = await axios.get(`${baseUrl}/${roomName}/messages`)
+  const date = Date.now() // For making sure the request doesn't fetch from cache
+  const response = await axios.get(`${baseUrl}/${roomName}/messages/?t=${date}`)
   return response.data
 }
 
