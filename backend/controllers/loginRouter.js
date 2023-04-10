@@ -6,7 +6,7 @@ const { login } = require('../services/userService')
  * This file contains functions that handle login data
  */
 
- // logs user in using request data
+// logs user in using request data
 loginRouter.post('/', async (request, response) => {
   const body = request.body
   const logginUser = await login(body)

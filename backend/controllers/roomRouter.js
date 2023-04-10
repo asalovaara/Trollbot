@@ -28,15 +28,14 @@ roomRouter.get('/activeRoom', async (req, res) => {
 // Gets the number of users per room
 roomRouter.get('/roomSize', async (req, res) => {
   const size = await getRoomSize()
-  logger.info("getRoomSize:", size)
-  return res.send(size + "")
+  return res.send(size + '')
 })
 
 // Sets the number of users per room
 roomRouter.post('/roomSize', async (req, res) => {
   const body = req.body
   const size = await setRoomSize(body.size)
-  return res.send(size + "")
+  return res.send(size + '')
 })
 
 // Gets room with link

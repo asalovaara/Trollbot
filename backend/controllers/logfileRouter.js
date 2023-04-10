@@ -6,7 +6,7 @@ const { runLogger } = require('../services/eventLogger/logWriterService')
  * This class is used to fetch log data from the database and create log files from the data rasa has uploaded.
  */
 
- // Handles logfile creation requests for a single room
+// Handles logfile creation requests for a single room
 logfileRouter.post('/:roomId', async (request, response) => {
   const body = request.body
   logger.info('logfileRouter ', body)

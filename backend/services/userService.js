@@ -66,7 +66,7 @@ const deleteUser = userName => {
 }
 
 
- // Logs user in with given login information
+// Logs user in with given login information
 // Will create a new user if none is found with username.
 const login = async loginInfo => {
   logger.info('login info: ', loginInfo)

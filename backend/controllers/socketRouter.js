@@ -10,7 +10,7 @@ const { TASK_COMPLETE_REDIRECT_TARGET } = require('../utils/config')
  * This function controls the socket connection.
  */
 
- // starts the socket
+// starts the socket
 const start = (io) => {
   
   io.on('connection', async (socket) => {
