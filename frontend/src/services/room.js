@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { API_URL } from '../config'
 
+/*
+ * Room related communication router
+ */
+
 const baseUrl = `${API_URL}/rooms`
 
 const addRoom = async room => {

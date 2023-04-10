@@ -4,6 +4,10 @@ import roomService from './room'
 import loginService from './login'
 import { SOCKET_SERVER_URL, SOCKET_ENDPOINT } from '../config'
 
+/*
+ * Socket connection manager for the waiting room
+ */
+
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 

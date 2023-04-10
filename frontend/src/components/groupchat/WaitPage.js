@@ -3,6 +3,10 @@ import { Helmet } from 'react-helmet'
 import waitingUsers from '../../services/wait'
 import roomService from '../../services/room'
 
+/*
+ * Component used for waiting for enough users to connect, and then redirect them to the correct room
+ */
+
 const WaitPage = props => {
   const roomId = props.roomId
   const users = waitingUsers(roomId)

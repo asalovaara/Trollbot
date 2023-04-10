@@ -20,6 +20,9 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import AvatarGroup from '@material-ui/lab/AvatarGroup'
 
+/*
+ * Chat room base component
+ */
 
 const ChatRoom = (props) => {
   const { roomId } = props.match.params

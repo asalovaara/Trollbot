@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { API_URL } from '../config'
 
+/*
+ * Log generation router
+ */
+
 const baseUrl = `${API_URL}/log`
 
 const logGen = async roomId => {

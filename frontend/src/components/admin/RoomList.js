@@ -10,6 +10,9 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
+/*
+ * List of all rooms with log creation informantion
+ */
 
 const RoomList = ({ rooms }) => {
 

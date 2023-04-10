@@ -11,6 +11,10 @@ import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 
+/*
+ * Admin page base
+ */
+
 const AdminPage = user => {
   const [rooms, setRooms] = useState([])
 

@@ -3,6 +3,10 @@ import TypingAnimation from './TypingAnimation'
 import { useTypingStyles } from '../../styles/TypingStyles'
 import UserAvatar from './UserAvatar'
 
+/*
+ * Typing animation container component
+ */
+
 const TypingMessage = ({ user }) => {
   const classes = useTypingStyles()
 

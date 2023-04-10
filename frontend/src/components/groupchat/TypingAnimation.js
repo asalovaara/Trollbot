@@ -2,6 +2,10 @@ import React from 'react'
 import './TypingAnimation.css'
 import { useTypingStyles } from '../../styles/TypingStyles'
 
+/*
+ * Animation played while a user is typing a message
+ */
+
 const TypingAnimation = () => {
   const classes = useTypingStyles()
 

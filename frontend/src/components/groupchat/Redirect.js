@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import roomService from '../../services/room'
 import WaitPage from './WaitPage'
 
+/*
+ * Used for redirecting the user to wait for their chat room
+ */
 
 const RedirectPage = () => {
   const [redirectPage, setRedirectPage] = useState(<p>Redirecting...</p>)

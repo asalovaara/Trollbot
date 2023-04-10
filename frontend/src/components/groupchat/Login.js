@@ -11,6 +11,10 @@ import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
 
+/*
+ * Login page component
+ */
+
 const Login = ({ user, setUser }) => {
   const username = useField('text')
   const classes = useTextInputStyles()

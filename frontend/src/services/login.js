@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { API_URL } from '../config'
 
+/*
+ * User related communication router
+ */
+
 const baseUrl = `${API_URL}/login`
 
 const login = async user => {
