@@ -223,7 +223,7 @@ const addRoom = async room => {
   await dbService.saveUserToDatabase(bot)
   const bot_id = await dbService.getUserByName(bot.username)
   newRoom.bot = bot_id
-  logger.info("addroom newRoom bot:", newRoom.bot)
+  logger.info('addroom newRoom bot:', newRoom.bot)
   
   const callback = getRoomUpdateFunction(roomCode)
 
@@ -289,10 +289,10 @@ const manageComplete = async (value, roomId) => {
 
   // returns true if the room has already completed its assignment
   if (foundRoom.completed_users.length === foundRoom.users.length) return true
-  logger.info(`Validating check..`)
+  logger.info('Validating check..')
   // returns false if the user requesting has already requested completion
   if (!value || foundRoom.completed_users.includes(value)) return false
-  logger.info(`Adding complete..`)
+  logger.info('Adding complete..')
 
   await dbService.addValueToArrayIfMissing(roomId, value, 'completed_users')
 
@@ -322,7 +322,7 @@ const getRoomSize = async () => {
 // sets the room size
 const setRoomSize = async size => {
   redirectPoint = size
-  logger.info("Redirection point changed:", redirectPoint)
+  logger.info('Redirection point changed:', redirectPoint)
   return redirectPoint
 }
 
