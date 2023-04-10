@@ -45,11 +45,13 @@ const waitingUsers = roomId => {
       console.log(socketRef.current.id)
     })
 
+    // User connects to room -> add to users
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
     })
 
+    // User leaves room -> remove from users
     socketRef.current.on(USER_LEAVE_CHAT_EVENT, (user) => {
       setUsers((users) => users.filter((u) => u.id !== user.id))
     })

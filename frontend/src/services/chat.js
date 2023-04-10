@@ -66,15 +66,19 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     socketRef.current.on('disconnect', () => {
       window.location.href = '/'
     })
+
+    // User connects to room -> add to users
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
     })
 
+    // User leaves room -> remove from users
     socketRef.current.on(USER_LEAVE_CHAT_EVENT, (user) => {
       setUsers((users) => users.filter((u) => u.id !== user.id))
     })
 
+    // New chat message handlers
     socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
       console.log('Incoming message', message)
       const incomingMessage = {
@@ -94,6 +98,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
       }, 10)
     })
 
+    // Events for when user starts or stops typing
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {
       if (typingInfo.senderId !== socketRef.current.id) {
         const typingUser = typingInfo.user
@@ -107,6 +112,8 @@ const useChat = (roomId, giveComleteHeadsUp) => {
         setTypingUsers((users) => users.filter((u) => u.name !== typingUser.name))
       }
     })
+
+    // Task completion event
     socketRef.current.on(COMPLETE_TASK_EVENT, (data) => {
       giveComleteHeadsUp()
       if(data) {
@@ -132,7 +139,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     })
   }
 
-  const sendMessageToBot = (messageBody) => {
+  const sendMessageToBUser = (messageBody) => {
     console.log('Send message to bot')
     if (!socketRef.current) return
     const { pid, ...userclone } = user
@@ -176,7 +183,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     users,
     typingUsers,
     sendMessage,
-    sendMessageToBot,
+    sendMessageToBUser,
     startTypingMessage,
     stopTypingMessage,
     completeTask,
