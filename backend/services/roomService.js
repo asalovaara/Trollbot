@@ -25,8 +25,7 @@ const getRooms = async (callback) => {
 // adds testrooms to database if there are no rooms, as the frontend will not work with an empty room array
 
 const createTestRooms = async (rooms) => {
-  logger.info('Current number of rooms:',rooms.length)
-  if(rooms.length < 2) {
+  if(rooms && rooms.length < 2) {
     logger.info('Adding test rooms')
     await dbService.saveRoomToDatabase({
       name: 'Test_Normal',
@@ -53,6 +52,7 @@ const createTestRooms = async (rooms) => {
   }
 }
 getRooms(createTestRooms)
+
 
 // Getters for various things
 
@@ -102,10 +102,10 @@ const deleteRoom = async roomId => {
   return getRooms()
 }
 
-const getUserInRoom = (roomName, name) => {
-  const existingRoom = getRoom(roomName)
+const getUserInRoom = async (roomName, name) => {
+  const existingRoom = await getRoom(roomName)
   if (!existingRoom || !existingRoom.users) return
-  return existingRoom.users.find(u => u.name === name)
+  return existingRoom.users.find(u => u.name === name) // gets with name instead of username
 }
 
 // Room model has seperate user count field that needs to be occasitionally updated.
