@@ -1,3 +1,9 @@
+
+/*
+ * this contains the npm logger -command functions.
+ */
+
+
 const info = (...params) => {
   if (process.env.NODE_ENV == 'development') {
     console.log(...params)

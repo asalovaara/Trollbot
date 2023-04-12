@@ -15,6 +15,10 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 
+/*
+ * Room selector component currently at the front page
+ */
+
 const RoomSelect = () => {
   const [rooms, setRooms] = useState([])
   const classes = useTextInputStyles()
@@ -24,6 +28,7 @@ const RoomSelect = () => {
     roomService.getRooms()
       .then(roomList => {
         setRooms(roomList)
+        console.log(rooms)
       })
   }, [])
 

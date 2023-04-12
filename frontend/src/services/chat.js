@@ -4,13 +4,17 @@ import roomService from './room'
 import loginService from './login'
 import { SOCKET_SERVER_URL, SOCKET_ENDPOINT } from '../config'
 
+/*
+ * Socket connection manager for the chatroom
+ */
+
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 const NEW_CHAT_MESSAGE_EVENT = 'NEW_CHAT_MESSAGE_EVENT'
-const SEND_MESSAGE_TO_BOT_EVENT = 'SEND_MESSAGE_TO_BOT_EVENT'
+const SEND_MESSAGE_TO_BSERVER_EVENT = 'SEND_MESSAGE_TO_BSERVER_EVENT'
 const START_TYPING_MESSAGE_EVENT = 'START_TYPING_MESSAGE_EVENT'
 const STOP_TYPING_MESSAGE_EVENT = 'STOP_TYPING_MESSAGE_EVENT'
-const BOT_SENDS_MESSAGE_EVENT = 'BOT_SENDS_MESSAGE_EVENT'
+const BSERVER_SENDS_MESSAGE_EVENT = 'BSERVER_SENDS_MESSAGE_EVENT'
 const COMPLETE_TASK_EVENT = 'COMPLETE_TASK_EVENT'
 
 const useChat = (roomId, giveComleteHeadsUp) => {
@@ -23,21 +27,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
   // Check localstorage for logged user
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      console.log('Found user in localstorage')
-      const fetchUser = async () => {
-        const loggedUser = JSON.parse(loggedUserJSON)
-        const userObject = await loginService.login({
-          name: loggedUser.name
-        })
-        setUser({
-          id: userObject.id,
-          name: userObject.name,
-        })
-      }
-      fetchUser()
-    }
+    loginService.handleLogin(setUser)
   }, [])
 
   // Set initial users.
@@ -73,22 +63,24 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     socketRef.current.on('connect', () => {
       console.log(socketRef.current.id)
     })
-
     socketRef.current.on('disconnect', () => {
       window.location.href = '/'
     })
 
+    // User connects to room -> add to users
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
     })
 
+    // User leaves room -> remove from users
     socketRef.current.on(USER_LEAVE_CHAT_EVENT, (user) => {
       setUsers((users) => users.filter((u) => u.id !== user.id))
     })
 
+    // New chat message handlers
     socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
-      console.log('Incomming message', message)
+      console.log('Incoming message', message)
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: false,
@@ -96,7 +88,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
       setMessages((m) => [...m, incomingMessage])
     })
 
-    socketRef.current.on(BOT_SENDS_MESSAGE_EVENT, (message) => {
+    socketRef.current.on(BSERVER_SENDS_MESSAGE_EVENT, (message) => {
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
@@ -106,6 +98,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
       }, 10)
     })
 
+    // Events for when user starts or stops typing
     socketRef.current.on(START_TYPING_MESSAGE_EVENT, (typingInfo) => {
       if (typingInfo.senderId !== socketRef.current.id) {
         const typingUser = typingInfo.user
@@ -119,6 +112,8 @@ const useChat = (roomId, giveComleteHeadsUp) => {
         setTypingUsers((users) => users.filter((u) => u.name !== typingUser.name))
       }
     })
+
+    // Task completion event
     socketRef.current.on(COMPLETE_TASK_EVENT, (data) => {
       giveComleteHeadsUp()
       if(data) {
@@ -134,20 +129,25 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
   const sendMessage = (messageBody) => {
     if (!socketRef.current) return
+    const { pid, ...userclone } = user
+    pid === pid
+    console.log(user)
     socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
-      user: user,
+      user: userclone,
     })
   }
 
-  const sendMessageToBot = (messageBody) => {
+  const sendMessageToBUser = (messageBody) => {
     console.log('Send message to bot')
     if (!socketRef.current) return
-    socketRef.current.emit(SEND_MESSAGE_TO_BOT_EVENT, {
+    const { pid, ...userclone } = user
+    pid === pid
+    socketRef.current.emit(SEND_MESSAGE_TO_BSERVER_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
-      user: user,
+      user: userclone,
     })
   }
 
@@ -168,7 +168,8 @@ const useChat = (roomId, giveComleteHeadsUp) => {
   }
 
   const completeTask = () => {
-    const prolific_pid = `${window.localStorage.getItem('prolific_pid')}`
+    const prolific_pid = user.pid
+    console.log('make sure this has a value: ', prolific_pid)
     if (!socketRef.current || prolific_pid === null) return
     socketRef.current.emit(COMPLETE_TASK_EVENT, {
       senderId: socketRef.current.id,
@@ -182,7 +183,7 @@ const useChat = (roomId, giveComleteHeadsUp) => {
     users,
     typingUsers,
     sendMessage,
-    sendMessageToBot,
+    sendMessageToBUser,
     startTypingMessage,
     stopTypingMessage,
     completeTask,

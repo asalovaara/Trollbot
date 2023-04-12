@@ -7,6 +7,9 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 
+/*
+ * Navigation bar component at the top of the page
+ */
 
 const Navigation = ({ user, setUser }) => {
 
@@ -17,7 +20,7 @@ const Navigation = ({ user, setUser }) => {
     loginService.logout(user)
     setUser(null)
     window.localStorage.removeItem('loggedUser')
-    history.push('/')
+    history.push('/login')
   }
 
   return (

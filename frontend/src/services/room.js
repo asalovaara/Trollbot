@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { API_URL } from '../config'
 
+/*
+ * Room related communication router
+ */
+
 const baseUrl = `${API_URL}/rooms`
 
 const addRoom = async room => {
@@ -20,6 +24,7 @@ const getLinks = async roomId => {
 
 const getRooms = async () => {
   const response = await axios.get(baseUrl)
+  console.log(response.data)
   return response.data
 }
 
@@ -34,7 +39,8 @@ const getUsersInRoom = async roomName => {
 }
 
 const getRoomMessages = async roomName => {
-  const response = await axios.get(`${baseUrl}/${roomName}/messages`)
+  const date = Date.now() // For making sure the request doesn't fetch from cache
+  const response = await axios.get(`${baseUrl}/${roomName}/messages/?t=${date}`)
   return response.data
 }
 
@@ -53,4 +59,15 @@ const activateRoom = async roomId => {
   return response.data
 }
 
-export default { addRoom, getRooms, getBot, getUsersInRoom, getRoomMessages, addLink, getLinks, isRoomActive, getActiveRoom, activateRoom }
+const getRoomSize = async () => {
+  const response = await axios.get(`${baseUrl}/roomSize`)
+  return response.data
+}
+
+const setRoomSize = async size => {
+  console.log('Sending setRoomSize...')
+  const response = await axios.post(`${baseUrl}/roomSize`, { size: size })
+  return response.data
+}
+
+export default { addRoom, getRooms, getBot, getUsersInRoom, getRoomMessages, addLink, getLinks, isRoomActive, getActiveRoom, activateRoom, getRoomSize, setRoomSize }

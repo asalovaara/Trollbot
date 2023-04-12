@@ -3,16 +3,17 @@ describe('Trollbot app E2E testing', () => {
   beforeEach(() => {
     localStorage.setItem('prolific_pid', 'TestDummyValue1')
     cy.visit('http://localhost:3001')
-    loginHelper('Chatter1')
+    loginHelper('Chatter1', 'Test')
   })
 
   after(() => {
     logoutHelper()
   })
 
-  const loginHelper = (username) => {
+  const loginHelper = (username, pid) => {
     cy.intercept('POST', '/login').as('login')
     cy.get('#username').type(username)
+    cy.get('#prolific_pid').type(pid)
     cy.get('#login').click()
   }
 

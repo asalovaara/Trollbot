@@ -5,6 +5,10 @@ const { CLIENT_ID, CLIENT_SECRET } = require('../utils/config')
 var fs = require('fs')
 
 /*
+ * This file contains functions that fetch data from spotify.
+ */
+
+/*
 This module requires .env file in the root folder that contains Client ID and Client secret from the spotify app dashboard.
 See {@link https://developer.spotify.com/dashboard/applications}.
 */

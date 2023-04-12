@@ -10,6 +10,9 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
+/*
+ * List of all rooms with log creation informantion
+ */
 
 const RoomList = ({ rooms }) => {
 
@@ -24,12 +27,12 @@ const RoomList = ({ rooms }) => {
 
               return (
 
-                <div>
-                  <ListItem id={`list-item-${r.name}`} key={r.id}>
-                    <ListItemText primary={r.name} />
+                <div key={`${r.id}-element`}>
+                  <ListItem id={`list-item-${r.name}`}>
+                    <ListItemText primary={r.name}/>
                     <b>{`Link: ${r.roomLink}`}</b>
-                    <p style={{ marginLeft: '1rem' }}>{`Bot Type: ${r.bot.type}`}</p>
-                    <ReactLink to={`/${r.name}`}><Button id='join' variant="contained" color='primary' type='submit' style={{ marginLeft: '1rem' }}>Join</Button></ReactLink>
+                    <p style={{ marginLeft: '1rem' }}>{`Bot Type: ${r.botType}`}</p>
+                    <ReactLink to={`/${r.roomLink}`}><Button id='join' variant="contained" color='primary' type='submit' style={{ marginLeft: '1rem' }}>Join</Button></ReactLink>
                     <Button onClick={async () => logService.logGen(r.name)} variant="contained" color='primary' style={{ marginLeft: '.5rem' }} id='generate_log'> Generate Log</Button>
                     <Button onClick={async () => logService.deleteConv(r.name)} variant="contained" color='secondary' style={{ marginLeft: '.5rem' }} id='generate_log'> Delete From Tracker Store</Button>
                   </ListItem>

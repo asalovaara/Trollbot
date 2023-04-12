@@ -4,6 +4,10 @@ import roomService from './room'
 import loginService from './login'
 import { SOCKET_SERVER_URL, SOCKET_ENDPOINT } from '../config'
 
+/*
+ * Socket connection manager for the waiting room
+ */
+
 const USER_JOIN_CHAT_EVENT = 'USER_JOIN_CHAT_EVENT'
 const USER_LEAVE_CHAT_EVENT = 'USER_LEAVE_CHAT_EVENT'
 
@@ -14,21 +18,7 @@ const waitingUsers = roomId => {
 
   // Check localstorage for logged user
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      console.log('Found user in localstorage')
-      const fetchUser = async () => {
-        const loggedUser = JSON.parse(loggedUserJSON)
-        const userObject = await loginService.login({
-          name: loggedUser.name
-        })
-        setUser({
-          id: userObject.id,
-          name: userObject.name,
-        })
-      }
-      fetchUser()
-    }
+    loginService.handleLogin(setUser)
   }, [])
 
   // Set initial users.
@@ -55,11 +45,13 @@ const waitingUsers = roomId => {
       console.log(socketRef.current.id)
     })
 
+    // User connects to room -> add to users
     socketRef.current.on(USER_JOIN_CHAT_EVENT, (user) => {
       if (user.id === socketRef.current.id) return
       setUsers((users) => [...users, user])
     })
 
+    // User leaves room -> remove from users
     socketRef.current.on(USER_LEAVE_CHAT_EVENT, (user) => {
       setUsers((users) => users.filter((u) => u.id !== user.id))
     })

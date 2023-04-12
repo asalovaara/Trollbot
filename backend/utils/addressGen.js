@@ -1,5 +1,9 @@
 const crypto = require('crypto')
 
+/*
+ * This file contains a function that generates a random alphanumeric string.
+ */
+
 const generate = (length) => {
   const letters = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
   var ret = ''

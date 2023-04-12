@@ -1,6 +1,10 @@
 const axios = require('axios')
 const logger = require('../utils/logger')
 
+/*
+ * This file contains functions that fetch artist data from Wikipedia.
+ */
+
 // I put the unused code in comment jail so it won't mess anything up but it might be useful later? -Luuranko
 
 // let artist = 'The Beatles' // Example. Should work for most artists.

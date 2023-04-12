@@ -1,42 +1,56 @@
-const { addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete } = require('../services/roomService')
+const { userAllowedIn, addUserIntoRoom, addMessage, removeUserFromRoom, getBot, getUsersInRoom, getRoomName, getRoom, manageComplete, addUserToAllowed } = require('../services/roomService')
 const { getBotMessage, setRasaLastMessageSenderSlot, sendMessageToRasa, setRasaUsersSlot, setBotType } = require('../services/rasaService')
+const { getUser } = require('../services/userService')
 
 const logger = require('../utils/logger')
 const events = require('../utils/socketEvents')
 const { TASK_COMPLETE_REDIRECT_TARGET } = require('../utils/config')
 
+/*
+ * This function controls the socket connection.
+ */
+
+// starts the socket
 const start = (io) => {
   
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
 
     const { roomId, name } = socket.handshake.query
-    logger.error('Connecting user...')
-
+    logger.info('Connecting user...')
     // Join a conversation
-    const roomName = getRoomName(roomId)
+    // Can this be moved so there is no extra database call? Investigate
+    const roomName = await getRoomName(roomId)
     logger.info(`Socket.io: ${name} joined ${roomName}.`)
     socket.join(roomId)
 
-    // Check that room exists
-    const room = getRoom(roomId)
-    if (room === undefined) {
-      logger.error('No such room')
+    // Check that room and user exist
+    const room = await getRoom(roomId)
+    const user = await getUser(name)
+
+    if (!room || !user || (!room.active && !userAllowedIn(room._id, user._id))) { // This might be causing the random disconnection issues
+      logger.error('Cannot connect to this room')
       socket.disconnect()
     }
-    // Get room data
-    const bot = getBot(roomId)
-    const user = addUserIntoRoom(socket.id, roomId, name)
-    const users = getUsersInRoom(roomId)
+    
+    await addUserIntoRoom(roomId, name)
 
+    // Get room data
+    const bot = await getBot(roomId)
+    const users = await getUsersInRoom(roomId)
+    logger.info('bot: ', bot)
     // Set Rasa users and bot type
-    if (bot !== undefined && bot.type !== undefined && room.active) setBotType(roomId, bot.type)
-    if (bot !== undefined && users !== undefined && room.active) setRasaUsersSlot(roomId, users)
+    if (bot && bot.type !== undefined && room && room.active) setBotType(roomId, bot.type)
+    if (bot && users && room && room.active) setRasaUsersSlot(roomId, users)
 
     // Emit user joined
     io.in(roomId).emit(events.USER_JOIN_CHAT_EVENT, user)
 
+    // This should be called when the user is still waiting. When room is in use, this should no longer be called
+    if (room && room.active) await addUserToAllowed(roomId, user._id)
+
+    // Checks bot messages periodically
     setInterval(() => {
-      if(bot === undefined || room === undefined || !room.active) return
+      if(!bot || !room || !room.active) return
       const botMessage = getBotMessage(roomId)
       if (typeof botMessage !== 'undefined') {
 
@@ -56,9 +70,9 @@ const start = (io) => {
     }, 3000)
 
     // Listen for new messages
-    socket.on(events.NEW_CHAT_MESSAGE_EVENT, (data) => {
+    socket.on(events.NEW_CHAT_MESSAGE_EVENT, async (data) => {
       logger.info('Socket router message', data)
-      const message = addMessage(roomId, data)
+      const message = await addMessage(roomId, data)
       io.in(roomId).emit(events.NEW_CHAT_MESSAGE_EVENT, message)
     })
 
@@ -78,8 +92,10 @@ const start = (io) => {
       logger.info('Stop typing data:', data)
       io.in(roomId).emit(events.STOP_TYPING_MESSAGE_EVENT, data)
     })
-    socket.on(events.COMPLETE_TASK_EVENT, (data) => {
-      const compCode = (manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
+
+    // Checks whether the task is complete
+    socket.on(events.COMPLETE_TASK_EVENT, async (data) => {
+      const compCode = (await manageComplete(data.prolific_id, roomId)) ? TASK_COMPLETE_REDIRECT_TARGET : null
       logger.info(TASK_COMPLETE_REDIRECT_TARGET)
       io.in(roomId).emit(events.COMPLETE_TASK_EVENT, compCode)
     })
