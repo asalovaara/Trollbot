@@ -1,7 +1,6 @@
 jest.mock('../database/databaseService')
 
 const { saveBotMessage, getBotMessage } = require('../services/rasaService')
-const roomService = require('../services/roomService')
 const {getRoomByLink} = require('../database/databaseService')
 
 describe('Rasa Service unit tests', () => {
