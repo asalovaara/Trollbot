@@ -20,7 +20,7 @@ const Navigation = ({ user, setUser }) => {
     loginService.logout(user)
     setUser(null)
     window.localStorage.removeItem('loggedUser')
-    history.push('/')
+    history.push('/login')
   }
 
   return (
