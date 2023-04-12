@@ -21,11 +21,13 @@ const Login = ({ user, setUser }) => {
 
   const storage_pid = window.localStorage.getItem('prolific_pid')
   const field_pid = useField('text')
-  const [loginFailed, setFailed] = useState(false)
+  const [loginFailed, setFailedText] = useState(null)
 
   // Exits if the user is already logged in
   useEffect(() => {
+    console.log('????')
     if(user){
+      console.log('redirecting...')
       // return to the page user came from after they have logged in
       const queryParams = new URLSearchParams(window.location.search)
       const returnTarget = queryParams.get('returnLocation')
@@ -45,24 +47,27 @@ const Login = ({ user, setUser }) => {
       })
       console.log(JSON.stringify(userObject))
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
-      setUser(userObject)
+      if(userObject) setUser(userObject)
       window.localStorage.removeItem('prolific_pid')
+      setFailedText(<b style={{ color:'#ff6347' }}>User creation failed. The username you chose may already be in use, try entering another username</b>)
 
-      if (!userObject) setFailed(true)
       console.log(loginFailed)
     } catch (error) {
       console.log('Error when logging in', error)
     }
   }
+  useEffect(() => {
+    console.log('Updated loginFailed: ', loginFailed)
+    if (!loginFailed) setFailedText(' ')
+
+  }, [loginFailed])
 
   return (
     <Container>
       <Helmet >
         <title>{`Login - ${TITLE}`}</title>
       </Helmet>
-      {loginFailed &&
-      <b style={{ color:'#ff6347' }}>User creation failed. The username you chose may already be in use, try entering another username</b>
-      }
+      {loginFailed}
       <Typography className={classes.titleText} variant="h4" paragraph>Login</Typography>
       <form className={classes.wrapForm} noValidate autoComplete='off' onSubmit={handleSubmit}>
         <TextField
