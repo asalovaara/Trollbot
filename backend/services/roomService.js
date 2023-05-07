@@ -192,8 +192,7 @@ const addMessage = async (roomId, message) => {
   if (!existingRoom) return
 
   const msg = { room: roomId, ...message }
-  logger.info('id?:', message.user.id)
-  if(!message.user.id || message.user.id === undefined) return
+  if(!message.user || !message.user.id || message.user.id === undefined) return
   msg.user = message.user.id
   logger.info('Add message:', msg)
 
