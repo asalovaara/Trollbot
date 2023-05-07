@@ -25,7 +25,6 @@ const Login = ({ user, setUser }) => {
 
   // Exits if the user is already logged in
   useEffect(() => {
-    console.log('????')
     if(user){
       console.log('redirecting...')
       // return to the page user came from after they have logged in
@@ -56,11 +55,6 @@ const Login = ({ user, setUser }) => {
       console.log('Error when logging in', error)
     }
   }
-  useEffect(() => {
-    console.log('Updated loginFailed: ', loginFailed)
-    if (!loginFailed) setFailedText(' ')
-
-  }, [loginFailed])
 
   return (
     <Container>

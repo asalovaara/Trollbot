@@ -38,7 +38,7 @@ const ChatRoom = (props) => {
     users,
     typingUsers,
     sendMessage,
-    sendMessageToBot,
+    sendMessageToBUser,
     startTypingMessage,
     stopTypingMessage,
     completeTask,
@@ -51,7 +51,7 @@ const ChatRoom = (props) => {
     event.preventDefault()
     cancelTyping()
     sendMessage(message.value)
-    sendMessageToBot(message.value)
+    sendMessageToBUser(message.value)
     message.clear()
   }
   const handleComplete = (event) => {
