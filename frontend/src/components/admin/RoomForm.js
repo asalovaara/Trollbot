@@ -11,6 +11,10 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
 import Typography from '@material-ui/core/Typography'
 
+/*
+ * Room creation form
+ */
+
 const RoomForm = ({ rooms, setRooms }) => {
   const roomName = useField('text')
   const botType = useField('number', 10)

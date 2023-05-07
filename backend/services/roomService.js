@@ -1,233 +1,336 @@
 const logger = require('../utils/logger')
-var uuid = require('uuid')
 const { createBot } = require('./botFactory')
 const addressGen = require('../utils/addressGen')
 const crypto = require('crypto')
+const dbService = require('../database/databaseService')
+const { getUser } = require('./userService')
 
-const testBotNormal = {
-  id: 'nbot',
-  senderId: 'nbot',
-  name: 'Normalbot',
-  type: 'Normal',
-}
+const { BOT_TYPES } = require('../utils/config')
+const { ROOM_DESIRED_USERCOUNT } = require('../utils/config')
 
-const testBotTroll = {
-  id: 'tbot',
-  senderId: 'tbot',
-  name: 'Trollbot',
-  type: 'Troll',
-}
+/*
+ * This file has all of the functions related to managing rooms.
+ */
 
-let users = [testBotNormal, testBotTroll]
+let redirectPoint = ROOM_DESIRED_USERCOUNT
 
-let rooms = [{
-  id: 1,
-  name: 'Test_Normal',
-  roomLink: 'aaaaaaaaa',
-  bot: testBotNormal,
-  users: [testBotNormal],
-  completed_users: [],
-  messages: [],
-  active: true,
-  in_use: false
-},
-{
-  id: 2,
-  name: 'Test_Troll',
-  roomLink: 'bbbbbbbbb',
-  bot: testBotTroll,
-  users: [testBotTroll],
-  completed_users: [],
-  messages: [],
-  active: true,
-  in_use: false
-}
-]
+// Callback functions should take the result as an argument
 
-const getUsers = () => users
-
-const getRooms = () => rooms
-
-const getRoom = roomId => rooms.find(r => r.roomLink === roomId)
-
-const getRoomName = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.name
-}
-const getRoomLink = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.roomLinkBase
-}
-const getMessagesInRoom = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.messages
-}
-const getUsersInRoom = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.users
-}
-const getBot = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return undefined 
-  return foundRoom.bot
-}
-const isRoomActive = roomId => {
-  const foundRoom = getRoom(roomId)
-  if (foundRoom === undefined) return false 
-  return foundRoom.active
-}
-const deleteRoom = roomId => {
-  rooms = rooms.filter(r => r.roomLink !== roomId)
+const getRooms = async (callback) => {
+  const rooms = await dbService.getRooms()
+  if(callback) await callback(rooms)
   return rooms
 }
-const addUserIntoRoom = (senderId, roomName, name) => {
-  const existingUser = getUserInRoom(roomName, name)
-  const existingRoom = getRoom(roomName)
 
-  if (!name || !roomName) return { error: 'Username and room are required.' }
+// adds testrooms to database if there are no rooms, as the frontend will not work with an empty room array
+
+const createTestRooms = async (rooms) => {
+  if(rooms && rooms.length < 2) {
+    logger.info('Adding test rooms')
+    await dbService.saveRoomToDatabase({
+      name: 'Test_Normal',
+      roomLink: 'aaaaaaaaa',
+      botType: 'Normal',
+      //bot: testBotNormal,  Add later when autogenerating bot users
+      users: [],
+      completed_users: [],
+      messages: [],
+      active: true,
+      in_use: false
+    })
+    await dbService.saveRoomToDatabase({
+      name: 'Test_Troll',
+      roomLink: 'bbbbbbbbb',
+      botType: 'Troll',
+      // bot: testBotTroll,  Add later when autogenerating bot users
+      users: [],
+      completed_users: [],
+      messages: [],
+      active: true,
+      in_use: false
+    })
+  }
+}
+getRooms(createTestRooms)
+
+
+// Getters for various things
+
+const getRoom = async roomId => await dbService.getRoomByLink(roomId)
+
+// getRoom, but includes bot information 
+const getRoomWithBot = async roomId => await dbService.getRoomWithBot(roomId)
+
+const getMessagesInRoom = async roomId => {
+  const foundRoom = await dbService.getRoomWithMessageUsers(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.messages
+}
+
+const getRoomName = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.name
+}
+const getRoomLink = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.roomLinkBase
+}
+
+const getUsersInRoom = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.users
+}
+const getBot = async roomId => {
+  const foundRoom = await getRoomWithBot(roomId)
+  if (!foundRoom || foundRoom === undefined) return undefined 
+  return foundRoom.bot
+}
+
+// checks if room is active
+const isRoomActive = async roomId => {
+  const foundRoom = await getRoom(roomId)
+  if (!foundRoom || foundRoom === undefined) return false 
+  return foundRoom.active
+}
+
+// deletes given room
+const deleteRoom = async roomId => {
+  await dbService.deleteRoom(roomId)
+  return getRooms()
+}
+
+const getUserInRoom = async (roomName, name) => {
+  const existingRoom = await getRoom(roomName)
+  if (!existingRoom || !existingRoom.users) return
+  return existingRoom.users.find(u => u.name === name) // gets with name instead of username
+}
+
+// Room model has seperate user count field that needs to be occasitionally updated.
+
+// Updates the usercount value in room
+const updateRoomUserCount = async (roomId) => {
+  const users = await getUsersInRoom(roomId)
+  const newVal = users.length
+  
+  await dbService.updateRoomField(roomId, {userCount: newVal})
+}
+
+// Gets room while updating the usercount 
+const getRoomUpdateFunction = async (roomId) => {
+  // to make it easier to update rooms in callback functions
+  return async () => {
+    logger.info('callback roomId?')
+    const users = await getUsersInRoom(roomId)
+    const newVal = users.length
+  
+    await dbService.updateRoomField(roomId, {userCount: newVal})
+  }
+}
+
+// There is some naming inconsistensies with some variables
+
+/** Adds given user into the room
+ * @param {*} roomId room id
+ * @param {*} username username of user to be added
+ * @returns 
+ */
+
+const addUserIntoRoom = async (roomId, username) => {
+  logger.info(`User '${username}' is trying to enter room '${roomId}`)
+  const existingUser = await getUserInRoom(roomId, username)
+  const existingRoom = await getRoom(roomId)
+  const user = await getUser(username)
+  if (!username || !roomId) return { error: 'Username and room are required.' }
   if (!existingRoom || existingRoom.length === 0) return { error: 'Room not found.' }
   if (existingUser) return { error: 'User is already in this room.' }
 
-  const user = { id: uuid.v4(), senderId, name }
-
-  existingRoom.users.push(user)
-
-  logger.info(`Adding user: '${user.name}' into room: '${getRoomName(roomName)}'`)
+  const callback = getRoomUpdateFunction(roomId)
+  await dbService.addValueToArrayIfMissing(roomId, user._id, 'users', callback)
+  
+  logger.info(`'users in room: '${await getUsersInRoom(roomId)}`)
+  
+  logger.info(`Adding user: '${user.username}' into room: '${existingRoom.name}'`)
 
   return user
 }
 
-const removeUserFromRoom = (roomName, name) => {
-  const existingRoom = getRoom(roomName)
-  if (!existingRoom) return
+/** Removes given user into the room
+ * @param {*} roomId room id
+ * @param {*} name username of user to be added
+ * @returns 
+ */
+const removeUserFromRoom = async (roomId, name) => {
+  const existingRoom = await getRoom(roomId)
+  const user = await getUser(name)
+  if (!existingRoom || !user) return
+  logger.info(`Removing ${user.name} from ${existingRoom}`)
 
-  logger.info(`Removing ${name} from ${existingRoom}`)
+  const callback = getRoomUpdateFunction(roomId)
 
-  const roomUsers = existingRoom.users
-  const index = roomUsers.findIndex((user) => user.name === name)
-
-  if (index !== -1) return roomUsers.splice(index, 1)[0]
+  return await dbService.removeValueFromArray(roomId, user._id, 'users', callback)
 }
 
-const getUserInRoom = (roomName, name) => {
-  const existingRoom = getRoom(roomName)
-  if (!existingRoom || !existingRoom.users) return
-  return existingRoom.users.find(u => u.name === name)
+/** Adds given user into allowed users
+ * @param {*} roomId room id
+ * @param {*} user_id users mongoose _id 
+ * @returns 
+ */
+const addUserToAllowed = async (roomId, user_id) => {
+  dbService.addValueToArrayIfMissing(roomId, user_id, 'allowedUsers')
 }
 
-const addMessage = (roomName, message) => {
-  const existingRoom = getRoom(roomName)
+/** Adds message to rooms messages
+ * @param {*} roomId room id
+ * @param {*} message the message 
+ * @returns 
+ */
+const addMessage = async (roomId, message) => {
+  const existingRoom = await getRoom(roomId)
   if (!existingRoom) return
 
-  const msg = { id: uuid.v4(), room: roomName, ...message }
+  const msg = { room: roomId, ...message }
+  logger.info('id?:', message.user.id)
+  if(!message.user.id || message.user.id === undefined) return
+  msg.user = message.user.id
   logger.info('Add message:', msg)
 
-  existingRoom.messages.push(msg)
-  return msg
+  await dbService.addMessage(roomId, msg)
+  return { room: roomId, ...message }
 }
 
-const addRoom = room => {
+/** Adds message to rooms messages
+ * @param {*} room room object
+ * @returns 
+ */
+
+const addRoom = async room => {
   let roomCode = (room.roomLink !== undefined)? room.roomLink : addressGen.generate(9)
-
+  let existingRoom = await dbService.findOneRoom({roomLink: roomCode})
   // In case generates an existing room code
-  while (rooms.find(r => r.roomLink === roomCode) !== undefined) {
+  while (existingRoom) {
     roomCode = addressGen.generate(9)
+    existingRoom = await dbService.findOneRoom({roomLink: roomCode})
   }
-	
-  const newRoom = { ...room, id: rooms.length + 1, users: [], messages: [], completed_users: ['bot'], roomLink: roomCode , active: false, in_use: true }
 
-  const bot = createBot(room.botType)
+  const newRoom = { ...room, completed_users: ['default'], roomLink: roomCode , active: false, in_use: true }
+
+  const bot = await createBot(room.botType)
+  logger.info('bot info:', bot)
+  // Saves the room and the generated bot as a new user
+  await dbService.saveUserToDatabase(bot)
+  const bot_id = await dbService.getUserByName(bot.username)
+  newRoom.bot = bot_id
+  logger.info('addroom newRoom bot:', newRoom.bot)
   
-  newRoom.bot = bot
-  newRoom.users.push(bot)
-  users.push(bot)
+  const callback = getRoomUpdateFunction(roomCode)
+
+  await dbService.saveRoomToDatabase(newRoom)
+  await dbService.addValueToArray(roomCode, bot_id, 'users', callback)
 
   logger.info('Added room:', newRoom)
-  rooms.push(newRoom)
   return newRoom
 }
 
-const autoCreateRoom = () => {
-  const randomInt = crypto.randomInt(2)
-  const newBotType = (randomInt === 0)? 'Normal' : 'Troll'
-  const newRoom = { name:  `Room ${rooms.length + 1}`, botType: newBotType }
+/** Automatically creates a room
+ * @returns the new room
+ */
+const autoCreateRoom = async () => {
+  const randomInt = crypto.randomInt(BOT_TYPES.length)
+  const newBotType = BOT_TYPES[randomInt]
+  const roomCount = await dbService.roomCount()
+
+  const newRoom = { name:  `Room ${roomCount + 1}`, botType: newBotType }
   
-  return addRoom(newRoom)
+  return await addRoom(newRoom)
 }
 
-const getActiveRoom = () => {
-  let roomCandidates = rooms.filter(r => r.users.length === 2 && r.in_use)
-  if (roomCandidates.length > 0) return roomCandidates[0].roomLink
 
-  roomCandidates = rooms.filter(r => r.users.length === 1 && r.in_use)
-  if (roomCandidates.length > 0) return roomCandidates[0].roomLink
-  
-  return autoCreateRoom().roomLink
+const getActiveRoom = async () => {
+  // This can be optimised by requesting active rooms sorted by number of users and then selecting the first one
+
+  // Get an in-use room with most users 
+  let condition = {in_use: true}
+  let roomCandidate = await dbService.findOneRoomWithHighestField('userCount', condition)
+  logger.info('roomCandidate:', roomCandidate)
+  if (roomCandidate) return roomCandidate.roomLink
+
+  // else create new room
+  const autocreatedRoom = await autoCreateRoom()
+  return autocreatedRoom.roomLink
 }
 
-const activateRoom = roomCode => {
-  const foundRoom = getRoom(roomCode)
+/** Activates room if room has enough users
+ * @param {*} roomCode room id
+ * @returns boolean on whether the room was activated successfully
+ */
+const activateRoom = async roomCode => {
+  const foundRoom = await getRoom(roomCode)
+  // usercount + 1 for the bot
+  logger.info('users in room:', foundRoom.users.length, 'compared to', Number(redirectPoint) + 1)
+  if (!foundRoom || foundRoom.users.length < Number(redirectPoint) + 1) return false
+  logger.info('Activating room')
+  await dbService.updateRoomField(roomCode, {in_use: false})
+  await dbService.updateRoomField(roomCode, {active: true})
 
-  if (foundRoom === undefined || foundRoom.users.length < 3) return false
-  foundRoom.in_use = false
-  foundRoom.active = true
   return true
 }
 
-const manageComplete = (value, roomId) => {
+/** Adds the value (completing user's info) to the completed, and checks if the room is ready to complete the task
+ * @param {*} value the value used to complete
+ * @param {*} roomId room id
+ * @returns boolean on whether the task is complete
+ */
+const manageComplete = async (value, roomId) => {
   logger.info(`Task completion requested by ${value}`)
-  const foundRoom = getRoom(roomId)
-  const completedUsers = foundRoom.completed_users
-  logger.info(`${completedUsers.length} vs ${foundRoom.users.length}`)
-  if (completedUsers.length === foundRoom.users.length) return true
-  if (!value || completedUsers.includes(value)) return false
+  let foundRoom = await getRoom(roomId)
 
-  completedUsers.push(value)
-  logger.info(completedUsers.length)
+  // returns true if the room has already completed its assignment
+  if (foundRoom.completed_users.length === foundRoom.users.length) return true
+  logger.info('Validating check..')
+  // returns false if the user requesting has already requested completion
+  if (!value || foundRoom.completed_users.includes(value)) return false
+  logger.info('Adding complete..')
 
-  return completedUsers.length === foundRoom.users.length
+  await dbService.addValueToArrayIfMissing(roomId, value, 'completed_users')
+
+  foundRoom = await getRoom(roomId)
+  logger.info(`${foundRoom.completed_users.length} vs ${foundRoom.users.length}`)
+
+  return foundRoom.completed_users.length === foundRoom.users.length
 }
 
-const addUser = (senderId, name, room) => {
-  if (!name) return { error: 'Username and room are required.' }
-
-  const existingUser = users.find(u => u.name === name)
-  if (existingUser) return existingUser
-
-  const user = { id: users.length + 1, senderId, name, room }
-  users = users.concat(user)
-
-  return user
+/** Checks whether the user is allowed into the room
+ * @param {*} room_id Rooms mongoose _id
+ * @param {*} user_id Users mongoose _id
+ * @returns boolean on whether the task is complete
+ */
+const userAllowedIn = async (room_id, user_id) =>  {
+  const condition = {_id: room_id, allowedUsers: {$elemMatch: {_id: user_id}}}
+  
+  const rooms = await dbService.findRooms(condition)
+  return rooms && rooms.length > 0
 }
 
-// Will create a new user if none is found with username.
-const login = username => {
-  const user = users.find(u => u.name.toLowerCase() == username.toLowerCase())
-
-  if (user === undefined) {
-    const newUser = {
-      id: users.length + 1,
-      name: username,
-    }
-    users = users.concat(newUser)
-    return newUser
-  }
-  return user
+// gets the room size
+const getRoomSize = async () => {
+  return redirectPoint
 }
 
+// sets the room size
+const setRoomSize = async size => {
+  redirectPoint = size
+  logger.info('Redirection point changed:', redirectPoint)
+  return redirectPoint
+}
 
 
 module.exports = {
-  login,
-  addUser,
   addRoom,
   deleteRoom,
   getBot,
-  getUsers,
   getRooms,
   getRoom,
   addMessage,
@@ -242,5 +345,10 @@ module.exports = {
   autoCreateRoom,
   getActiveRoom,
   activateRoom,
-  manageComplete
+  manageComplete,
+  addUserToAllowed,
+  userAllowedIn,
+  getRoomSize,
+  setRoomSize,
+  updateRoomUserCount
 }

@@ -20,6 +20,9 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import AvatarGroup from '@material-ui/lab/AvatarGroup'
 
+/*
+ * Chat room base component
+ */
 
 const ChatRoom = (props) => {
   const { roomId } = props.match.params
@@ -27,7 +30,6 @@ const ChatRoom = (props) => {
   const classes = useChatRoomStyles()
 
   const giveComleteHeadsUp = () => {
-    event.preventDefault()
     toast('A user is ready to complete the task.')
   }
 

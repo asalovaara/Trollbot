@@ -35,6 +35,8 @@ Dockerfile.local
 npm-debug.log*
 yarn-debug.log*
 
+local.yaml
+
 # Logs
 logs
 *.log

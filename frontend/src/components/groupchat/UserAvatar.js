@@ -1,6 +1,10 @@
 import Avatar from '@material-ui/core/Avatar'
 import React from 'react'
 
+/*
+ * User avatar used in the chat room
+ */
+
 const UserAvatar = ({ user }) => {
 
   if (!user) {

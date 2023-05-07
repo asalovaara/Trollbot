@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useField } from '../../hooks/inputFields'
 import { Helmet } from 'react-helmet'
 import loginService from '../../services/login'
@@ -11,32 +11,63 @@ import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
 
+/*
+ * Login page component
+ */
+
 const Login = ({ user, setUser }) => {
   const username = useField('text')
   const classes = useTextInputStyles()
+
+  const storage_pid = window.localStorage.getItem('prolific_pid')
+  const field_pid = useField('text')
+  const [loginFailed, setFailedText] = useState(null)
+
+  // Exits if the user is already logged in
+  useEffect(() => {
+    console.log('????')
+    if(user){
+      console.log('redirecting...')
+      // return to the page user came from after they have logged in
+      const queryParams = new URLSearchParams(window.location.search)
+      const returnTarget = queryParams.get('returnLocation')
+      window.location.href = (returnTarget) ? returnTarget : '/'
+    }
+
+  }, [user])
+
+  if (user) return <div>You are logged in</div>
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
       const userObject = await loginService.login({
-        name: username.value
+        name: username.value,
+        pid:  `${(storage_pid)? storage_pid : field_pid.value}`
       })
       console.log(JSON.stringify(userObject))
       window.localStorage.setItem('loggedUser', JSON.stringify(userObject))
-      setUser(userObject)
+      if(userObject) setUser(userObject)
+      window.localStorage.removeItem('prolific_pid')
+      setFailedText(<b style={{ color:'#ff6347' }}>User creation failed. The username you chose may already be in use, try entering another username</b>)
+
+      console.log(loginFailed)
     } catch (error) {
       console.log('Error when logging in', error)
     }
   }
-  const prolific_pid = window.localStorage.getItem('prolific_pid')
-  if (!prolific_pid) return <div>There was a problem with your login. Please check you used the correct link.</div>
-  if (user) return <div>You are logged in</div>
+  useEffect(() => {
+    console.log('Updated loginFailed: ', loginFailed)
+    if (!loginFailed) setFailedText(' ')
+
+  }, [loginFailed])
 
   return (
     <Container>
       <Helmet >
         <title>{`Login - ${TITLE}`}</title>
       </Helmet>
+      {loginFailed}
       <Typography className={classes.titleText} variant="h4" paragraph>Login</Typography>
       <form className={classes.wrapForm} noValidate autoComplete='off' onSubmit={handleSubmit}>
         <TextField
@@ -46,6 +77,15 @@ const Login = ({ user, setUser }) => {
           className={classes.wrapText}
           onChange={username.onChange}
         />
+        {!storage_pid && <TextField
+          required
+          id='prolific_pid'
+          label='Prolific pid'
+          className={classes.wrapText}
+          onChange={field_pid.onChange}
+        />
+
+        }
         <Button id='login' variant='contained' color='primary' type='submit'>Login</Button>
       </form>
     </Container>

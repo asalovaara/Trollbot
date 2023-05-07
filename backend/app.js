@@ -15,7 +15,7 @@ const rasaRouter = require('./controllers/rasaRouter')
 
 const app = express()
 
-logger.info('connecting to Mongoose')
+logger.info('connecting to Mongoose at ', MONGODB_URI)
 
 mongoose.connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => {

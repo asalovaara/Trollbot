@@ -1,6 +1,10 @@
 const axios = require('axios')
 const logger = require('../utils/logger')
 
+/*
+ * This file contains functions that fetches data from musicbrainz.
+ */
+
 const headers = {
   'User-Agent': 'Trollbot/1.0 (https://github.com/sumuh/Trollbot)'
 }

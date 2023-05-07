@@ -5,10 +5,15 @@ import { Helmet } from 'react-helmet'
 import { TITLE } from '../../config'
 import roomService from '../../services/room'
 import logService from '../../services/log'
+import RoomSizeSetter from './RoomSizeSetter'
 
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+
+/*
+ * Admin page base
+ */
 
 const AdminPage = user => {
   const [rooms, setRooms] = useState([])
@@ -42,6 +47,9 @@ const AdminPage = user => {
         </Grid>
         <Grid xs={6} item>
           <Button onClick={async () => logService.logGen('all')} variant='contained' color='primary' id='generate_log_tracker_store'> Generate Logs For All Tracker Store Conversations</Button>
+        </Grid>
+        <Grid xs={6} item>
+          <RoomSizeSetter/>
         </Grid>
       </Grid>
       {rooms !== undefined && <RoomList rooms={rooms} />}

@@ -4,9 +4,13 @@ const fs = require('fs')
 const readline = require('readline')
 const logger = require('../utils/logger')
 const { API_URL, MONGODB_URI } = require('../utils/config')
-const { saveArtistToDatabase, updateArtist, deleteAll } = require('../database/databaseService')
+const { saveArtistToDatabase, updateArtist } = require('../database/databaseService')
 const { getArtist } = require('./musicbrainzService')
 const path = require('path')
+
+/*
+ * This manages artist data.
+ */
 
 // run this file to add artists to the database
 
