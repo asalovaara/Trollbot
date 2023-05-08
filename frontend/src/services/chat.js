@@ -129,8 +129,8 @@ const useChat = (roomId, giveComleteHeadsUp) => {
 
   const sendMessage = (messageBody) => {
     if (!socketRef.current) return
-    const { pid, ...userclone } = user
-    pid === pid
+    const { pid, ...userclone } = user // We send user without pid
+    pid === pid // Avoids unused variable error
     console.log(user)
     socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
       body: messageBody,
@@ -140,10 +140,9 @@ const useChat = (roomId, giveComleteHeadsUp) => {
   }
 
   const sendMessageToBUser = (messageBody) => {
-    console.log('Send message to bot')
     if (!socketRef.current) return
-    const { pid, ...userclone } = user
-    pid === pid
+    const { pid, ...userclone } = user // We send user without pid
+    pid === pid  // Avoids unused variable error
     socketRef.current.emit(SEND_MESSAGE_TO_BSERVER_EVENT, {
       body: messageBody,
       senderId: socketRef.current.id,
