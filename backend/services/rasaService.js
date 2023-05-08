@@ -89,7 +89,7 @@ const setRasaUsersSlot = async (roomId, users) => {
   const humanUsers = users.slice(1) // Assumes that the bot is in slot 1
   let rasa_users = {}
   for (const user of humanUsers) {
-    rasa_users[user.senderId] = user
+    rasa_users[user.senderId] = user // This senderId might make sense to change later to something more associated with account
   }
   logger.info('Entered rasaService:setRasaUsersSlot().', users)
   try {
