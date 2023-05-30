@@ -1,2 +1,2 @@
-rasa==2.7.1
+rasa
 transformers
